@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
@@ -28,30 +27,19 @@ export default async function DashboardPage() {
 
   if (!user) {
     return (
-      <main className="page-shell">
-        <nav className="nav" aria-label="Hauptnavigation">
-          <Link className="brand" href="/">
-            <span className="brand-mark" aria-hidden>
-              🏟️
-            </span>
-            <span>Mojiwar Dashboard</span>
-          </Link>
-        </nav>
-
-        <section className="hero">
-          <div>
-            <p className="eyebrow">Noch kein Spieler</p>
-            <h1>Starte zuerst deinen Emoji-Account.</h1>
-            <p className="lead">
-              Auf diesem Geraet wird eine sichere Supabase-Session gespeichert,
-              damit du beim naechsten Besuch weiterspielen kannst.
-            </p>
-            <div className="actions">
-              <StartPlayingButton />
-            </div>
+      <section className="hero">
+        <div>
+          <p className="eyebrow">Noch kein Spieler</p>
+          <h1>Starte zuerst deinen Emoji-Account.</h1>
+          <p className="lead">
+            Auf diesem Geraet wird eine sichere Supabase-Session gespeichert,
+            damit du beim naechsten Besuch weiterspielen kannst.
+          </p>
+          <div className="actions">
+            <StartPlayingButton />
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
     );
   }
 
@@ -103,20 +91,7 @@ export default async function DashboardPage() {
   const isAnonymous = user.is_anonymous;
 
   return (
-    <main className="page-shell">
-      <nav className="nav" aria-label="Hauptnavigation">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden>
-            🏟️
-          </span>
-          <span>Mojiwar Dashboard</span>
-        </Link>
-        <div className="nav-links">
-          <Link href="/opponents">Gegner suchen</Link>
-          <Link href="/deck">Deck bearbeiten</Link>
-        </div>
-      </nav>
-
+    <>
       <section>
         <p className="eyebrow">Offline-Inbox</p>
         <h1>Willkommen zurueck, {character.name}.</h1>
@@ -166,6 +141,6 @@ export default async function DashboardPage() {
           </form>
         </article>
       </section>
-    </main>
+    </>
   );
 }

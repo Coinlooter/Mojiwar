@@ -1,25 +1,10 @@
-import Link from "next/link";
-
 import { MAX_STARTER_DECK_SIZE, starterCards } from "@/lib/game/cards";
 
 const activeCardIds = new Set(["ember-punch", "swift-sneaker", "panic-snack"]);
 
 export default function DeckPage() {
   return (
-    <main className="page-shell">
-      <nav className="nav" aria-label="Hauptnavigation">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden>
-            🃏
-          </span>
-          <span>Deck</span>
-        </Link>
-        <div className="nav-links">
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/opponents">Gegner</Link>
-        </div>
-      </nav>
-
+    <>
       <section>
         <p className="eyebrow">Meta-Strategie</p>
         <h1>{MAX_STARTER_DECK_SIZE} Karten entscheiden deinen Build.</h1>
@@ -47,6 +32,6 @@ export default function DeckPage() {
           );
         })}
       </section>
-    </main>
+    </>
   );
 }

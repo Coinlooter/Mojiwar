@@ -40,6 +40,43 @@ const demoBattle = simulateBattle({
   },
 });
 
+const highlights = [
+  {
+    value: "3",
+    label: "Start-Deck Slots",
+  },
+  {
+    value: "±15%",
+    label: "Auto-Matchmaking Range",
+  },
+  {
+    value: "100%",
+    label: "Serverseitige Kampfentscheidung",
+  },
+  {
+    value: "1",
+    label: "Permanente Karte fuer Gewinner",
+  },
+] as const;
+
+const features = [
+  {
+    title: "Pure Battle Engine",
+    description:
+      "Kampfregeln sind von React und Supabase getrennt und koennen isoliert getestet werden.",
+  },
+  {
+    title: "Battle-Logs als Replay",
+    description:
+      "Die UI animiert gespeicherte Events. Alte Kaempfe bleiben auch nach spaeteren Regelversionen nachvollziehbar.",
+  },
+  {
+    title: "Supabase mit RLS",
+    description:
+      "Client-Aktionen starten nur Herausforderungen. Ergebnis, XP und Kartenrewards entstehen serverseitig.",
+  },
+] as const;
+
 export default function Home() {
   const winner =
     demoBattle.winnerSide === "attacker"
@@ -47,23 +84,9 @@ export default function Home() {
       : demoBattle.defenderSnapshot;
 
   return (
-    <main className="page-shell">
-      <nav className="nav" aria-label="Hauptnavigation">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden>
-            ⚔️
-          </span>
-          <span>Mojiwar</span>
-        </Link>
-        <div className="nav-links">
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/opponents">Gegner</Link>
-          <Link href="/deck">Deck</Link>
-        </div>
-      </nav>
-
-      <section className="hero">
-        <div>
+    <>
+      <section className="hero landing-hero">
+        <div className="hero-copy">
           <p className="eyebrow">Async Emoji Auto-Battler</p>
           <h1>Baue dein Emoji. Gewinne Karten. Schlafe, waehrend du kaempfst.</h1>
           <p className="lead">
@@ -80,7 +103,7 @@ export default function Home() {
           </div>
         </div>
 
-        <aside className="panel battle-card" aria-label="Demo Kampf Ergebnis">
+        <aside className="panel battle-card landing-battle-card" aria-label="Demo Kampf Ergebnis">
           <p className="eyebrow">Letzter Kampf</p>
           <div className="fighter-row">
             <div className="fighter">
@@ -101,7 +124,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <p style={{ marginTop: 22, marginBottom: 0 }}>
+          <p className="battle-result">
             Gewinner: <strong>{winner.emoji} {winner.name}</strong> nach{" "}
             {demoBattle.rounds} Runden
           </p>
@@ -109,51 +132,26 @@ export default function Home() {
       </section>
 
       <section className="stat-grid" aria-label="MVP Kennzahlen">
-        <div className="stat-card">
-          <div className="stat-value">3</div>
-          <p className="muted">Start-Deck Slots</p>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">±15%</div>
-          <p className="muted">Auto-Matchmaking Range</p>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">100%</div>
-          <p className="muted">Serverseitige Kampfentscheidung</p>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">1</div>
-          <p className="muted">Permanente Karte fuer Gewinner</p>
-        </div>
+        {highlights.map((item) => (
+          <div className="stat-card" key={item.label}>
+            <div className="stat-value">{item.value}</div>
+            <p className="muted">{item.label}</p>
+          </div>
+        ))}
       </section>
 
       <section className="section">
         <p className="eyebrow">Architektur</p>
         <h2>So bleibt das Spiel erweiterbar.</h2>
         <div className="feature-grid">
-          <article className="feature-card">
-            <h3>Pure Battle Engine</h3>
-            <p className="muted">
-              Kampfregeln sind von React und Supabase getrennt und koennen
-              isoliert getestet werden.
-            </p>
-          </article>
-          <article className="feature-card">
-            <h3>Battle-Logs als Replay</h3>
-            <p className="muted">
-              Die UI animiert gespeicherte Events. Alte Kaempfe bleiben auch
-              nach spaeteren Regelversionen nachvollziehbar.
-            </p>
-          </article>
-          <article className="feature-card">
-            <h3>Supabase mit RLS</h3>
-            <p className="muted">
-              Client-Aktionen starten nur Herausforderungen. Ergebnis, XP und
-              Kartenrewards entstehen serverseitig.
-            </p>
-          </article>
+          {features.map((feature) => (
+            <article className="feature-card" key={feature.title}>
+              <h3>{feature.title}</h3>
+              <p className="muted">{feature.description}</p>
+            </article>
+          ))}
         </div>
       </section>
-    </main>
+    </>
   );
 }

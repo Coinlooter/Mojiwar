@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { BattleReplay } from "@/components/battle/BattleReplay";
 import { simulateBattle } from "@/lib/game/battle-engine";
 import { starterCards } from "@/lib/game/cards";
@@ -42,21 +40,7 @@ const result = simulateBattle({
 
 export default function DemoBattlePage() {
   return (
-    <main className="page-shell">
-      <nav className="nav" aria-label="Hauptnavigation">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden>
-            ⚔️
-          </span>
-          <span>Demo-Kampf</span>
-        </Link>
-        <div className="nav-links">
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/opponents">Gegner</Link>
-          <Link href="/deck">Deck</Link>
-        </div>
-      </nav>
-
+    <>
       <section style={{ marginBottom: 32 }}>
         <p className="eyebrow">Animierter Rundenkampf</p>
         <h1>Replay aus serverseitigem Battle-Log.</h1>
@@ -67,6 +51,6 @@ export default function DemoBattlePage() {
       </section>
 
       <BattleReplay result={result} />
-    </main>
+    </>
   );
 }

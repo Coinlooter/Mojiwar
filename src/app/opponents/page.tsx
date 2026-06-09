@@ -75,20 +75,7 @@ export default function OpponentsPage() {
   const match = findBestAutomaticOpponent({ player, candidates });
 
   return (
-    <main className="page-shell">
-      <nav className="nav" aria-label="Hauptnavigation">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden>
-            🎯
-          </span>
-          <span>Gegner</span>
-        </Link>
-        <div className="nav-links">
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/deck">Deck</Link>
-        </div>
-      </nav>
-
+    <>
       <section>
         <p className="eyebrow">Matchmaking</p>
         <h1>Gezielt herausfordern oder automatisch matchen.</h1>
@@ -125,6 +112,6 @@ export default function OpponentsPage() {
           </article>
         ))}
       </section>
-    </main>
+    </>
   );
 }

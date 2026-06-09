@@ -31,6 +31,197 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+.app-shell {
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+}
+
+.site-main {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
+.glass-chrome {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--border) 70%, transparent);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.glass-chrome > * {
+  position: relative;
+  z-index: 1;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+}
+
+.site-chrome-inner {
+  display: flex;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+}
+
+.site-footer-inner {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px 10px;
+  padding: 10px 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.brand-subtitle {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.footer-meta {
+  min-width: 0;
+}
+
+.footer-separator {
+  color: var(--border);
+}
+
+.footer-link,
+.footer-version {
+  border: 0;
+  background: transparent;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.footer-link:hover,
+.footer-version:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-version {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.changelog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.changelog-dialog {
+  width: min(720px, 100%);
+  max-height: min(80svh, 720px);
+  padding: 20px;
+}
+
+.changelog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.changelog-header h2 {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.changelog-list {
+  display: grid;
+  gap: 12px;
+  max-height: min(55svh, 520px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.changelog-entry {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 14px 16px;
+}
+
+.changelog-entry h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.changelog-entry ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.changelog-entry li + li {
+  margin-top: 6px;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -44,15 +235,7 @@ input {
 .page-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 32px 0 56px;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 64px;
+  padding: 32px 0 48px;
 }
 
 .brand {
@@ -107,11 +290,20 @@ input {
   font-weight: 800;
 }
 
-.hero {
+.hero,
+.landing-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   gap: 32px;
   align-items: center;
+}
+
+.landing-battle-card {
+  min-height: 100%;
+}
+
+.battle-result {
+  margin: 22px 0 0;
 }
 
 .eyebrow {
@@ -281,15 +473,24 @@ h3 {
 
 @media (max-width: 900px) {
   .hero,
+  .landing-hero,
   .replay-shell,
   .stat-grid,
   .feature-grid {
     grid-template-columns: 1fr;
   }
 
-  .nav {
+  .site-chrome-inner {
     align-items: flex-start;
     flex-direction: column;
-    margin-bottom: 40px;
+  }
+
+  .site-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .footer-version {
+    margin-left: 0;
   }
 }

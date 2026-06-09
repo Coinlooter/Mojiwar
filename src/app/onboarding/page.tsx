@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { createCharacter } from "./actions";
@@ -38,17 +37,7 @@ export default async function OnboardingPage({
   const errorMessage = params.error ? errorMessages[params.error] : null;
 
   return (
-    <main className="page-shell">
-      <nav className="nav" aria-label="Hauptnavigation">
-        <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden>
-            🧬
-          </span>
-          <span>Emoji erstellen</span>
-        </Link>
-      </nav>
-
-      <section className="hero">
+    <section className="hero">
         <div>
           <p className="eyebrow">Erster Start</p>
           <h1>Waehle dein Emoji und gib ihm einen Namen.</h1>
@@ -96,7 +85,6 @@ export default async function OnboardingPage({
             Charakter erstellen
           </button>
         </form>
-      </section>
-    </main>
+    </section>
   );
 }
