@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { BattleArena } from "@/components/battle/BattleArena";
 import type { BattleEvent, BattleResult, FighterSide } from "@/lib/game/types";
 
 const sideLabel: Record<FighterSide, string> = {
@@ -9,7 +10,7 @@ const sideLabel: Record<FighterSide, string> = {
   defender: "Verteidiger",
 };
 
-const EVENT_STEP_MS = 900;
+const EVENT_STEP_MS = 1100;
 
 export function BattleReplay({
   result,
@@ -29,6 +30,10 @@ export function BattleReplay({
   const fighterHp = useMemo(
     () => deriveFighterHp(result, shownEvents),
     [result, shownEvents],
+  );
+  const currentRound = useMemo(
+    () => deriveCurrentRound(shownEvents),
+    [shownEvents],
   );
 
   useEffect(() => {
@@ -70,34 +75,29 @@ export function BattleReplay({
 
   return (
     <section className="replay-shell" aria-label="Kampf-Replay">
-      <div className="panel battle-card">
-        <p className="eyebrow">Replay · Regeln v{result.rulesVersion}</p>
-        <div className="fighter-row">
-          <FighterPanel
-            emoji={result.attackerSnapshot.emoji}
-            hp={fighterHp.attacker}
-            maxHp={result.attackerSnapshot.finalStats.hp}
-            name={result.attackerSnapshot.name}
-            power={result.attackerSnapshot.power}
-          />
-          <strong>VS</strong>
-          <FighterPanel
-            emoji={result.defenderSnapshot.emoji}
-            hp={fighterHp.defender}
-            maxHp={result.defenderSnapshot.finalStats.hp}
-            name={result.defenderSnapshot.name}
-            power={result.defenderSnapshot.power}
-          />
+      <div className="panel battle-card battle-replay-main">
+        <div className="battle-replay-header">
+          <p className="eyebrow">Kampf-Arena · Regeln v{result.rulesVersion}</p>
+          <p className="battle-round-pill">
+            {isComplete ? "Kampf beendet" : `Runde ${currentRound}`}
+          </p>
         </div>
+
+        <BattleArena
+          animate={!prefersReducedMotion}
+          events={shownEvents}
+          fighterHp={fighterHp}
+          result={result}
+        />
 
         <div className="actions">
           {!isComplete ? (
             <p className="muted replay-status" aria-live="polite">
-              Kampf laeuft automatisch ab...
+              Die Emojis kaempfen gerade...
             </p>
           ) : (
             <p className="muted replay-status" aria-live="polite">
-              Kampf beendet.
+              Kampf beendet — Ergebnis folgt gleich.
             </p>
           )}
           <button
@@ -125,6 +125,18 @@ export function BattleReplay({
       </aside>
     </section>
   );
+}
+
+function deriveCurrentRound(events: BattleEvent[]) {
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index];
+
+    if (event.round > 0) {
+      return event.round;
+    }
+  }
+
+  return 0;
 }
 
 function deriveFighterHp(result: BattleResult, events: BattleEvent[]) {
@@ -165,30 +177,6 @@ function deriveFighterHp(result: BattleResult, events: BattleEvent[]) {
   }
 
   return { attacker: attackerHp, defender: defenderHp };
-}
-
-function FighterPanel({
-  emoji,
-  name,
-  power,
-  hp,
-  maxHp,
-}: {
-  emoji: string;
-  name: string;
-  power: number;
-  hp: number;
-  maxHp: number;
-}) {
-  return (
-    <div className="fighter">
-      <div className="emoji">{emoji}</div>
-      <h3>{name}</h3>
-      <p className="muted">
-        Power {power} · {hp}/{maxHp} HP
-      </p>
-    </div>
-  );
 }
 
 function BattleEventCard({
