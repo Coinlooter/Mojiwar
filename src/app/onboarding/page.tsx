@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { EmojiPicker } from "@/components/onboarding/EmojiPicker";
 import { createCharacter } from "./actions";
 import { getVerifiedUser } from "@/lib/auth/session";
 
@@ -38,53 +39,42 @@ export default async function OnboardingPage({
 
   return (
     <section className="hero">
-        <div>
-          <p className="eyebrow">Erster Start</p>
-          <h1>Waehle dein Emoji und gib ihm einen Namen.</h1>
-          <p className="lead">
-            Dein Fortschritt wird ab jetzt mit diesem Geraet verknuepft. Spaeter
-            kannst du den Account mit einer Eltern-E-Mail sichern.
+      <div>
+        <p className="eyebrow">Erster Start</p>
+        <h1>Waehle dein Emoji und gib ihm einen Namen.</h1>
+        <p className="lead">
+          Such dir einen Helden aus und gib ihm einen coolen Namen. Dein
+          Fortschritt wird ab jetzt mit diesem Geraet gespeichert.
+        </p>
+      </div>
+
+      <form action={createCharacter} className="panel battle-card form-card">
+        <EmojiPicker />
+
+        <label className="field-label" htmlFor="name">
+          Name deines Emojis
+        </label>
+        <input
+          autoComplete="nickname"
+          className="text-input"
+          id="name"
+          maxLength={32}
+          minLength={2}
+          name="name"
+          placeholder="z. B. Foxy"
+          required
+        />
+
+        {errorMessage ? (
+          <p className="muted" role="alert">
+            {errorMessage}
           </p>
-        </div>
+        ) : null}
 
-        <form action={createCharacter} className="panel battle-card form-card">
-          <label className="field-label" htmlFor="emoji">
-            Dein Emoji
-          </label>
-          <input
-            autoComplete="off"
-            className="text-input emoji-input"
-            defaultValue="🦊"
-            id="emoji"
-            maxLength={16}
-            name="emoji"
-            required
-          />
-
-          <label className="field-label" htmlFor="name">
-            Name deines Emojis
-          </label>
-          <input
-            autoComplete="nickname"
-            className="text-input"
-            id="name"
-            maxLength={32}
-            minLength={2}
-            name="name"
-            placeholder="z. B. Foxy"
-            required
-          />
-
-          {errorMessage ? (
-            <p className="muted" role="alert">
-              {errorMessage}
-            </p>
-          ) : null}
-
-          <button className="button primary" type="submit">
-            Charakter erstellen
-          </button>
-        </form>
+        <button className="button primary" type="submit">
+          Charakter erstellen
+        </button>
+      </form>
     </section>
   );
 }

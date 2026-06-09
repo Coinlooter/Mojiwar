@@ -647,6 +647,51 @@ h3 {
   text-align: center;
 }
 
+.emoji-picker {
+  display: grid;
+  gap: 12px;
+}
+
+.emoji-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.emoji-picker-option {
+  display: grid;
+  min-height: 4.4rem;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--chrome-muted);
+  color: inherit;
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  padding: 10px;
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    transform 140ms ease;
+}
+
+.emoji-picker-option:hover {
+  border-color: var(--accent-strong);
+  transform: translateY(-2px);
+}
+
+.emoji-picker-option.is-selected {
+  border-color: var(--accent-strong);
+  background: rgba(159, 122, 234, 0.22);
+  box-shadow: 0 0 0 1px var(--accent-strong);
+}
+
+.emoji-picker-hint {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .landing-emoji-chip {
     animation: none;
@@ -675,5 +720,9 @@ h3 {
 
   .footer-version {
     margin-left: 0;
+  }
+
+  .emoji-picker-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

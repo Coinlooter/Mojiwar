@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { STARTER_EMOJIS } from "@/constants/starter-emojis";
+
 export const createCharacterSchema = z.object({
-  emoji: z.string().trim().min(1).max(16),
+  emoji: z.enum(STARTER_EMOJIS),
   name: z.string().trim().min(2).max(32),
 });
 
