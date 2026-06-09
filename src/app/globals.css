@@ -894,6 +894,121 @@ input {
   margin-top: 12px;
 }
 
+.leaderboard-summary-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.leaderboard-summary-rank {
+  color: var(--accent-strong);
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.leaderboard-summary-emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.leaderboard-summary h2 {
+  margin: 0 0 4px;
+}
+
+.leaderboard-table {
+  display: grid;
+  gap: 10px;
+}
+
+.leaderboard-header,
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1.4fr) repeat(4, minmax(56px, 0.7fr));
+  gap: 10px;
+  align-items: center;
+}
+
+.leaderboard-header {
+  padding: 0 16px 8px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.leaderboard-row {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 14px 16px;
+}
+
+.leaderboard-row-current {
+  border-color: rgba(52, 211, 153, 0.45);
+  background: rgba(52, 211, 153, 0.1);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2);
+}
+
+.leaderboard-row-top-1 {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.leaderboard-row-top-2 {
+  border-color: rgba(203, 213, 225, 0.4);
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.leaderboard-row-top-3 {
+  border-color: rgba(251, 146, 60, 0.4);
+  background: rgba(251, 146, 60, 0.08);
+}
+
+.leaderboard-rank {
+  font-size: 1.35rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.leaderboard-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.leaderboard-emoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.leaderboard-player strong {
+  display: inline;
+}
+
+.leaderboard-you-badge {
+  margin-left: 8px;
+  border-radius: 999px;
+  background: var(--success);
+  color: #052e1c;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 7px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.leaderboard-stat {
+  text-align: center;
+  font-weight: 800;
+}
+
+.leaderboard-stat-win {
+  color: var(--success);
+}
+
 .eyebrow {
   color: var(--accent-strong);
   font-size: 0.8rem;
@@ -1768,5 +1883,15 @@ h3 {
 
   .battle-result-stats {
     grid-template-columns: 1fr;
+  }
+
+  .leaderboard-table {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .leaderboard-header,
+  .leaderboard-row {
+    min-width: 620px;
   }
 }

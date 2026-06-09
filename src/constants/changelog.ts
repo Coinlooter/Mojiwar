@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.8",
+    changes: [
+      "Rangliste — Top-Spieler nach Siegen mit eigenem Platz und Navigation",
+    ],
+  },
+  {
     version: "1.1.7",
     changes: [
       "Navigation — Menuepunkt Karten heisst jetzt Inventar",

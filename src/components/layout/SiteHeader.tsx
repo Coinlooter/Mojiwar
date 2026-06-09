@@ -1,3 +1,4 @@
+import type { Route } from "next";
 import Link from "next/link";
 
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
@@ -6,6 +7,7 @@ const navItems = [
   { href: "/dashboard", label: "Mein Spiel" },
   { href: "/opponents", label: "Gegner" },
   { href: "/deck", label: "Inventar" },
+  { href: "/leaderboard", label: "Rangliste" },
 ] as const;
 
 export function SiteHeader() {
@@ -25,7 +27,7 @@ export function SiteHeader() {
         <nav className="site-nav" aria-label="Hauptnavigation">
           <div className="nav-links">
             {navItems.map((item) => (
-              <Link href={item.href} key={item.href}>
+              <Link href={item.href as Route} key={item.href}>
                 {item.label}
               </Link>
             ))}

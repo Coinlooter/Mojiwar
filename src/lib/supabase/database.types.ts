@@ -50,6 +50,8 @@ export type Database = {
           base_speed: number;
           base_crit_chance: number;
           power: number;
+          wins: number;
+          losses: number;
           is_bot: boolean;
           created_at: string;
           updated_at: string;
@@ -67,6 +69,8 @@ export type Database = {
           base_speed?: number;
           base_crit_chance?: number;
           power?: number;
+          wins?: number;
+          losses?: number;
           is_bot?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -84,6 +88,8 @@ export type Database = {
           base_speed?: number;
           base_crit_chance?: number;
           power?: number;
+          wins?: number;
+          losses?: number;
           is_bot?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -268,6 +274,21 @@ export type Database = {
           p_defender_power_after: number;
         };
         Returns: string;
+      };
+      get_leaderboard: {
+        Args: {
+          p_limit?: number;
+        };
+        Returns: {
+          rank: number;
+          character_id: string;
+          emoji: string;
+          name: string;
+          level: number;
+          power: number;
+          wins: number;
+          losses: number;
+        }[];
       };
     };
     Enums: {

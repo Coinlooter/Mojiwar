@@ -140,6 +140,9 @@ export default async function DashboardPage() {
           <Link className="button" href="/deck">
             Inventar oeffnen
           </Link>
+          <Link className="button" href={"/leaderboard" as Route}>
+            Rangliste
+          </Link>
         </div>
       </section>
 
