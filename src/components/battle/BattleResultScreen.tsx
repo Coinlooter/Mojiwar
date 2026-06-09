@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 
+import { GameCard } from "@/components/cards/GameCard";
 import type { CardRarity } from "@/lib/game/types";
 
 export type BattleLootCard = {
@@ -17,12 +18,6 @@ export type BattleSummary = {
   rounds: number;
   xpGained: number;
   loot?: BattleLootCard;
-};
-
-const rarityLabel: Record<CardRarity, string> = {
-  common: "Gewoehnlich",
-  rare: "Selten",
-  epic: "Episch",
 };
 
 export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
@@ -68,14 +63,15 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
         {won && loot ? (
           <div className="battle-result-loot">
             <p className="eyebrow">Beute</p>
-            <article className="battle-result-loot-card">
-              <div className="emoji">{loot.emoji}</div>
-              <div>
-                <p className="eyebrow">{rarityLabel[loot.rarity]}</p>
-                <h3>{loot.name}</h3>
-                <p className="muted">{loot.description}</p>
-              </div>
-            </article>
+            <div className="battle-result-loot-display">
+              <GameCard
+                description={loot.description}
+                emoji={loot.emoji}
+                name={loot.name}
+                rarity={loot.rarity}
+                size="lg"
+              />
+            </div>
             <p className="muted battle-result-loot-hint">
               Die Karte liegt jetzt in deiner Sammlung. Rueste sie auf der
               Karten-Seite aus.
