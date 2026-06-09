@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.9",
+    changes: [
+      "Hintergrund — Comic-Kampfszene mit kaempfenden Emojis als App-Wallpaper",
+    ],
+  },
+  {
     version: "1.1.8",
     changes: [
       "Rangliste — Top-Spieler nach Siegen mit eigenem Platz und Navigation",
