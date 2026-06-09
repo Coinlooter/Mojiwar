@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.7",
+    changes: [
+      "Navigation — Menuepunkt Karten heisst jetzt Inventar",
+      "Inventar — Karten per Drag and Drop in Deck-Slots ziehen und zurueck ins Inventar legen",
+    ],
+  },
+  {
     version: "1.1.6",
     changes: [
       "Karten — neues Spielkarten-Design mit Muster und Qualitaets-Rand (Gewoehnlich, Selten, Episch)",

@@ -807,6 +807,85 @@ input {
   background: rgba(0, 0, 0, 0.18);
   color: var(--muted);
   font-size: 0.88rem;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.inventory-board-pending {
+  pointer-events: none;
+}
+
+.inventory-board-error {
+  margin: 0 0 16px;
+}
+
+.inventory-board-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.inventory-board-hint {
+  margin: 0 0 16px;
+}
+
+.deck-slot-drop {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  min-height: 100%;
+}
+
+.deck-slot-drop-hover .deck-slot-empty,
+.deck-slot-drop-hover.deck-slot-drop-filled {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 4px;
+  border-radius: 16px;
+}
+
+.deck-slot-drop-hover .deck-slot-empty {
+  border-color: var(--accent-strong);
+  background: rgba(159, 122, 234, 0.14);
+  color: #e9d5ff;
+}
+
+.inventory-draggable {
+  cursor: grab;
+  touch-action: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.inventory-draggable:active {
+  cursor: grabbing;
+}
+
+.inventory-draggable.is-dragging {
+  opacity: 0.45;
+  transform: scale(0.96);
+}
+
+.inventory-collection {
+  border: 2px dashed transparent;
+  border-radius: 24px;
+  padding: 8px;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.inventory-collection-hover,
+.inventory-collection-unequip.inventory-collection-hover {
+  border-color: var(--accent-strong);
+  background: rgba(159, 122, 234, 0.08);
+}
+
+.inventory-collection-empty {
+  width: 100%;
 }
 
 .battle-result-loot-display {

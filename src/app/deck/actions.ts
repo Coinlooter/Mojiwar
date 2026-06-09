@@ -19,6 +19,8 @@ const unequipSchema = z.object({
   slotIndex: z.coerce.number().int().min(0).max(MAX_STARTER_DECK_SIZE - 1),
 });
 
+export type DeckActionError = "invalid" | "card" | "slot";
+
 async function refreshCharacterPower(characterId: string) {
   const { supabase } = await requireCharacter();
   const loadout = await fetchCharacterLoadout(supabase, characterId);
@@ -33,17 +35,23 @@ async function refreshCharacterPower(characterId: string) {
     .eq("id", characterId);
 }
 
-export async function equipDeckSlot(formData: FormData) {
-  const { supabase, user, character } = await requireCharacter();
+function revalidateDeckPaths() {
+  revalidatePath("/deck");
+  revalidatePath("/dashboard");
+  revalidatePath("/opponents");
+}
 
-  const parsed = equipSchema.safeParse({
-    playerCardId: formData.get("playerCardId"),
-    slotIndex: formData.get("slotIndex"),
-  });
+export async function equipDeckSlotById(
+  playerCardId: string,
+  slotIndex: number,
+): Promise<{ ok: true } | { ok: false; error: DeckActionError }> {
+  const parsed = equipSchema.safeParse({ playerCardId, slotIndex });
 
   if (!parsed.success) {
-    redirect("/deck?error=invalid" as Route);
+    return { ok: false, error: "invalid" };
   }
+
+  const { supabase, user, character } = await requireCharacter();
 
   const { data: ownedCard } = await supabase
     .from("player_cards")
@@ -53,7 +61,7 @@ export async function equipDeckSlot(formData: FormData) {
     .maybeSingle();
 
   if (!ownedCard) {
-    redirect("/deck?error=card" as Route);
+    return { ok: false, error: "card" };
   }
 
   await supabase
@@ -74,26 +82,25 @@ export async function equipDeckSlot(formData: FormData) {
   });
 
   if (error) {
-    redirect("/deck?error=slot" as Route);
+    return { ok: false, error: "slot" };
   }
 
   await refreshCharacterPower(character.id);
-  revalidatePath("/deck");
-  revalidatePath("/dashboard");
-  revalidatePath("/opponents");
-  redirect("/deck" as Route);
+  revalidateDeckPaths();
+
+  return { ok: true };
 }
 
-export async function unequipDeckSlot(formData: FormData) {
-  const { supabase, character } = await requireCharacter();
-
-  const parsed = unequipSchema.safeParse({
-    slotIndex: formData.get("slotIndex"),
-  });
+export async function unequipDeckSlotByIndex(
+  slotIndex: number,
+): Promise<{ ok: true } | { ok: false; error: DeckActionError }> {
+  const parsed = unequipSchema.safeParse({ slotIndex });
 
   if (!parsed.success) {
-    redirect("/deck?error=invalid" as Route);
+    return { ok: false, error: "invalid" };
   }
+
+  const { supabase, character } = await requireCharacter();
 
   const { error } = await supabase
     .from("deck_slots")
@@ -102,12 +109,51 @@ export async function unequipDeckSlot(formData: FormData) {
     .eq("slot_index", parsed.data.slotIndex);
 
   if (error) {
-    redirect("/deck?error=slot" as Route);
+    return { ok: false, error: "slot" };
   }
 
   await refreshCharacterPower(character.id);
-  revalidatePath("/deck");
-  revalidatePath("/dashboard");
-  revalidatePath("/opponents");
+  revalidateDeckPaths();
+
+  return { ok: true };
+}
+
+export async function equipDeckSlot(formData: FormData) {
+  const parsed = equipSchema.safeParse({
+    playerCardId: formData.get("playerCardId"),
+    slotIndex: formData.get("slotIndex"),
+  });
+
+  if (!parsed.success) {
+    redirect("/deck?error=invalid" as Route);
+  }
+
+  const result = await equipDeckSlotById(
+    parsed.data.playerCardId,
+    parsed.data.slotIndex,
+  );
+
+  if (!result.ok) {
+    redirect(`/deck?error=${result.error}` as Route);
+  }
+
+  redirect("/deck" as Route);
+}
+
+export async function unequipDeckSlot(formData: FormData) {
+  const parsed = unequipSchema.safeParse({
+    slotIndex: formData.get("slotIndex"),
+  });
+
+  if (!parsed.success) {
+    redirect("/deck?error=invalid" as Route);
+  }
+
+  const result = await unequipDeckSlotByIndex(parsed.data.slotIndex);
+
+  if (!result.ok) {
+    redirect(`/deck?error=${result.error}` as Route);
+  }
+
   redirect("/deck" as Route);
 }
