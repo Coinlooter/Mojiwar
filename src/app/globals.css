@@ -21,10 +21,24 @@
 
 html {
   min-height: 100%;
-  background:
-    radial-gradient(circle at top left, rgba(159, 122, 234, 0.28), transparent 34rem),
-    radial-gradient(circle at bottom right, rgba(52, 211, 153, 0.18), transparent 28rem),
-    var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at top left, rgba(159, 122, 234, 0.2), transparent 34rem),
+    radial-gradient(circle at bottom right, rgba(52, 211, 153, 0.12), transparent 28rem),
+    linear-gradient(180deg, rgba(7, 8, 18, 0.78), rgba(7, 8, 18, 0.9)),
+    url("/backgrounds/mojiwar-comic-background.png");
+  background-position:
+    top left,
+    bottom right,
+    center,
+    center;
+  background-size:
+    auto,
+    auto,
+    cover,
+    cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 body {
