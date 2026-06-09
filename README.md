@@ -55,11 +55,17 @@ Tables:
 All public tables have RLS enabled. Client-visible keys must be provided via:
 
 ```txt
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+NEXT_PUBLIC_SUPABASE_URL=https://xqbnqfntxeaqbcjakzfd.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_WSExgYEUSmMbfKqCkCoOuA_UQsUHRRK
 ```
 
 Copy `.env.example` to `.env.local` for local development.
+
+Project:
+
+- Supabase project: `Mojiwar`
+- Project ref: `xqbnqfntxeaqbcjakzfd`
+- Region: `eu-west-1`
 
 ## Local development
 
