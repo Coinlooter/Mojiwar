@@ -11,7 +11,13 @@ const sideLabel: Record<FighterSide, string> = {
 
 const EVENT_STEP_MS = 900;
 
-export function BattleReplay({ result }: { result: BattleResult }) {
+export function BattleReplay({
+  result,
+  onComplete,
+}: {
+  result: BattleResult;
+  onComplete?: () => void;
+}) {
   const [visibleEvents, setVisibleEvents] = useState(1);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -53,6 +59,14 @@ export function BattleReplay({ result }: { result: BattleResult }) {
       window.clearTimeout(timer);
     };
   }, [isComplete, prefersReducedMotion, result.events.length, visibleEvents]);
+
+  useEffect(() => {
+    if (!isComplete) {
+      return;
+    }
+
+    onComplete?.();
+  }, [isComplete, onComplete]);
 
   return (
     <section className="replay-shell" aria-label="Kampf-Replay">

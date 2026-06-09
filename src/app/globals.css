@@ -648,6 +648,118 @@ h3 {
   flex: 1;
 }
 
+.battle-result-screen {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: min(72vh, 720px);
+  padding: 12px 0 24px;
+}
+
+.battle-result-backdrop {
+  position: absolute;
+  inset: -12px -8px auto;
+  height: 100%;
+  border-radius: 32px;
+  pointer-events: none;
+}
+
+.battle-result-win .battle-result-backdrop {
+  background:
+    radial-gradient(circle at top, rgba(52, 211, 153, 0.22), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(159, 122, 234, 0.16), transparent 45%);
+}
+
+.battle-result-lose .battle-result-backdrop {
+  background:
+    radial-gradient(circle at top, rgba(251, 113, 133, 0.2), transparent 55%),
+    radial-gradient(circle at bottom left, rgba(159, 122, 234, 0.1), transparent 45%);
+}
+
+.battle-result-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 640px);
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.battle-result-win .battle-result-card {
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.battle-result-lose .battle-result-card {
+  border-color: rgba(251, 113, 133, 0.35);
+}
+
+.battle-result-title {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+}
+
+.battle-result-lead {
+  margin: 0 auto;
+}
+
+.battle-result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.battle-result-stat {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 16px 12px;
+}
+
+.battle-result-stat-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.battle-result-xp-win {
+  color: var(--success);
+}
+
+.battle-result-loot {
+  margin-top: 28px;
+  text-align: left;
+}
+
+.battle-result-loot-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-top: 10px;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: 22px;
+  background: rgba(52, 211, 153, 0.08);
+  padding: 18px;
+}
+
+.battle-result-loot-card .emoji {
+  font-size: 3.2rem;
+}
+
+.battle-result-loot-hint,
+.battle-result-no-loot {
+  margin: 14px 0 0;
+}
+
+.battle-result-actions {
+  justify-content: center;
+  margin-top: 28px;
+}
+
 .form-card {
   display: grid;
   gap: 14px;
@@ -754,5 +866,9 @@ h3 {
 
   .emoji-picker-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .battle-result-stats {
+    grid-template-columns: 1fr;
   }
 }
