@@ -638,6 +638,16 @@ h3 {
   padding: 14px;
 }
 
+.event-card-latest {
+  border-color: var(--accent-strong);
+  background: rgba(159, 122, 234, 0.14);
+}
+
+.replay-status {
+  margin: 0;
+  flex: 1;
+}
+
 .form-card {
   display: grid;
   gap: 14px;

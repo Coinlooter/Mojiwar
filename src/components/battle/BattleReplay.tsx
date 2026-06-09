@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { BattleEvent, BattleResult, FighterSide } from "@/lib/game/types";
 
@@ -9,10 +9,50 @@ const sideLabel: Record<FighterSide, string> = {
   defender: "Verteidiger",
 };
 
+const EVENT_STEP_MS = 900;
+
 export function BattleReplay({ result }: { result: BattleResult }) {
-  const [visibleEvents, setVisibleEvents] = useState(4);
-  const shownEvents = result.events.slice(0, visibleEvents);
-  const isComplete = visibleEvents >= result.events.length;
+  const [visibleEvents, setVisibleEvents] = useState(1);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  const shownEventCount = prefersReducedMotion
+    ? result.events.length
+    : visibleEvents;
+  const shownEvents = result.events.slice(0, shownEventCount);
+  const isComplete = shownEventCount >= result.events.length;
+  const fighterHp = useMemo(
+    () => deriveFighterHp(result, shownEvents),
+    [result, shownEvents],
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const updatePreference = () => {
+      setPrefersReducedMotion(media.matches);
+    };
+
+    updatePreference();
+    media.addEventListener("change", updatePreference);
+
+    return () => {
+      media.removeEventListener("change", updatePreference);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || isComplete) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setVisibleEvents((count) => Math.min(count + 1, result.events.length));
+    }, EVENT_STEP_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [isComplete, prefersReducedMotion, result.events.length, visibleEvents]);
 
   return (
     <section className="replay-shell" aria-label="Kampf-Replay">
@@ -21,33 +61,36 @@ export function BattleReplay({ result }: { result: BattleResult }) {
         <div className="fighter-row">
           <FighterPanel
             emoji={result.attackerSnapshot.emoji}
+            hp={fighterHp.attacker}
+            maxHp={result.attackerSnapshot.finalStats.hp}
             name={result.attackerSnapshot.name}
             power={result.attackerSnapshot.power}
-            hp={result.attackerSnapshot.finalStats.hp}
           />
           <strong>VS</strong>
           <FighterPanel
             emoji={result.defenderSnapshot.emoji}
+            hp={fighterHp.defender}
+            maxHp={result.defenderSnapshot.finalStats.hp}
             name={result.defenderSnapshot.name}
             power={result.defenderSnapshot.power}
-            hp={result.defenderSnapshot.finalStats.hp}
           />
         </div>
 
         <div className="actions">
-          <button
-            className="button primary"
-            type="button"
-            onClick={() => setVisibleEvents((count) => Math.min(count + 2, result.events.length))}
-            disabled={isComplete}
-          >
-            Naechste Events
-          </button>
+          {!isComplete ? (
+            <p className="muted replay-status" aria-live="polite">
+              Kampf laeuft automatisch ab...
+            </p>
+          ) : (
+            <p className="muted replay-status" aria-live="polite">
+              Kampf beendet.
+            </p>
+          )}
           <button
             className="button"
-            type="button"
-            onClick={() => setVisibleEvents(result.events.length)}
             disabled={isComplete}
+            onClick={() => setVisibleEvents(result.events.length)}
+            type="button"
           >
             Ueberspringen
           </button>
@@ -56,9 +99,13 @@ export function BattleReplay({ result }: { result: BattleResult }) {
 
       <aside className="panel battle-card">
         <p className="eyebrow">Kampf-Log</p>
-        <div className="event-list">
+        <div className="event-list" aria-live="polite">
           {shownEvents.map((event, index) => (
-            <BattleEventCard event={event} key={`${event.type}-${event.round}-${index}`} />
+            <BattleEventCard
+              event={event}
+              isLatest={index === shownEvents.length - 1 && !isComplete}
+              key={`${event.type}-${event.round}-${index}`}
+            />
           ))}
         </div>
       </aside>
@@ -66,31 +113,79 @@ export function BattleReplay({ result }: { result: BattleResult }) {
   );
 }
 
+function deriveFighterHp(result: BattleResult, events: BattleEvent[]) {
+  let attackerHp = result.attackerSnapshot.finalStats.hp;
+  let defenderHp = result.defenderSnapshot.finalStats.hp;
+
+  for (const event of events) {
+    if (event.type === "attack") {
+      if (event.target === "attacker") {
+        attackerHp = event.targetHpAfter;
+      } else {
+        defenderHp = event.targetHpAfter;
+      }
+    }
+
+    if (event.type === "card_effect") {
+      if (event.target === "attacker") {
+        attackerHp = event.targetHpAfter ?? attackerHp;
+      }
+
+      if (event.target === "defender") {
+        defenderHp = event.targetHpAfter ?? defenderHp;
+      }
+
+      if (event.actorHpAfter !== undefined) {
+        if (event.actor === "attacker") {
+          attackerHp = event.actorHpAfter;
+        } else {
+          defenderHp = event.actorHpAfter;
+        }
+      }
+    }
+
+    if (event.type === "battle_finished") {
+      attackerHp = event.attackerHp;
+      defenderHp = event.defenderHp;
+    }
+  }
+
+  return { attacker: attackerHp, defender: defenderHp };
+}
+
 function FighterPanel({
   emoji,
   name,
   power,
   hp,
+  maxHp,
 }: {
   emoji: string;
   name: string;
   power: number;
   hp: number;
+  maxHp: number;
 }) {
   return (
     <div className="fighter">
       <div className="emoji">{emoji}</div>
       <h3>{name}</h3>
       <p className="muted">
-        Power {power} · {hp} HP
+        Power {power} · {hp}/{maxHp} HP
       </p>
     </div>
   );
 }
 
-function BattleEventCard({ event }: { event: BattleEvent }) {
+function BattleEventCard({
+  event,
+  isLatest,
+}: {
+  event: BattleEvent;
+  isLatest: boolean;
+}) {
   return (
-    <article className="event-card">
+    <article className={`event-card${isLatest ? " event-card-latest" : ""}`}>
       <strong>{formatEventTitle(event)}</strong>
       <p className="muted" style={{ margin: "6px 0 0" }}>
         {formatEventDetails(event)}
