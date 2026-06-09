@@ -13,7 +13,7 @@ export function SiteFooter() {
       <footer className="site-footer glass-chrome">
         <div className="site-chrome-inner site-footer-inner" data-testid="site-footer">
           <span className="footer-meta">
-            Asynchrones Multiplayer-RPG · serverseitige Kaempfe · permanente Karten
+            Baue dein Emoji · kaempfe gegen andere · sammle Karten
           </span>
           <span className="footer-separator" aria-hidden>
             ·

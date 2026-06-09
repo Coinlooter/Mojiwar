@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Mojiwar",
-  description: "Async multiplayer emoji auto-battler RPG.",
+  description: "Baue dein Emoji, kaempfe gegen andere Spieler und sammle Karten.",
 };
 
 export default function RootLayout({

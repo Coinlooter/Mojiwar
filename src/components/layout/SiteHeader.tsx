@@ -3,9 +3,9 @@ import Link from "next/link";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard", label: "Mein Spiel" },
   { href: "/opponents", label: "Gegner" },
-  { href: "/deck", label: "Deck" },
+  { href: "/deck", label: "Karten" },
 ] as const;
 
 export function SiteHeader() {
@@ -18,7 +18,7 @@ export function SiteHeader() {
           </span>
           <span className="brand-copy">
             <span className="brand-title">Mojiwar</span>
-            <span className="brand-subtitle">Async Emoji Auto-Battler</span>
+            <span className="brand-subtitle">Emoji-Kampfspiel</span>
           </span>
         </Link>
 
@@ -30,7 +30,7 @@ export function SiteHeader() {
               </Link>
             ))}
           </div>
-          <StartPlayingButton>Sofort spielen</StartPlayingButton>
+          <StartPlayingButton>Jetzt spielen</StartPlayingButton>
         </nav>
       </div>
     </header>

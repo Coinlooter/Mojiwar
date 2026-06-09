@@ -40,40 +40,23 @@ const demoBattle = simulateBattle({
   },
 });
 
-const highlights = [
-  {
-    value: "3",
-    label: "Start-Deck Slots",
-  },
-  {
-    value: "±15%",
-    label: "Auto-Matchmaking Range",
-  },
-  {
-    value: "100%",
-    label: "Serverseitige Kampfentscheidung",
-  },
-  {
-    value: "1",
-    label: "Permanente Karte fuer Gewinner",
-  },
-] as const;
+const heroEmojis = ["🦊", "🐸", "👻", "🤖", "🐉", "🦄"] as const;
 
-const features = [
+const playSteps = [
   {
-    title: "Pure Battle Engine",
-    description:
-      "Kampfregeln sind von React und Supabase getrennt und koennen isoliert getestet werden.",
+    emoji: "🎨",
+    title: "Waehle dein Emoji",
+    description: "Gib ihm einen coolen Namen. Das ist dein Held im Spiel.",
   },
   {
-    title: "Battle-Logs als Replay",
-    description:
-      "Die UI animiert gespeicherte Events. Alte Kaempfe bleiben auch nach spaeteren Regelversionen nachvollziehbar.",
+    emoji: "⚔️",
+    title: "Fordere Gegner heraus",
+    description: "Dein Emoji kaempft automatisch. Du musst nicht die ganze Zeit online sein.",
   },
   {
-    title: "Supabase mit RLS",
-    description:
-      "Client-Aktionen starten nur Herausforderungen. Ergebnis, XP und Kartenrewards entstehen serverseitig.",
+    emoji: "🃏",
+    title: "Sammle Karten",
+    description: "Wenn du gewinnst, bekommst du neue Karten fuer dein Deck.",
   },
 ] as const;
 
@@ -84,74 +67,95 @@ export default function Home() {
       : demoBattle.defenderSnapshot;
 
   return (
-    <>
+    <div className="landing-page">
       <section className="hero landing-hero">
         <div className="hero-copy">
-          <p className="eyebrow">Async Emoji Auto-Battler</p>
-          <h1>Baue dein Emoji. Gewinne Karten. Schlafe, waehrend du kaempfst.</h1>
+          <div className="landing-emoji-strip" aria-hidden>
+            {heroEmojis.map((emoji) => (
+              <span className="landing-emoji-chip" key={emoji}>
+                {emoji}
+              </span>
+            ))}
+          </div>
+
+          <p className="eyebrow">Dein Emoji-Kampfspiel</p>
+          <h1>Baue deinen Helden. Kaempfe. Gewinne Karten.</h1>
           <p className="lead">
-            Mojiwar ist ein asynchrones Multiplayer-RPG: Du forderst gezielt
-            Gegner heraus oder findest automatisch passende Matches in deiner
-            Kampfkraft-Range. Der Kampf wird fair serverseitig simuliert und als
-            ueberspringbares Replay abgespielt.
+            In Mojiwar erstellst du dein eigenes Emoji und schickst es in
+            spannende Kaempfe. Gegner muessen nicht gleichzeitig online sein —
+            dein Held kaempft auch, wenn du gerade etwas anderes machst.
           </p>
           <div className="actions">
-            <StartPlayingButton />
+            <StartPlayingButton>Jetzt spielen</StartPlayingButton>
             <Link className="button" href="/battle/demo">
-              Demo-Kampf
+              Kampf ansehen
             </Link>
           </div>
         </div>
 
-        <aside className="panel battle-card landing-battle-card" aria-label="Demo Kampf Ergebnis">
-          <p className="eyebrow">Letzter Kampf</p>
+        <aside
+          className="panel battle-card landing-battle-card landing-arena"
+          aria-label="Beispielkampf"
+        >
+          <p className="landing-arena-badge">Live im Kampf!</p>
           <div className="fighter-row">
-            <div className="fighter">
+            <div className="fighter landing-fighter">
               <div className="emoji">{demoBattle.attackerSnapshot.emoji}</div>
               <h3>{demoBattle.attackerSnapshot.name}</h3>
-              <p className="muted">
-                Power {demoBattle.attackerSnapshot.power} · Level{" "}
-                {demoBattle.attackerSnapshot.level}
-              </p>
+              <p className="muted">Level {demoBattle.attackerSnapshot.level}</p>
             </div>
-            <strong>VS</strong>
-            <div className="fighter">
+            <span className="landing-vs">VS</span>
+            <div className="fighter landing-fighter">
               <div className="emoji">{demoBattle.defenderSnapshot.emoji}</div>
               <h3>{demoBattle.defenderSnapshot.name}</h3>
-              <p className="muted">
-                Power {demoBattle.defenderSnapshot.power} · Level{" "}
-                {demoBattle.defenderSnapshot.level}
-              </p>
+              <p className="muted">Level {demoBattle.defenderSnapshot.level}</p>
             </div>
           </div>
-          <p className="battle-result">
-            Gewinner: <strong>{winner.emoji} {winner.name}</strong> nach{" "}
-            {demoBattle.rounds} Runden
+          <p className="battle-result landing-winner">
+            <span className="landing-trophy" aria-hidden>
+              🏆
+            </span>
+            <strong>
+              {winner.emoji} {winner.name}
+            </strong>{" "}
+            hat gewonnen!
           </p>
         </aside>
       </section>
 
-      <section className="stat-grid" aria-label="MVP Kennzahlen">
-        {highlights.map((item) => (
-          <div className="stat-card" key={item.label}>
-            <div className="stat-value">{item.value}</div>
-            <p className="muted">{item.label}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="section">
-        <p className="eyebrow">Architektur</p>
-        <h2>So bleibt das Spiel erweiterbar.</h2>
-        <div className="feature-grid">
-          {features.map((feature) => (
-            <article className="feature-card" key={feature.title}>
-              <h3>{feature.title}</h3>
-              <p className="muted">{feature.description}</p>
+      <section className="section landing-steps" aria-label="So spielst du">
+        <p className="eyebrow">So spielst du</p>
+        <h2>In drei Schritten geht es los.</h2>
+        <div className="landing-step-grid">
+          {playSteps.map((step, index) => (
+            <article className="landing-step-card" key={step.title}>
+              <span className="landing-step-number">{index + 1}</span>
+              <div className="landing-step-emoji" aria-hidden>
+                {step.emoji}
+              </div>
+              <h3>{step.title}</h3>
+              <p className="muted">{step.description}</p>
             </article>
           ))}
         </div>
       </section>
-    </>
+
+      <section className="section landing-cards" aria-label="Karten sammeln">
+        <p className="eyebrow">Karten sammeln</p>
+        <h2>Staerkere Emojis brauchen starke Karten.</h2>
+        <p className="lead landing-cards-lead">
+          Jede Karte gibt deinem Emoji neue Kraefte. Baue dein Lieblingsdeck
+          und werde zum Champion.
+        </p>
+        <div className="landing-card-showcase">
+          {starterCards.map((card) => (
+            <article className="landing-card-tile" key={card.id}>
+              <div className="landing-card-emoji">{card.emoji}</div>
+              <h3>{card.name}</h3>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

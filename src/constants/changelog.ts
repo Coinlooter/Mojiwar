@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.0.2",
+    changes: [
+      "Startseite — kindgerechte Spielsprache statt technischer Details",
+      "Startseite — Emoji-Strip, So-spielst-du-Schritte und Karten-Showcase",
+      "Navigation — Mein Spiel, Gegner und Karten statt Dashboard und Deck",
+    ],
+  },
+  {
     version: "1.0.1",
     changes: [
       "Startseite — fester Header und Footer auf allen Seiten",
