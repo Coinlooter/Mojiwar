@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
+import { GameCard } from "@/components/cards/GameCard";
 import { landingDemoBattle } from "@/constants/landing-demo";
 import { starterCards } from "@/lib/game/cards";
 
@@ -115,10 +116,13 @@ export default function Home() {
         </p>
         <div className="landing-card-showcase">
           {starterCards.map((card) => (
-            <article className="landing-card-tile" key={card.id}>
-              <div className="landing-card-emoji">{card.emoji}</div>
-              <h3>{card.name}</h3>
-            </article>
+            <GameCard
+              emoji={card.emoji}
+              key={card.id}
+              name={card.name}
+              rarity={card.rarity}
+              size="sm"
+            />
           ))}
         </div>
       </section>

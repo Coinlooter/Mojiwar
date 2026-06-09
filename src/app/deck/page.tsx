@@ -1,4 +1,5 @@
 import { equipDeckSlot, unequipDeckSlot } from "@/app/deck/actions";
+import { GameCard } from "@/components/cards/GameCard";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { requireCharacter } from "@/lib/auth/require-character";
 import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
@@ -40,6 +41,7 @@ export default async function DeckPage({
     : { data: [] };
 
   const cardsById = new Map((cardRows ?? []).map((card) => [card.id, mapCardRow(card)]));
+  const ownedCardsById = new Map((ownedCards ?? []).map((ownedCard) => [ownedCard.id, ownedCard]));
   const activeBySlot = new Map(
     (deckSlots ?? []).map((slot) => [slot.slot_index, slot.player_card_id]),
   );
@@ -64,16 +66,24 @@ export default async function DeckPage({
 
       <section className="section">
         <p className="eyebrow">Aktive Slots</p>
-        <div className="feature-grid">
+        <div className="deck-slot-grid">
           {Array.from({ length: MAX_STARTER_DECK_SIZE }, (_, slotIndex) => {
             const activeCardId = activeBySlot.get(slotIndex);
+            const ownedCard = activeCardId ? ownedCardsById.get(activeCardId) : null;
+            const card = ownedCard ? cardsById.get(ownedCard.card_id) : null;
 
             return (
-              <article className="feature-card" key={slotIndex}>
-                <p className="eyebrow">Slot {slotIndex + 1}</p>
-                {activeCardId ? (
+              <div className="deck-slot-card" key={slotIndex}>
+                <p className="deck-slot-label">Slot {slotIndex + 1}</p>
+                {card ? (
                   <>
-                    <p className="muted">Karte ist aktiv.</p>
+                    <GameCard
+                      active
+                      description={card.description}
+                      emoji={card.emoji}
+                      name={card.name}
+                      rarity={card.rarity}
+                    />
                     <form action={unequipDeckSlot}>
                       <input name="slotIndex" type="hidden" value={slotIndex} />
                       <SubmitButton pendingLabel="Wird entfernt...">
@@ -82,15 +92,16 @@ export default async function DeckPage({
                     </form>
                   </>
                 ) : (
-                  <p className="muted">Noch leer.</p>
+                  <div className="deck-slot-empty">Noch leer</div>
                 )}
-              </article>
+              </div>
             );
           })}
         </div>
       </section>
 
-      <section className="section feature-grid" aria-label="Kartensammlung">
+      <section className="section">
+        <p className="eyebrow">Kartensammlung</p>
         {(ownedCards ?? []).length === 0 ? (
           <article className="feature-card">
             <p className="muted">
@@ -98,46 +109,53 @@ export default async function DeckPage({
               sammeln.
             </p>
           </article>
-        ) : null}
+        ) : (
+          <div className="deck-card-grid" aria-label="Kartensammlung">
+            {(ownedCards ?? []).map((ownedCard) => {
+              const card = cardsById.get(ownedCard.card_id);
 
-        {(ownedCards ?? []).map((ownedCard) => {
-          const card = cardsById.get(ownedCard.card_id);
+              if (!card) {
+                return null;
+              }
 
-          if (!card) {
-            return null;
-          }
+              const active = activeCardIds.has(ownedCard.id);
 
-          const active = activeCardIds.has(ownedCard.id);
-
-          return (
-            <article className="feature-card" key={ownedCard.id}>
-              <div className="emoji">{card.emoji}</div>
-              <p className="eyebrow">{card.rarity}</p>
-              <h3>{card.name}</h3>
-              <p className="muted">{card.description}</p>
-              <p style={{ color: active ? "var(--success)" : "var(--muted)" }}>
-                {active ? "Aktiv im Deck" : "In Sammlung"}
-              </p>
-              {!active ? (
-                <div className="actions">
-                  {Array.from({ length: MAX_STARTER_DECK_SIZE }, (_, slotIndex) => (
-                    <form action={equipDeckSlot} key={`${ownedCard.id}-${slotIndex}`}>
-                      <input
-                        name="playerCardId"
-                        type="hidden"
-                        value={ownedCard.id}
-                      />
-                      <input name="slotIndex" type="hidden" value={slotIndex} />
-                      <SubmitButton pendingLabel="Wird ausgeruestet...">
-                        Slot {slotIndex + 1}
-                      </SubmitButton>
-                    </form>
-                  ))}
+              return (
+                <div className="deck-card-item" key={ownedCard.id}>
+                  <GameCard
+                    active={active}
+                    description={card.description}
+                    emoji={card.emoji}
+                    name={card.name}
+                    rarity={card.rarity}
+                  />
+                  <div className="deck-card-meta">
+                    <p style={{ color: active ? "var(--success)" : "var(--muted)" }}>
+                      {active ? "Aktiv im Deck" : "In Sammlung"}
+                    </p>
+                    {!active ? (
+                      <div className="actions" style={{ justifyContent: "center" }}>
+                        {Array.from({ length: MAX_STARTER_DECK_SIZE }, (_, slotIndex) => (
+                          <form action={equipDeckSlot} key={`${ownedCard.id}-${slotIndex}`}>
+                            <input
+                              name="playerCardId"
+                              type="hidden"
+                              value={ownedCard.id}
+                            />
+                            <input name="slotIndex" type="hidden" value={slotIndex} />
+                            <SubmitButton pendingLabel="Wird ausgeruestet...">
+                              Slot {slotIndex + 1}
+                            </SubmitButton>
+                          </form>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-              ) : null}
-            </article>
-          );
-        })}
+              );
+            })}
+          </div>
+        )}
       </section>
     </>
   );

@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.6",
+    changes: [
+      "Karten — neues Spielkarten-Design mit Muster und Qualitaets-Rand (Gewoehnlich, Selten, Episch)",
+    ],
+  },
+  {
     version: "1.1.5",
     changes: [
       "UX — Ladeanzeige bei Buttons und Navigation, Startseite scrollt wieder mit dem Mausrad",

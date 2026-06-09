@@ -550,37 +550,269 @@ input {
 
 .landing-card-showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-}
-
-.landing-card-tile {
-  display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 16px;
   justify-items: center;
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 16px 12px;
+}
+
+.game-card {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 5 / 7;
+  transition: transform 180ms ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px) rotate(-0.6deg);
+}
+
+.game-card-frame {
+  position: relative;
+  height: 100%;
+  border-radius: 14px;
+  padding: 5px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38);
+}
+
+.game-card-common .game-card-frame {
+  background: linear-gradient(145deg, #9ca3af, #6b7280 45%, #d1d5db 100%);
+}
+
+.game-card-rare .game-card-frame {
+  background: linear-gradient(145deg, #60a5fa, #7c3aed 48%, #c084fc 100%);
+}
+
+.game-card-epic .game-card-frame {
+  background: linear-gradient(145deg, #fbbf24, #f59e0b 35%, #a855f7 72%, #fde047 100%);
+}
+
+.game-card-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  align-content: start;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #111322;
+  padding: 10px 10px 12px;
   text-align: center;
-  transition:
-    border-color 140ms ease,
-    transform 140ms ease;
 }
 
-.landing-card-tile:hover {
-  border-color: var(--accent-strong);
-  transform: translateY(-3px);
+.game-card-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.42;
+  pointer-events: none;
 }
 
-.landing-card-emoji {
-  font-size: 2.6rem;
+.game-card-common .game-card-pattern {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0 2px,
+      transparent 2px 8px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.04) 0 2px,
+      transparent 2px 8px
+    ),
+    radial-gradient(circle at 50% 0%, rgba(156, 163, 175, 0.18), transparent 55%);
+}
+
+.game-card-rare .game-card-pattern {
+  background:
+    repeating-linear-gradient(
+      60deg,
+      rgba(96, 165, 250, 0.12) 0 3px,
+      transparent 3px 14px
+    ),
+    repeating-linear-gradient(
+      -60deg,
+      rgba(192, 132, 252, 0.1) 0 3px,
+      transparent 3px 14px
+    ),
+    radial-gradient(circle at 20% 15%, rgba(124, 58, 237, 0.28), transparent 42%),
+    radial-gradient(circle at 80% 85%, rgba(96, 165, 250, 0.22), transparent 40%);
+}
+
+.game-card-epic .game-card-pattern {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(251, 191, 36, 0.35) 0 2px, transparent 3px),
+    radial-gradient(circle at 75% 28%, rgba(253, 224, 71, 0.28) 0 2px, transparent 3px),
+    radial-gradient(circle at 42% 72%, rgba(168, 85, 247, 0.3) 0 2px, transparent 3px),
+    radial-gradient(circle at 88% 78%, rgba(251, 191, 36, 0.25) 0 2px, transparent 3px),
+    conic-gradient(
+      from 210deg at 50% 50%,
+      rgba(251, 191, 36, 0.12),
+      rgba(168, 85, 247, 0.16),
+      rgba(253, 224, 71, 0.12),
+      rgba(168, 85, 247, 0.16),
+      rgba(251, 191, 36, 0.12)
+    );
+}
+
+.game-card-rarity {
+  position: relative;
+  z-index: 2;
+  justify-self: center;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+  color: #e5e7eb;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.game-card-common .game-card-rarity {
+  color: #e5e7eb;
+}
+
+.game-card-rare .game-card-rarity {
+  color: #dbeafe;
+}
+
+.game-card-epic .game-card-rarity {
+  color: #fef3c7;
+}
+
+.game-card-art {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  flex: 1;
+  font-size: clamp(2.4rem, 42%, 3.4rem);
   line-height: 1;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
 }
 
-.landing-card-tile h3 {
+.game-card-name {
+  position: relative;
+  z-index: 2;
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.game-card-description {
+  position: relative;
+  z-index: 2;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.game-card-sm {
+  max-width: 148px;
+}
+
+.game-card-sm .game-card-name {
+  font-size: 0.74rem;
+}
+
+.game-card-sm .game-card-art {
+  font-size: clamp(2rem, 38%, 2.6rem);
+}
+
+.game-card-lg {
+  max-width: 260px;
+}
+
+.game-card-lg .game-card-name {
+  font-size: 0.95rem;
+}
+
+.game-card-lg .game-card-description {
+  font-size: 0.74rem;
+}
+
+.game-card-active .game-card-frame {
+  box-shadow:
+    0 0 0 2px rgba(52, 211, 153, 0.55),
+    0 16px 40px rgba(0, 0, 0, 0.38);
+}
+
+.game-card-active-badge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  z-index: 3;
+  border-radius: 999px;
+  background: var(--success);
+  color: #052e1c;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.deck-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.deck-card-item {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.deck-card-meta {
+  width: 100%;
+  max-width: 220px;
+  text-align: center;
+}
+
+.deck-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.deck-slot-card {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.deck-slot-label {
   margin: 0;
-  font-size: 0.92rem;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.deck-slot-empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 5 / 7;
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.battle-result-loot-display {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
 }
 
 .eyebrow {
@@ -1317,21 +1549,6 @@ h3 {
   text-align: left;
 }
 
-.battle-result-loot-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 16px;
-  align-items: center;
-  margin-top: 10px;
-  border: 1px solid rgba(52, 211, 153, 0.35);
-  border-radius: 22px;
-  background: rgba(52, 211, 153, 0.08);
-  padding: 18px;
-}
-
-.battle-result-loot-card .emoji {
-  font-size: 3.2rem;
-}
 
 .battle-result-loot-hint,
 .battle-result-no-loot {
@@ -1435,6 +1652,10 @@ h3 {
 
   .nav-progress.is-active {
     transform: scaleX(0.45);
+  }
+
+  .game-card:hover {
+    transform: none;
   }
 }
 
