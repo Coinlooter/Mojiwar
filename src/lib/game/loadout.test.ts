@@ -17,6 +17,8 @@ describe("loadout mapper", () => {
       base_speed: 10,
       base_crit_chance: 0.05,
       power: 200,
+      wins: 0,
+      losses: 0,
       is_bot: false,
       created_at: "2026-01-01T00:00:00.000Z",
       updated_at: "2026-01-01T00:00:00.000Z",
