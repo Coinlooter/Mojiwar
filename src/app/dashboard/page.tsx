@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { getVerifiedUser } from "@/lib/auth/session";
 
@@ -220,11 +221,7 @@ export default async function DashboardPage() {
             Nicht abmelden, wenn du anonym spielst und den Fortschritt noch
             nicht gesichert hast.
           </p>
-          <form action="/auth/signout" method="post">
-            <button className="button" type="submit">
-              Abmelden
-            </button>
-          </form>
+          <SignOutButton />
         </article>
       </section>
     </>

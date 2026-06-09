@@ -103,10 +103,12 @@ export function BattleReplay({
           <button
             className="button"
             disabled={isComplete}
-            onClick={() => setVisibleEvents(result.events.length)}
+            onClick={() => {
+              setVisibleEvents(result.events.length);
+            }}
             type="button"
           >
-            Ueberspringen
+            {isComplete ? "Fertig" : "Ueberspringen"}
           </button>
         </div>
       </div>

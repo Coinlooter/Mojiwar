@@ -1,4 +1,5 @@
 import { equipDeckSlot, unequipDeckSlot } from "@/app/deck/actions";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { requireCharacter } from "@/lib/auth/require-character";
 import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
 import { mapCardRow } from "@/lib/game/loadout";
@@ -75,9 +76,9 @@ export default async function DeckPage({
                     <p className="muted">Karte ist aktiv.</p>
                     <form action={unequipDeckSlot}>
                       <input name="slotIndex" type="hidden" value={slotIndex} />
-                      <button className="button" type="submit">
+                      <SubmitButton pendingLabel="Wird entfernt...">
                         Ausruesten entfernen
-                      </button>
+                      </SubmitButton>
                     </form>
                   </>
                 ) : (
@@ -127,9 +128,9 @@ export default async function DeckPage({
                         value={ownedCard.id}
                       />
                       <input name="slotIndex" type="hidden" value={slotIndex} />
-                      <button className="button" type="submit">
+                      <SubmitButton pendingLabel="Wird ausgeruestet...">
                         Slot {slotIndex + 1}
-                      </button>
+                      </SubmitButton>
                     </form>
                   ))}
                 </div>
