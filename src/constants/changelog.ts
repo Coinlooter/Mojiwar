@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.5",
+    changes: [
+      "UX — Ladeanzeige bei Buttons und Navigation, Startseite scrollt wieder mit dem Mausrad",
+      "Performance — schnellere Gegner-Seite durch parallele Datenabfragen",
+    ],
+  },
+  {
     version: "1.1.4",
     changes: [
       "Kampf-Arena — Emojis springen an, Schadenszahlen steigen auf, Lebensbalken zeigen HP live",

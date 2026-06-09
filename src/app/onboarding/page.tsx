@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { EmojiPicker } from "@/components/onboarding/EmojiPicker";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { createCharacter } from "./actions";
 import { getVerifiedUser } from "@/lib/auth/session";
 
@@ -71,9 +72,9 @@ export default async function OnboardingPage({
           </p>
         ) : null}
 
-        <button className="button primary" type="submit">
+        <SubmitButton pendingLabel="Held wird erstellt..." variant="primary">
           Charakter erstellen
-        </button>
+        </SubmitButton>
       </form>
     </section>
   );

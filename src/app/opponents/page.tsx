@@ -1,4 +1,5 @@
 import { challengeCharacter } from "@/app/battle/actions";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 import { requireCharacter } from "@/lib/auth/require-character";
 import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
 import { calculatePower } from "@/lib/game/calculate-power";
@@ -30,9 +31,7 @@ function OpponentCard({ candidate }: { candidate: CharacterLoadout }) {
       </p>
       <form action={challengeCharacter}>
         <input name="defenderCharacterId" type="hidden" value={candidate.id} />
-        <button className="button" type="submit">
-          Herausfordern
-        </button>
+        <SubmitButton pendingLabel="Kampf startet...">Herausfordern</SubmitButton>
       </form>
     </article>
   );
@@ -47,15 +46,16 @@ export default async function OpponentsPage({
   const params = await searchParams;
   const errorMessage = params.error ? errorMessages[params.error] : null;
 
-  const player = await fetchCharacterLoadout(supabase, character.id);
+  const [player, opponentIds] = await Promise.all([
+    fetchCharacterLoadout(supabase, character.id),
+    fetchOpponentCharacterIds(supabase, character.user_id),
+  ]);
 
   if (!player) {
     return null;
   }
 
-  const { allIds, botIds, playerIds, hasRealPlayers } =
-    await fetchOpponentCharacterIds(supabase, character.user_id);
-
+  const { allIds, botIds, playerIds, hasRealPlayers } = opponentIds;
   const candidates = await fetchCharacterLoadouts(supabase, allIds);
   const botCandidates = candidates.filter((candidate) => botIds.includes(candidate.id));
   const playerCandidates = candidates.filter((candidate) =>
@@ -98,9 +98,9 @@ export default async function OpponentsPage({
               type="hidden"
               value={match.opponent.id}
             />
-            <button className="button primary" type="submit">
+            <SubmitButton pendingLabel="Kampf startet..." variant="primary">
               Herausfordern
-            </button>
+            </SubmitButton>
           </form>
         </section>
       ) : null}

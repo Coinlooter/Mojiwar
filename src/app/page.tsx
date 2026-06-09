@@ -1,44 +1,10 @@
 import Link from "next/link";
 
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
-import { simulateBattle } from "@/lib/game/battle-engine";
+import { landingDemoBattle } from "@/constants/landing-demo";
 import { starterCards } from "@/lib/game/cards";
 
-const demoBattle = simulateBattle({
-  seed: "landing-demo",
-  attacker: {
-    id: "attacker",
-    ownerUserId: "demo-a",
-    emoji: "🦊",
-    name: "Foxy",
-    level: 4,
-    xp: 280,
-    baseStats: {
-      hp: 110,
-      attack: 19,
-      defense: 7,
-      speed: 13,
-      critChance: 0.08,
-    },
-    deck: [starterCards[0], starterCards[3], starterCards[6]],
-  },
-  defender: {
-    id: "defender",
-    ownerUserId: "demo-b",
-    emoji: "🐸",
-    name: "Hopser",
-    level: 3,
-    xp: 190,
-    baseStats: {
-      hp: 126,
-      attack: 16,
-      defense: 9,
-      speed: 9,
-      critChance: 0.05,
-    },
-    deck: [starterCards[1], starterCards[2], starterCards[4]],
-  },
-});
+const demoBattle = landingDemoBattle;
 
 const heroEmojis = ["🦊", "🐸", "👻", "🤖", "🐉", "🦄"] as const;
 
