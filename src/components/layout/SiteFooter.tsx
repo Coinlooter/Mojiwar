@@ -49,7 +49,7 @@ export function SiteFooter() {
           role="dialog"
         >
           <div
-            className="changelog-dialog panel"
+            className="changelog-dialog"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="changelog-header">

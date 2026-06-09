@@ -10,6 +10,9 @@
   --success: #34d399;
   --danger: #fb7185;
   --border: rgba(255, 255, 255, 0.14);
+  --chrome: #0c0d18;
+  --chrome-elevated: #141622;
+  --chrome-muted: #1b1d2b;
 }
 
 * {
@@ -48,10 +51,8 @@ body {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-color: color-mix(in srgb, var(--border) 70%, transparent);
-  background: color-mix(in srgb, var(--panel) 88%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  border-color: var(--border);
+  background: var(--chrome);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
@@ -169,6 +170,10 @@ body {
 .changelog-dialog {
   width: min(720px, 100%);
   max-height: min(80svh, 720px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--chrome-elevated);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
   padding: 20px;
 }
 
@@ -201,7 +206,7 @@ body {
 .changelog-entry {
   border: 1px solid var(--border);
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.22);
+  background: var(--chrome-muted);
   padding: 14px 16px;
 }
 

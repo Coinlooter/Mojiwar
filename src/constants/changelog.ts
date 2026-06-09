@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.0.3",
+    changes: [
+      "UI — Header, Footer und Changelog-Fenster ohne Transparenz",
+    ],
+  },
+  {
     version: "1.0.2",
     changes: [
       "Startseite — kindgerechte Spielsprache statt technischer Details",
