@@ -6,6 +6,18 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.4",
+    changes: [
+      "Kampf-Arena — Emojis springen an, Schadenszahlen steigen auf, Lebensbalken zeigen HP live",
+    ],
+  },
+  {
+    version: "1.1.3",
+    changes: [
+      "Kampf — nach dem Replay erscheint ein Sieg- oder Niederlage-Bildschirm mit XP und Beute",
+    ],
+  },
+  {
     version: "1.1.2",
     changes: [
       "Kampf-Replay — Kaempfe laufen automatisch ab, HP aktualisiert sich live",

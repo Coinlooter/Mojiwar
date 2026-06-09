@@ -1,4 +1,4 @@
-import { BattleReplay } from "@/components/battle/BattleReplay";
+import { BattleExperience } from "@/components/battle/BattleExperience";
 import { simulateBattle } from "@/lib/game/battle-engine";
 import { starterCards } from "@/lib/game/cards";
 
@@ -38,19 +38,27 @@ const result = simulateBattle({
   },
 });
 
+const won = result.winnerSide === "attacker";
+
 export default function DemoBattlePage() {
   return (
-    <>
-      <section style={{ marginBottom: 32 }}>
-        <p className="eyebrow">Animierter Rundenkampf</p>
-        <h1>Replay aus serverseitigem Battle-Log.</h1>
-        <p className="lead">
-          Die Demo zeigt das Zielverhalten: Der Kampf ist bereits entschieden,
-          die UI spielt nur das gespeicherte Log Schritt fuer Schritt ab.
-        </p>
-      </section>
-
-      <BattleReplay result={result} />
-    </>
+    <BattleExperience
+      result={result}
+      summary={{
+        won,
+        opponentEmoji: result.defenderSnapshot.emoji,
+        opponentName: result.defenderSnapshot.name,
+        rounds: result.rounds,
+        xpGained: result.xp.attacker,
+        loot: won
+          ? {
+              emoji: starterCards[4].emoji,
+              name: starterCards[4].name,
+              rarity: starterCards[4].rarity,
+              description: starterCards[4].description,
+            }
+          : undefined,
+      }}
+    />
   );
 }
