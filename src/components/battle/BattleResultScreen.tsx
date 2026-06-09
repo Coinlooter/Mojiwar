@@ -73,8 +73,7 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
               />
             </div>
             <p className="muted battle-result-loot-hint">
-              Die Karte liegt jetzt in deiner Sammlung. Rueste sie auf der
-              Karten-Seite aus.
+              Die Karte liegt jetzt in deinem Inventar. Ziehe sie in einen Slot.
             </p>
           </div>
         ) : won ? (
@@ -96,7 +95,7 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
           </Link>
           {won && loot ? (
             <Link className="button" href={"/deck" as Route}>
-              Karte ausruesten
+              Zum Inventar
             </Link>
           ) : null}
         </div>

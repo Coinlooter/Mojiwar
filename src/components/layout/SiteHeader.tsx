@@ -5,7 +5,7 @@ import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 const navItems = [
   { href: "/dashboard", label: "Mein Spiel" },
   { href: "/opponents", label: "Gegner" },
-  { href: "/deck", label: "Karten" },
+  { href: "/deck", label: "Inventar" },
 ] as const;
 
 export function SiteHeader() {

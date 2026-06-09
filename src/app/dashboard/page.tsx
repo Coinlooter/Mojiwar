@@ -138,7 +138,7 @@ export default async function DashboardPage() {
             Gegner suchen
           </Link>
           <Link className="button" href="/deck">
-            Karten verwalten
+            Inventar oeffnen
           </Link>
         </div>
       </section>
