@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.1",
+    changes: [
+      "Gegner — zehn Übungsgegner mit steigender Staerke bis echte Spieler mitmachen",
+    ],
+  },
+  {
     version: "1.1.0",
     changes: [
       "Spielablauf — Herausforderungen starten echte Kaempfe mit serverseitiger Aufloesung",

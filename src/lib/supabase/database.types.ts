@@ -50,6 +50,7 @@ export type Database = {
           base_speed: number;
           base_crit_chance: number;
           power: number;
+          is_bot: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -66,6 +67,7 @@ export type Database = {
           base_speed?: number;
           base_crit_chance?: number;
           power?: number;
+          is_bot?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -82,6 +84,7 @@ export type Database = {
           base_speed?: number;
           base_crit_chance?: number;
           power?: number;
+          is_bot?: boolean;
           created_at?: string;
           updated_at?: string;
         };

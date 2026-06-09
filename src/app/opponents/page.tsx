@@ -1,8 +1,11 @@
 import { challengeCharacter } from "@/app/battle/actions";
 import { requireCharacter } from "@/lib/auth/require-character";
+import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
 import { calculatePower } from "@/lib/game/calculate-power";
 import { fetchCharacterLoadout, fetchCharacterLoadouts } from "@/lib/game/loadout";
 import { findBestAutomaticOpponent } from "@/lib/game/matchmaking";
+import { fetchOpponentCharacterIds } from "@/lib/game/opponents";
+import type { CharacterLoadout } from "@/lib/game/types";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +15,28 @@ const errorMessages: Record<string, string> = {
   missing: "Der Gegner wurde nicht gefunden.",
   battle: "Der Kampf konnte gerade nicht gestartet werden. Versuche es erneut.",
 };
+
+function OpponentCard({ candidate }: { candidate: CharacterLoadout }) {
+  const isBot = BOT_OPPONENT_IDS.has(candidate.id);
+
+  return (
+    <article className="feature-card">
+      <div className="emoji">{candidate.emoji}</div>
+      {isBot ? <p className="eyebrow">Übungsgegner</p> : null}
+      <h3>{candidate.name}</h3>
+      <p className="muted">
+        Level {candidate.level} · Staerke {calculatePower(candidate)} ·{" "}
+        {candidate.deck.length} Karten
+      </p>
+      <form action={challengeCharacter}>
+        <input name="defenderCharacterId" type="hidden" value={candidate.id} />
+        <button className="button" type="submit">
+          Herausfordern
+        </button>
+      </form>
+    </article>
+  );
+}
 
 export default async function OpponentsPage({
   searchParams,
@@ -28,15 +53,13 @@ export default async function OpponentsPage({
     return null;
   }
 
-  const { data: opponentRows } = await supabase
-    .from("characters")
-    .select("id")
-    .neq("user_id", character.user_id)
-    .order("power", { ascending: true });
+  const { allIds, botIds, playerIds, hasRealPlayers } =
+    await fetchOpponentCharacterIds(supabase, character.user_id);
 
-  const candidates = await fetchCharacterLoadouts(
-    supabase,
-    (opponentRows ?? []).map((row) => row.id),
+  const candidates = await fetchCharacterLoadouts(supabase, allIds);
+  const botCandidates = candidates.filter((candidate) => botIds.includes(candidate.id));
+  const playerCandidates = candidates.filter((candidate) =>
+    playerIds.includes(candidate.id),
   );
 
   const match = findBestAutomaticOpponent({ player, candidates });
@@ -47,8 +70,9 @@ export default async function OpponentsPage({
         <p className="eyebrow">Gegner suchen</p>
         <h1>Waehle einen Gegner fuer deinen naechsten Kampf.</h1>
         <p className="lead">
-          Dein Emoji kaempft sofort. Der Gegner muss nicht online sein und sieht
-          das Ergebnis spaeter in seiner Inbox.
+          {hasRealPlayers
+            ? "Du kannst echte Spieler oder Übungsgegner herausfordern. Der Kampf laeuft sofort ab."
+            : "Bis mehr Spieler mitmachen, stehen zehn Übungsgegner mit verschiedener Staerke bereit."}
         </p>
       </section>
 
@@ -65,7 +89,8 @@ export default async function OpponentsPage({
             {match.opponent.emoji} {match.opponent.name}
           </h2>
           <p className="muted">
-            Gegner-Staerke {match.opponentPower} · Level {match.opponent.level}
+            {BOT_OPPONENT_IDS.has(match.opponent.id) ? "Übungsgegner · " : ""}
+            Staerke {match.opponentPower} · Level {match.opponent.level}
           </p>
           <form action={challengeCharacter}>
             <input
@@ -78,36 +103,26 @@ export default async function OpponentsPage({
             </button>
           </form>
         </section>
-      ) : (
-        <section className="section panel battle-card">
-          <p className="muted">
-            Gerade gibt es keinen passenden Gegner. Probiere es spaeter noch
-            einmal.
-          </p>
-        </section>
-      )}
+      ) : null}
 
-      <section className="section feature-grid" aria-label="Alle Gegner">
-        {candidates.map((candidate) => (
-          <article className="feature-card" key={candidate.id}>
-            <div className="emoji">{candidate.emoji}</div>
-            <h3>{candidate.name}</h3>
-            <p className="muted">
-              Level {candidate.level} · Staerke {calculatePower(candidate)} ·{" "}
-              {candidate.deck.length} Karten
-            </p>
-            <form action={challengeCharacter}>
-              <input
-                name="defenderCharacterId"
-                type="hidden"
-                value={candidate.id}
-              />
-              <button className="button" type="submit">
-                Herausfordern
-              </button>
-            </form>
-          </article>
-        ))}
+      {playerCandidates.length > 0 ? (
+        <section className="section">
+          <p className="eyebrow">Echte Spieler</p>
+          <div className="feature-grid" aria-label="Echte Gegner">
+            {playerCandidates.map((candidate) => (
+              <OpponentCard candidate={candidate} key={candidate.id} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="section">
+        <p className="eyebrow">Übungsgegner</p>
+        <div className="feature-grid" aria-label="Übungsgegner">
+          {botCandidates.map((candidate) => (
+            <OpponentCard candidate={candidate} key={candidate.id} />
+          ))}
+        </div>
       </section>
     </>
   );
