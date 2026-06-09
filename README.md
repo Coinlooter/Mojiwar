@@ -40,7 +40,7 @@ The client never decides battle outcomes. A server path should:
 Initial schema lives in:
 
 ```txt
-supabase/migrations/20260609170600_initial_schema.sql
+supabase/migrations/20260609175505_initial_schema.sql
 ```
 
 Tables:
@@ -66,6 +66,20 @@ Project:
 - Supabase project: `Mojiwar`
 - Project ref: `xqbnqfntxeaqbcjakzfd`
 - Region: `eu-west-1`
+
+## Auth flow
+
+Mojiwar starts with a kid-friendly anonymous Supabase account:
+
+1. A new player clicks **Sofort spielen**.
+2. The browser creates an anonymous Supabase Auth user.
+3. The player chooses an emoji and name on `/onboarding`.
+4. `profiles` and `characters` rows are stored with the authenticated `user_id`.
+5. Returning on the same device reuses the cookie-backed session.
+
+Enable **Anonymous Sign-ins** in the Supabase project's Auth providers before
+using the flow in production. Later, anonymous users can be linked to an email
+or OAuth identity to secure progress across devices.
 
 ## Local development
 

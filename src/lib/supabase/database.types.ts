@@ -7,6 +7,9 @@ export type Json =
   | Json[];
 
 export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: "14.5";
+  };
   public: {
     Tables: {
       profiles: {
@@ -31,6 +34,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       characters: {
         Row: {
@@ -81,6 +85,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       cards: {
         Row: {
@@ -113,6 +118,7 @@ export type Database = {
           description?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
       player_cards: {
         Row: {
@@ -136,6 +142,7 @@ export type Database = {
           acquired_from_battle_id?: string | null;
           created_at?: string;
         };
+        Relationships: [];
       };
       deck_slots: {
         Row: {
@@ -162,6 +169,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       battles: {
         Row: {
@@ -204,13 +212,32 @@ export type Database = {
         };
         Update: {
           id?: string;
+          attacker_character_id?: string;
+          defender_character_id?: string;
+          winner_character_id?: string;
+          loser_character_id?: string;
+          rules_version?: number;
+          seed?: string;
+          rounds?: number;
+          attacker_power_before?: number;
+          defender_power_before?: number;
+          attacker_xp_gained?: number;
+          defender_xp_gained?: number;
+          reward_player_card_id?: string | null;
+          battle_log?: Json;
           viewed_by_attacker_at?: string | null;
           viewed_by_defender_at?: string | null;
+          created_at?: string;
         };
+        Relationships: [];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
     Enums: {
       card_rarity: "common" | "rare" | "epic";
       card_effect_type:
@@ -222,6 +249,8 @@ export type Database = {
         | "first_strike_damage"
         | "low_hp_heal";
     };
-    CompositeTypes: Record<string, never>;
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
 };

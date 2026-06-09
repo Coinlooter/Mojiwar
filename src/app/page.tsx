@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { simulateBattle } from "@/lib/game/battle-engine";
 import { starterCards } from "@/lib/game/cards";
 
@@ -72,9 +73,7 @@ export default function Home() {
             ueberspringbares Replay abgespielt.
           </p>
           <div className="actions">
-            <Link className="button primary" href="/dashboard">
-              MVP ansehen
-            </Link>
+            <StartPlayingButton />
             <Link className="button" href="/battle/demo">
               Demo-Kampf
             </Link>
