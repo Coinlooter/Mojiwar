@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 import { getVerifiedUser } from "@/lib/auth/session";
 import { calculatePower } from "@/lib/game/calculate-power";
+import { fetchCharacterLoadout } from "@/lib/game/loadout";
 import { createCharacterSchema } from "@/lib/game/schemas";
 
 export async function createCharacter(formData: FormData) {
@@ -65,20 +66,41 @@ export async function createCharacter(formData: FormData) {
     redirect("/dashboard");
   }
 
-  const { error: characterError } = await supabase.from("characters").insert({
-    user_id: user.id,
-    emoji: parsed.data.emoji,
-    name: parsed.data.name,
-    base_hp: baseStats.hp,
-    base_attack: baseStats.attack,
-    base_defense: baseStats.defense,
-    base_speed: baseStats.speed,
-    base_crit_chance: baseStats.critChance,
-    power,
+  const { data: createdCharacter, error: characterError } = await supabase
+    .from("characters")
+    .insert({
+      user_id: user.id,
+      emoji: parsed.data.emoji,
+      name: parsed.data.name,
+      base_hp: baseStats.hp,
+      base_attack: baseStats.attack,
+      base_defense: baseStats.defense,
+      base_speed: baseStats.speed,
+      base_crit_chance: baseStats.critChance,
+      power,
+    })
+    .select("id")
+    .single();
+
+  if (characterError || !createdCharacter) {
+    redirect("/onboarding?error=character" as Route);
+  }
+
+  const { error: starterDeckError } = await supabase.rpc("grant_starter_deck", {
+    p_character_id: createdCharacter.id,
   });
 
-  if (characterError) {
+  if (starterDeckError) {
     redirect("/onboarding?error=character" as Route);
+  }
+
+  const loadout = await fetchCharacterLoadout(supabase, createdCharacter.id);
+
+  if (loadout) {
+    await supabase
+      .from("characters")
+      .update({ power: calculatePower(loadout) })
+      .eq("id", createdCharacter.id);
   }
 
   revalidatePath("/", "layout");

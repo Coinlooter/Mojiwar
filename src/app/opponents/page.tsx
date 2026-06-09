@@ -1,114 +1,111 @@
-import Link from "next/link";
-
+import { challengeCharacter } from "@/app/battle/actions";
+import { requireCharacter } from "@/lib/auth/require-character";
+import { calculatePower } from "@/lib/game/calculate-power";
+import { fetchCharacterLoadout, fetchCharacterLoadouts } from "@/lib/game/loadout";
 import { findBestAutomaticOpponent } from "@/lib/game/matchmaking";
-import { starterCards } from "@/lib/game/cards";
 
-const player = {
-  id: "player",
-  ownerUserId: "demo-player",
-  emoji: "🦊",
-  name: "Foxy",
-  level: 4,
-  xp: 280,
-  baseStats: {
-    hp: 110,
-    attack: 19,
-    defense: 7,
-    speed: 13,
-    critChance: 0.08,
-  },
-  deck: [starterCards[0], starterCards[3], starterCards[6]],
+export const dynamic = "force-dynamic";
+
+const errorMessages: Record<string, string> = {
+  invalid: "Dieser Gegner konnte nicht herausgefordert werden.",
+  self: "Du kannst dich nicht selbst herausfordern.",
+  missing: "Der Gegner wurde nicht gefunden.",
+  battle: "Der Kampf konnte gerade nicht gestartet werden. Versuche es erneut.",
 };
 
-const candidates = [
-  {
-    id: "frog",
-    ownerUserId: "demo-frog",
-    emoji: "🐸",
-    name: "Hopser",
-    level: 3,
-    xp: 190,
-    baseStats: {
-      hp: 126,
-      attack: 16,
-      defense: 9,
-      speed: 9,
-      critChance: 0.05,
-    },
-    deck: [starterCards[1], starterCards[2], starterCards[4]],
-  },
-  {
-    id: "ghost",
-    ownerUserId: "demo-ghost",
-    emoji: "👻",
-    name: "Spuki",
-    level: 6,
-    xp: 530,
-    baseStats: {
-      hp: 132,
-      attack: 24,
-      defense: 8,
-      speed: 15,
-      critChance: 0.1,
-    },
-    deck: [starterCards[0], starterCards[4], starterCards[5]],
-  },
-  {
-    id: "robot",
-    ownerUserId: "demo-robot",
-    emoji: "🤖",
-    name: "Bitbot",
-    level: 4,
-    xp: 260,
-    baseStats: {
-      hp: 118,
-      attack: 17,
-      defense: 10,
-      speed: 8,
-      critChance: 0.05,
-    },
-    deck: [starterCards[1], starterCards[2], starterCards[3]],
-  },
-];
+export default async function OpponentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { supabase, character } = await requireCharacter();
+  const params = await searchParams;
+  const errorMessage = params.error ? errorMessages[params.error] : null;
 
-export default function OpponentsPage() {
+  const player = await fetchCharacterLoadout(supabase, character.id);
+
+  if (!player) {
+    return null;
+  }
+
+  const { data: opponentRows } = await supabase
+    .from("characters")
+    .select("id")
+    .neq("user_id", character.user_id)
+    .order("power", { ascending: true });
+
+  const candidates = await fetchCharacterLoadouts(
+    supabase,
+    (opponentRows ?? []).map((row) => row.id),
+  );
+
   const match = findBestAutomaticOpponent({ player, candidates });
 
   return (
     <>
       <section>
-        <p className="eyebrow">Matchmaking</p>
-        <h1>Gezielt herausfordern oder automatisch matchen.</h1>
+        <p className="eyebrow">Gegner suchen</p>
+        <h1>Waehle einen Gegner fuer deinen naechsten Kampf.</h1>
         <p className="lead">
-          Auto-Matchmaking startet bei ±15% Kampfkraft und erweitert die Range,
-          wenn kein fairer Gegner gefunden wird.
+          Dein Emoji kaempft sofort. Der Gegner muss nicht online sein und sieht
+          das Ergebnis spaeter in seiner Inbox.
         </p>
       </section>
 
+      {errorMessage ? (
+        <p className="muted" role="alert">
+          {errorMessage}
+        </p>
+      ) : null}
+
       {match ? (
         <section className="section panel battle-card">
-          <p className="eyebrow">Bester Auto-Match</p>
+          <p className="eyebrow">Passender Gegner</p>
           <h2>
             {match.opponent.emoji} {match.opponent.name}
           </h2>
           <p className="muted">
-            Gegner-Power {match.opponentPower} · Range{" "}
-            {Math.round(match.tolerance * 100)}%
+            Gegner-Staerke {match.opponentPower} · Level {match.opponent.level}
           </p>
-          <Link className="button primary" href="/battle/demo">
-            Demo-Herausforderung starten
-          </Link>
+          <form action={challengeCharacter}>
+            <input
+              name="defenderCharacterId"
+              type="hidden"
+              value={match.opponent.id}
+            />
+            <button className="button primary" type="submit">
+              Herausfordern
+            </button>
+          </form>
         </section>
-      ) : null}
+      ) : (
+        <section className="section panel battle-card">
+          <p className="muted">
+            Gerade gibt es keinen passenden Gegner. Probiere es spaeter noch
+            einmal.
+          </p>
+        </section>
+      )}
 
-      <section className="section feature-grid" aria-label="Gegnerliste">
+      <section className="section feature-grid" aria-label="Alle Gegner">
         {candidates.map((candidate) => (
           <article className="feature-card" key={candidate.id}>
             <div className="emoji">{candidate.emoji}</div>
             <h3>{candidate.name}</h3>
             <p className="muted">
-              Level {candidate.level} · {candidate.deck.length} Karten aktiv
+              Level {candidate.level} · Staerke {calculatePower(candidate)} ·{" "}
+              {candidate.deck.length} Karten
             </p>
+            <form action={challengeCharacter}>
+              <input
+                name="defenderCharacterId"
+                type="hidden"
+                value={candidate.id}
+              />
+              <button className="button" type="submit">
+                Herausfordern
+              </button>
+            </form>
           </article>
         ))}
       </section>

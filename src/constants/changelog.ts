@@ -6,6 +6,17 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.1.0",
+    changes: [
+      "Spielablauf — Herausforderungen starten echte Kaempfe mit serverseitiger Aufloesung",
+      "Onboarding — Starter-Deck mit drei Karten beim ersten Charakter",
+      "Dashboard — Inbox mit letzten Kaempfen und Replay-Links",
+      "Gegner — echte Spieler aus der Datenbank statt Demo-Daten",
+      "Deck — Karten aus der Sammlung ausruesten und wieder entfernen",
+      "Replay — gespeicherte Kaempfe unter /battle/[id]",
+    ],
+  },
+  {
     version: "1.0.4",
     changes: [
       "Onboarding — Emoji-Auswahl mit 16 Helden statt fest vorgegebenem Emoji",

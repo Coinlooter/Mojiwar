@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
@@ -21,6 +22,16 @@ async function getCount<T>(
 
   return count ?? 0;
 }
+
+type BattleRow = {
+  id: string;
+  created_at: string;
+  winner_character_id: string;
+  attacker_character_id: string;
+  defender_character_id: string;
+  viewed_by_attacker_at: string | null;
+  viewed_by_defender_at: string | null;
+};
 
 export default async function DashboardPage() {
   const { supabase, user } = await getVerifiedUser();
@@ -55,32 +66,50 @@ export default async function DashboardPage() {
     redirect("/onboarding" as Route);
   }
 
-  const [receivedChallenges, wins, losses, ownedCards] = await Promise.all([
-    getCount(
+  const [
+    receivedChallenges,
+    wins,
+    losses,
+    ownedCards,
+    battlesResult,
+    opponentsResult,
+  ] = await Promise.all([
+      getCount(
+        supabase
+          .from("battles")
+          .select("id", { count: "exact", head: true })
+          .eq("defender_character_id", character.id),
+      ),
+      getCount(
+        supabase
+          .from("battles")
+          .select("id", { count: "exact", head: true })
+          .eq("winner_character_id", character.id),
+      ),
+      getCount(
+        supabase
+          .from("battles")
+          .select("id", { count: "exact", head: true })
+          .eq("loser_character_id", character.id),
+      ),
+      getCount(
+        supabase
+          .from("player_cards")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id),
+      ),
       supabase
         .from("battles")
-        .select("id", { count: "exact", head: true })
-        .eq("defender_character_id", character.id),
-    ),
-    getCount(
-      supabase
-        .from("battles")
-        .select("id", { count: "exact", head: true })
-        .eq("winner_character_id", character.id),
-    ),
-    getCount(
-      supabase
-        .from("battles")
-        .select("id", { count: "exact", head: true })
-        .eq("loser_character_id", character.id),
-    ),
-    getCount(
-      supabase
-        .from("player_cards")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id),
-    ),
-  ]);
+        .select(
+          "id, created_at, winner_character_id, attacker_character_id, defender_character_id, viewed_by_attacker_at, viewed_by_defender_at",
+        )
+        .or(
+          `attacker_character_id.eq.${character.id},defender_character_id.eq.${character.id}`,
+        )
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabase.from("characters").select("id, emoji, name"),
+    ]);
 
   const inboxStats = [
     { label: "Herausforderungen erhalten", value: receivedChallenges },
@@ -89,20 +118,31 @@ export default async function DashboardPage() {
     { label: "Karten im Besitz", value: ownedCards },
   ];
   const isAnonymous = user.is_anonymous;
+  const battles = (battlesResult.data ?? []) as BattleRow[];
+  const opponentsById = new Map(
+    (opponentsResult.data ?? []).map((opponent) => [opponent.id, opponent]),
+  );
 
   return (
     <>
       <section>
-        <p className="eyebrow">Offline-Inbox</p>
+        <p className="eyebrow">Mein Spiel</p>
         <h1>Willkommen zurueck, {character.name}.</h1>
         <p className="lead">
-          Deine Session ist auf diesem Geraet gespeichert. Solange die
-          Browserdaten erhalten bleiben, kannst du ohne erneutes Login
-          weiterspielen.
+          Hier siehst du deine letzten Kaempfe, deine Karten und was passiert ist,
+          waehrend du weg warst.
         </p>
+        <div className="actions">
+          <Link className="button primary" href="/opponents">
+            Gegner suchen
+          </Link>
+          <Link className="button" href="/deck">
+            Karten verwalten
+          </Link>
+        </div>
       </section>
 
-      <section className="stat-grid" aria-label="Offline Statistiken">
+      <section className="stat-grid" aria-label="Spielstatistiken">
         {inboxStats.map((stat) => (
           <article className="stat-card" key={stat.label}>
             <div className="stat-value">{formatValue(stat.value)}</div>
@@ -111,20 +151,66 @@ export default async function DashboardPage() {
         ))}
       </section>
 
+      <section className="section">
+        <p className="eyebrow">Letzte Kaempfe</p>
+        {battles.length === 0 ? (
+          <article className="feature-card">
+            <p className="muted">
+              Noch keine Kaempfe. Starte auf der Gegner-Seite deinen ersten Kampf.
+            </p>
+          </article>
+        ) : (
+          <div className="inbox-list">
+            {battles.map((battle) => {
+              const isAttacker = battle.attacker_character_id === character.id;
+              const opponentId = isAttacker
+                ? battle.defender_character_id
+                : battle.attacker_character_id;
+              const opponent = opponentsById.get(opponentId);
+              const won = battle.winner_character_id === character.id;
+              const unread = isAttacker
+                ? !battle.viewed_by_attacker_at
+                : !battle.viewed_by_defender_at;
+
+              return (
+                <article className="inbox-card" key={battle.id}>
+                  <div>
+                    <h3>
+                      {won ? "Sieg" : "Niederlage"} gegen {opponent?.emoji}{" "}
+                      {opponent?.name ?? "Unbekannt"}
+                    </h3>
+                    <p className="muted">
+                      {new Date(battle.created_at).toLocaleString("de-DE")}
+                      {unread ? " · Neu" : ""}
+                    </p>
+                  </div>
+                  <Link
+                    className="button"
+                    href={`/battle/${battle.id}` as Route}
+                  >
+                    Replay
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
       <section className="section feature-grid">
         <article className="feature-card">
           <h3>Aktives Emoji</h3>
           <div className="emoji">{character.emoji}</div>
           <p className="muted">
             {character.name} · Level {character.level} · {character.xp} XP ·
-            Power {character.power}
+            Staerke {character.power}
           </p>
         </article>
         <article className="feature-card">
           <h3>Account sichern</h3>
           <p className="muted">
             {isAnonymous
-              ? "Dieser Account ist anonym. Als naechster Schritt kommt Eltern-E-Mail oder Magic Link, damit der Fortschritt auch auf neuen Geraeten wiederherstellbar ist."
+              ? "Dieser Account ist anonym. Spaeter kannst du ihn mit einer Eltern-E-Mail sichern."
               : "Dieser Account ist mit einer Login-Methode gesichert."}
           </p>
         </article>

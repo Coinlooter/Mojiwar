@@ -236,7 +236,36 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      grant_starter_deck: {
+        Args: {
+          p_character_id: string;
+        };
+        Returns: undefined;
+      };
+      resolve_battle: {
+        Args: {
+          p_attacker_character_id: string;
+          p_defender_character_id: string;
+          p_winner_character_id: string;
+          p_loser_character_id: string;
+          p_rules_version: number;
+          p_seed: string;
+          p_rounds: number;
+          p_attacker_power_before: number;
+          p_defender_power_before: number;
+          p_attacker_xp_gained: number;
+          p_defender_xp_gained: number;
+          p_battle_log: Json;
+          p_reward_card_id: string | null;
+          p_attacker_xp_after: number;
+          p_attacker_level_after: number;
+          p_attacker_power_after: number;
+          p_defender_xp_after: number;
+          p_defender_level_after: number;
+          p_defender_power_after: number;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       card_rarity: "common" | "rare" | "epic";
