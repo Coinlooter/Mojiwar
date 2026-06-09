@@ -1,0 +1,48 @@
+{
+  "name": "mojiwar",
+  "version": "1.0.2",
+  "description": "Async multiplayer emoji auto-battler RPG.",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coinlooter/Mojiwar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Coinlooter/Mojiwar/issues"
+  },
+  "homepage": "https://github.com/Coinlooter/Mojiwar#readme",
+  "dependencies": {
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.1",
+    "next": "^16.2.7",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.7",
+    "postcss": "^8.5.15",
+    "supabase": "^2.105.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  },
+  "overrides": {
+    "postcss": "^8.5.15"
+  }
+}

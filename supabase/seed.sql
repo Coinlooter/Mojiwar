@@ -1,0 +1,2 @@
+-- Seed data lives in the initial migration for now so remote and local databases
+-- start from the same card catalog.
