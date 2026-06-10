@@ -1,12 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import pkg from "../../../package.json";
 import { CHANGELOG_VERSIONS } from "@/constants/changelog";
 
 export function SiteFooter() {
   const [showChangelog, setShowChangelog] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!showChangelog) {
+      return;
+    }
+
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const closeButton = dialogRef.current?.querySelector("button");
+
+    closeButton?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setShowChangelog(false);
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, [showChangelog]);
 
   return (
     <>
@@ -42,7 +68,7 @@ export function SiteFooter() {
 
       {showChangelog ? (
         <div
-          aria-label="Changelog"
+          aria-labelledby={titleId}
           aria-modal="true"
           className="changelog-backdrop"
           onClick={() => setShowChangelog(false)}
@@ -51,9 +77,10 @@ export function SiteFooter() {
           <div
             className="changelog-dialog"
             onClick={(event) => event.stopPropagation()}
+            ref={dialogRef}
           >
             <div className="changelog-header">
-              <h2>Changelog</h2>
+              <h2 id={titleId}>Changelog</h2>
               <button
                 className="button"
                 onClick={() => setShowChangelog(false)}

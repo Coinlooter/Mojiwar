@@ -10,6 +10,7 @@ import {
 } from "@/app/deck/actions";
 import { GameCard } from "@/components/cards/GameCard";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { DECK_ERROR_MESSAGES } from "@/lib/ui/errors";
 import type {
   InventoryCardData,
   InventorySlotData,
@@ -17,12 +18,6 @@ import type {
 
 const DRAG_CARD_MIME = "application/x-emojitsu-card";
 const DRAG_SLOT_MIME = "application/x-emojitsu-slot";
-
-const errorMessages: Record<DeckActionError, string> = {
-  invalid: "Diese Karte konnte nicht platziert werden.",
-  card: "Diese Karte gehoert dir nicht.",
-  slot: "Das Inventar konnte gerade nicht aktualisiert werden.",
-};
 
 type DragSource =
   | { kind: "inventory"; playerCardId: string }
@@ -43,7 +38,7 @@ export function InventoryBoard({
   const [hoverSlot, setHoverSlot] = useState<number | null>(null);
   const [inventoryHover, setInventoryHover] = useState(false);
   const [actionError, setActionError] = useState<string | null>(
-    initialError ? errorMessages[initialError] : null,
+    initialError ? DECK_ERROR_MESSAGES[initialError] : null,
   );
 
   function runDeckAction(action: () => Promise<{ ok: true } | { ok: false; error: DeckActionError }>) {
@@ -53,7 +48,7 @@ export function InventoryBoard({
       const result = await action();
 
       if (!result.ok) {
-        setActionError(errorMessages[result.error]);
+        setActionError(DECK_ERROR_MESSAGES[result.error]);
         return;
       }
 
@@ -150,7 +145,8 @@ export function InventoryBoard({
         <div className="inventory-section-head">
           <p className="eyebrow">Aktive Slots</p>
           <p className="muted inventory-board-hint">
-            Ziehe Karten in einen Slot oder zurueck ins Inventar.
+            Ziehe Karten in einen Slot, nutze die Tastatur-Buttons oder lege
+            zurueck ins Inventar.
           </p>
         </div>
         <div className="inventory-slots-row">
@@ -203,6 +199,20 @@ export function InventoryBoard({
                     </div>
                   )}
                 </div>
+                {slot.card ? (
+                  <div className="inventory-keyboard-actions">
+                    <button
+                      className="button inventory-keyboard-button"
+                      disabled={isPending}
+                      onClick={() => {
+                        runDeckAction(() => unequipDeckSlotByIndex(slot.slotIndex));
+                      }}
+                      type="button"
+                    >
+                      Entfernen
+                    </button>
+                  </div>
+                ) : null}
               </div>
             );
           })}
@@ -264,6 +274,30 @@ export function InventoryBoard({
                         rarity={card.rarity}
                         size="sm"
                       />
+                    </div>
+                    <div
+                      aria-label={`${card.name} in Slot legen`}
+                      className="inventory-keyboard-actions"
+                      role="group"
+                    >
+                      {slots.map((targetSlot) => (
+                        <button
+                          className="button inventory-keyboard-button"
+                          disabled={isPending}
+                          key={targetSlot.slotIndex}
+                          onClick={() => {
+                            runDeckAction(() =>
+                              equipDeckSlotById(
+                                card.playerCardId,
+                                targetSlot.slotIndex,
+                              ),
+                            );
+                          }}
+                          type="button"
+                        >
+                          Slot {targetSlot.slotIndex + 1}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 );

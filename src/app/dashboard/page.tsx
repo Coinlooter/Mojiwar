@@ -4,35 +4,15 @@ import { redirect } from "next/navigation";
 
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
+import { getPrimaryCharacter } from "@/lib/auth/character";
 import { getVerifiedUser } from "@/lib/auth/session";
+import { fetchDashboardData } from "@/lib/game/dashboard";
 
 export const dynamic = "force-dynamic";
 
 function formatValue(value: number | null) {
   return String(value ?? 0);
 }
-
-async function getCount<T>(
-  query: PromiseLike<{ count: number | null; error: T | null }>,
-) {
-  const { count, error } = await query;
-
-  if (error) {
-    return 0;
-  }
-
-  return count ?? 0;
-}
-
-type BattleRow = {
-  id: string;
-  created_at: string;
-  winner_character_id: string;
-  attacker_character_id: string;
-  defender_character_id: string;
-  viewed_by_attacker_at: string | null;
-  viewed_by_defender_at: string | null;
-};
 
 export default async function DashboardPage() {
   const { supabase, user } = await getVerifiedUser();
@@ -55,71 +35,17 @@ export default async function DashboardPage() {
     );
   }
 
-  const { data: character } = await supabase
-    .from("characters")
-    .select("id, emoji, name, level, xp, power, wins, losses")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const character = await getPrimaryCharacter(supabase, user.id);
 
   if (!character) {
     redirect("/onboarding" as Route);
   }
 
-  const [receivedChallenges, ownedCards, battlesResult] = await Promise.all([
-    getCount(
-      supabase
-        .from("battles")
-        .select("id", { count: "exact", head: true })
-        .eq("defender_character_id", character.id),
-    ),
-    getCount(
-      supabase
-        .from("player_cards")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id),
-    ),
-    supabase
-      .from("battles")
-      .select(
-        "id, created_at, winner_character_id, attacker_character_id, defender_character_id, viewed_by_attacker_at, viewed_by_defender_at",
-      )
-      .or(
-        `attacker_character_id.eq.${character.id},defender_character_id.eq.${character.id}`,
-      )
-      .order("created_at", { ascending: false })
-      .limit(5),
-  ]);
-
-  const battles = (battlesResult.data ?? []) as BattleRow[];
-  const opponentIds = [
-    ...new Set(
-      battles.flatMap((battle) => {
-        const opponentId =
-          battle.attacker_character_id === character.id
-            ? battle.defender_character_id
-            : battle.attacker_character_id;
-
-        return opponentId ? [opponentId] : [];
-      }),
-    ),
-  ];
-
-  const { data: opponents } = opponentIds.length
-    ? await supabase.from("characters").select("id, emoji, name").in("id", opponentIds)
-    : { data: [] };
-
-  const opponentsById = new Map(
-    (opponents ?? []).map((opponent) => [opponent.id, opponent]),
+  const { inboxStats, battles } = await fetchDashboardData(
+    supabase,
+    user.id,
+    character,
   );
-
-  const inboxStats = [
-    { label: "Erhalten", value: receivedChallenges },
-    { label: "Siege", value: character.wins },
-    { label: "Niederlagen", value: character.losses },
-    { label: "Karten", value: ownedCards },
-  ];
   const isAnonymous = user.is_anonymous;
 
   return (
@@ -173,51 +99,39 @@ export default async function DashboardPage() {
             </p>
           ) : (
             <div className="dashboard-battle-list">
-              {battles.map((battle) => {
-                const isAttacker = battle.attacker_character_id === character.id;
-                const opponentId = isAttacker
-                  ? battle.defender_character_id
-                  : battle.attacker_character_id;
-                const opponent = opponentsById.get(opponentId);
-                const won = battle.winner_character_id === character.id;
-                const unread = isAttacker
-                  ? !battle.viewed_by_attacker_at
-                  : !battle.viewed_by_defender_at;
-
-                return (
-                  <article
-                    className={`dashboard-battle-row${unread ? " dashboard-battle-row-new" : ""}`}
-                    key={battle.id}
+              {battles.map((battle) => (
+                <article
+                  className={`dashboard-battle-row${battle.unread ? " dashboard-battle-row-new" : ""}`}
+                  key={battle.id}
+                >
+                  <span
+                    aria-label={battle.won ? "Sieg" : "Niederlage"}
+                    className={`dashboard-battle-result${battle.won ? " is-win" : " is-loss"}`}
                   >
-                    <span
-                      aria-hidden
-                      className={`dashboard-battle-result${won ? " is-win" : " is-loss"}`}
-                    >
-                      {won ? "S" : "N"}
+                    <span aria-hidden>{battle.won ? "S" : "N"}</span>
+                  </span>
+                  <div className="dashboard-battle-copy">
+                    <strong>
+                      {battle.opponentEmoji} {battle.opponentName}
+                    </strong>
+                    <span className="muted">
+                      {new Date(battle.created_at).toLocaleString("de-DE", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                      {battle.unread ? " · Neu" : ""}
                     </span>
-                    <div className="dashboard-battle-copy">
-                      <strong>
-                        {opponent?.emoji} {opponent?.name ?? "Unbekannt"}
-                      </strong>
-                      <span className="muted">
-                        {new Date(battle.created_at).toLocaleString("de-DE", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        {unread ? " · Neu" : ""}
-                      </span>
-                    </div>
-                    <Link
-                      className="button dashboard-battle-link"
-                      href={`/battle/${battle.id}` as Route}
-                    >
-                      Replay
-                    </Link>
-                  </article>
-                );
-              })}
+                  </div>
+                  <Link
+                    className="button dashboard-battle-link"
+                    href={`/battle/${battle.id}` as Route}
+                  >
+                    Replay
+                  </Link>
+                </article>
+              ))}
             </div>
           )}
         </section>

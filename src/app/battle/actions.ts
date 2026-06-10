@@ -5,13 +5,14 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { requireCharacter } from "@/lib/auth/require-character";
+import { markBattleViewedForCharacter } from "@/lib/game/battles";
 import { fetchCharacterLoadout } from "@/lib/game/loadout";
 import { persistBattleResult } from "@/lib/game/persist-battle";
 import { resolveBattleBetween } from "@/lib/game/resolve-battle";
 import { challengeCharacterSchema } from "@/lib/game/schemas";
 
 export async function challengeCharacter(formData: FormData) {
-  const { supabase, character } = await requireCharacter();
+  const { supabase, user, character } = await requireCharacter();
 
   const parsed = challengeCharacterSchema.safeParse({
     defenderCharacterId: formData.get("defenderCharacterId"),
@@ -39,7 +40,7 @@ export async function challengeCharacter(formData: FormData) {
   let battleId: string;
 
   try {
-    battleId = await persistBattleResult(supabase, persistenceInput);
+    battleId = await persistBattleResult(user.id, persistenceInput);
   } catch {
     redirect("/opponents?error=battle" as Route);
   }
@@ -53,37 +54,6 @@ export async function challengeCharacter(formData: FormData) {
 export async function markBattleViewed(battleId: string) {
   const { supabase, character } = await requireCharacter();
 
-  const { data: battle } = await supabase
-    .from("battles")
-    .select(
-      "id, attacker_character_id, defender_character_id, viewed_by_attacker_at, viewed_by_defender_at",
-    )
-    .eq("id", battleId)
-    .maybeSingle();
-
-  if (!battle) {
-    return;
-  }
-
-  const isAttacker = battle.attacker_character_id === character.id;
-  const isDefender = battle.defender_character_id === character.id;
-
-  if (!isAttacker && !isDefender) {
-    return;
-  }
-
-  const updatePayload = isAttacker
-    ? { viewed_by_attacker_at: new Date().toISOString() }
-    : { viewed_by_defender_at: new Date().toISOString() };
-
-  const alreadyViewed = isAttacker
-    ? battle.viewed_by_attacker_at
-    : battle.viewed_by_defender_at;
-
-  if (alreadyViewed) {
-    return;
-  }
-
-  await supabase.from("battles").update(updatePayload).eq("id", battleId);
+  await markBattleViewedForCharacter(supabase, battleId, character.id);
   revalidatePath("/dashboard");
 }

@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.3.0",
+    changes: [
+      "Sicherheit — Kampf-RPC nur serverseitig, Character-Progression per Trigger geschuetzt",
+      "Architektur — Page-Data-Helper, Battle-Log-Validierung und erweiterte Tests",
+      "UX — Loading/Error/404, Gast-Nav, Tastatur-Inventar und Accessibility-Fixes",
+    ],
+  },
+  {
     version: "1.2.4",
     changes: [
       "Branding — Spiel heisst jetzt Emojitsu (Repo, Vercel und UI)",

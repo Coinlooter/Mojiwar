@@ -1,13 +1,14 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-import type { Database } from "@/lib/supabase/database.types";
 import type { BattlePersistenceInput } from "./resolve-battle";
+import { createSupabaseServiceClient } from "@/lib/supabase/service";
 
 export async function persistBattleResult(
-  supabase: SupabaseClient<Database>,
+  requestingUserId: string,
   input: BattlePersistenceInput,
 ) {
+  const supabase = createSupabaseServiceClient();
+
   const { data, error } = await supabase.rpc("resolve_battle", {
+    p_requesting_user_id: requestingUserId,
     p_attacker_character_id: input.attackerCharacterId,
     p_defender_character_id: input.defenderCharacterId,
     p_winner_character_id: input.winnerCharacterId,
@@ -19,7 +20,7 @@ export async function persistBattleResult(
     p_defender_power_before: input.defenderPowerBefore,
     p_attacker_xp_gained: input.attackerXpGained,
     p_defender_xp_gained: input.defenderXpGained,
-    p_battle_log: input.battleLog as unknown as Database["public"]["Tables"]["battles"]["Insert"]["battle_log"],
+    p_battle_log: input.battleLog,
     p_reward_card_id: input.rewardCardId,
     p_attacker_xp_after: input.attackerXpAfter,
     p_attacker_level_after: input.attackerLevelAfter,

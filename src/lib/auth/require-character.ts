@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { getPrimaryCharacter } from "@/lib/auth/character";
 import { getVerifiedUser } from "@/lib/auth/session";
 import type { Database } from "@/lib/supabase/database.types";
 
@@ -23,13 +24,7 @@ export async function requireCharacter(): Promise<{
 }> {
   const { supabase, user } = await requireUser();
 
-  const { data: character } = await supabase
-    .from("characters")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const character = await getPrimaryCharacter(supabase, user.id);
 
   if (!character) {
     redirect("/onboarding" as Route);

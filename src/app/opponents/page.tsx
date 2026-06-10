@@ -1,49 +1,18 @@
-import { challengeCharacter } from "@/app/battle/actions";
+import { OpponentRow } from "@/components/opponents/OpponentRow";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 import { SubmitButton } from "@/components/ui/SubmitButton";
-import { requireCharacter } from "@/lib/auth/require-character";
+import { challengeCharacter } from "@/app/battle/actions";
 import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
-import { calculatePower } from "@/lib/game/calculate-power";
+import { requireCharacter } from "@/lib/auth/require-character";
 import { fetchCharacterLoadout, fetchCharacterLoadouts } from "@/lib/game/loadout";
 import { findBestAutomaticOpponent } from "@/lib/game/matchmaking";
 import { fetchOpponentCharacterIds } from "@/lib/game/opponents";
-import type { CharacterLoadout } from "@/lib/game/types";
+import {
+  getSearchParamErrorMessage,
+  OPPONENT_ERROR_MESSAGES,
+} from "@/lib/ui/errors";
 
 export const dynamic = "force-dynamic";
-
-const errorMessages: Record<string, string> = {
-  invalid: "Dieser Gegner konnte nicht herausgefordert werden.",
-  self: "Du kannst dich nicht selbst herausfordern.",
-  missing: "Der Gegner wurde nicht gefunden.",
-  battle: "Der Kampf konnte gerade nicht gestartet werden. Versuche es erneut.",
-};
-
-function OpponentRow({ candidate }: { candidate: CharacterLoadout }) {
-  const isBot = BOT_OPPONENT_IDS.has(candidate.id);
-  const power = calculatePower(candidate);
-
-  return (
-    <article className="fight-opponent-row">
-      <span aria-hidden className="fight-opponent-emoji">
-        {candidate.emoji}
-      </span>
-      <div className="fight-opponent-copy">
-        <strong>
-          {candidate.name}
-          {isBot ? (
-            <span className="fight-opponent-tag">Übung</span>
-          ) : null}
-        </strong>
-        <span className="muted">
-          Lv {candidate.level} · {power} · {candidate.deck.length} Karten
-        </span>
-      </div>
-      <form action={challengeCharacter}>
-        <input name="defenderCharacterId" type="hidden" value={candidate.id} />
-        <SubmitButton pendingLabel="Startet...">Kampf</SubmitButton>
-      </form>
-    </article>
-  );
-}
 
 export default async function OpponentsPage({
   searchParams,
@@ -52,7 +21,10 @@ export default async function OpponentsPage({
 }) {
   const { supabase, character } = await requireCharacter();
   const params = await searchParams;
-  const errorMessage = params.error ? errorMessages[params.error] : null;
+  const errorMessage = getSearchParamErrorMessage(
+    params.error,
+    OPPONENT_ERROR_MESSAGES,
+  );
 
   const [player, opponentIds] = await Promise.all([
     fetchCharacterLoadout(supabase, character.id),
@@ -60,7 +32,16 @@ export default async function OpponentsPage({
   ]);
 
   if (!player) {
-    return null;
+    return (
+      <div className="fight-page">
+        <section className="panel battle-card">
+          <p className="muted">
+            Dein Held konnte nicht geladen werden. Versuche es erneut unter
+            Dashboard.
+          </p>
+        </section>
+      </div>
+    );
   }
 
   const { allIds, botIds, playerIds, hasRealPlayers } = opponentIds;
@@ -86,11 +67,7 @@ export default async function OpponentsPage({
         </div>
       </header>
 
-      {errorMessage ? (
-        <p className="muted fight-error" role="alert">
-          {errorMessage}
-        </p>
-      ) : null}
+      {errorMessage ? <AlertBanner>{errorMessage}</AlertBanner> : null}
 
       {match ? (
         <section className="fight-match panel battle-card">
