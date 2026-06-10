@@ -141,7 +141,7 @@ export default async function DashboardPage() {
 
         <div className="actions dashboard-actions">
           <Link className="button primary" href="/opponents">
-            Gegner
+            Kampf
           </Link>
           <Link className="button" href="/deck">
             Inventar
@@ -169,8 +169,7 @@ export default async function DashboardPage() {
 
           {battles.length === 0 ? (
             <p className="muted dashboard-empty">
-              Noch keine Kaempfe. Starte auf der Gegner-Seite deinen ersten
-              Kampf.
+              Noch keine Kaempfe. Starte unter Kampf deinen ersten Kampf.
             </p>
           ) : (
             <div className="dashboard-battle-list">

@@ -17,21 +17,29 @@ const errorMessages: Record<string, string> = {
   battle: "Der Kampf konnte gerade nicht gestartet werden. Versuche es erneut.",
 };
 
-function OpponentCard({ candidate }: { candidate: CharacterLoadout }) {
+function OpponentRow({ candidate }: { candidate: CharacterLoadout }) {
   const isBot = BOT_OPPONENT_IDS.has(candidate.id);
+  const power = calculatePower(candidate);
 
   return (
-    <article className="feature-card">
-      <div className="emoji">{candidate.emoji}</div>
-      {isBot ? <p className="eyebrow">Übungsgegner</p> : null}
-      <h3>{candidate.name}</h3>
-      <p className="muted">
-        Level {candidate.level} · Staerke {calculatePower(candidate)} ·{" "}
-        {candidate.deck.length} Karten
-      </p>
+    <article className="fight-opponent-row">
+      <span aria-hidden className="fight-opponent-emoji">
+        {candidate.emoji}
+      </span>
+      <div className="fight-opponent-copy">
+        <strong>
+          {candidate.name}
+          {isBot ? (
+            <span className="fight-opponent-tag">Übung</span>
+          ) : null}
+        </strong>
+        <span className="muted">
+          Lv {candidate.level} · {power} · {candidate.deck.length} Karten
+        </span>
+      </div>
       <form action={challengeCharacter}>
         <input name="defenderCharacterId" type="hidden" value={candidate.id} />
-        <SubmitButton pendingLabel="Kampf startet...">Herausfordern</SubmitButton>
+        <SubmitButton pendingLabel="Startet...">Kampf</SubmitButton>
       </form>
     </article>
   );
@@ -65,65 +73,78 @@ export default async function OpponentsPage({
   const match = findBestAutomaticOpponent({ player, candidates });
 
   return (
-    <>
-      <section>
-        <p className="eyebrow">Gegner suchen</p>
-        <h1>Waehle einen Gegner fuer deinen naechsten Kampf.</h1>
-        <p className="lead">
-          {hasRealPlayers
-            ? "Du kannst echte Spieler oder Übungsgegner herausfordern. Der Kampf laeuft sofort ab."
-            : "Bis mehr Spieler mitmachen, stehen zehn Übungsgegner mit verschiedener Staerke bereit."}
-        </p>
-      </section>
+    <div className="fight-page">
+      <header className="fight-top panel battle-card">
+        <div>
+          <p className="eyebrow">Kampf</p>
+          <h1>Waehle deinen Gegner.</h1>
+          <p className="muted fight-top-lead">
+            {hasRealPlayers
+              ? "Echte Spieler oder Übungsgegner — der Kampf startet sofort."
+              : "Zehn Übungsgegner mit steigender Staerke stehen bereit."}
+          </p>
+        </div>
+      </header>
 
       {errorMessage ? (
-        <p className="muted" role="alert">
+        <p className="muted fight-error" role="alert">
           {errorMessage}
         </p>
       ) : null}
 
       {match ? (
-        <section className="section panel battle-card">
-          <p className="eyebrow">Passender Gegner</p>
-          <h2>
-            {match.opponent.emoji} {match.opponent.name}
-          </h2>
-          <p className="muted">
-            {BOT_OPPONENT_IDS.has(match.opponent.id) ? "Übungsgegner · " : ""}
-            Staerke {match.opponentPower} · Level {match.opponent.level}
-          </p>
+        <section className="fight-match panel battle-card">
+          <div className="fight-match-copy">
+            <p className="eyebrow">Empfohlen</p>
+            <div className="fight-match-main">
+              <span aria-hidden className="fight-match-emoji">
+                {match.opponent.emoji}
+              </span>
+              <div>
+                <h2>{match.opponent.name}</h2>
+                <p className="muted">
+                  {BOT_OPPONENT_IDS.has(match.opponent.id) ? "Übung · " : ""}
+                  Lv {match.opponent.level} · Staerke {match.opponentPower}
+                </p>
+              </div>
+            </div>
+          </div>
           <form action={challengeCharacter}>
             <input
               name="defenderCharacterId"
               type="hidden"
               value={match.opponent.id}
             />
-            <SubmitButton pendingLabel="Kampf startet..." variant="primary">
-              Herausfordern
+            <SubmitButton pendingLabel="Startet..." variant="primary">
+              Jetzt kaempfen
             </SubmitButton>
           </form>
         </section>
       ) : null}
 
-      {playerCandidates.length > 0 ? (
-        <section className="section">
-          <p className="eyebrow">Echte Spieler</p>
-          <div className="feature-grid" aria-label="Echte Gegner">
-            {playerCandidates.map((candidate) => (
-              <OpponentCard candidate={candidate} key={candidate.id} />
+      <div
+        className={`fight-lists${playerCandidates.length === 0 ? " fight-lists-single" : ""}`}
+      >
+        {playerCandidates.length > 0 ? (
+          <section className="panel battle-card fight-list-card">
+            <p className="eyebrow">Echte Spieler</p>
+            <div aria-label="Echte Spieler" className="fight-opponent-list">
+              {playerCandidates.map((candidate) => (
+                <OpponentRow candidate={candidate} key={candidate.id} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section className="panel battle-card fight-list-card">
+          <p className="eyebrow">Übungsgegner</p>
+          <div aria-label="Übungsgegner" className="fight-opponent-list">
+            {botCandidates.map((candidate) => (
+              <OpponentRow candidate={candidate} key={candidate.id} />
             ))}
           </div>
         </section>
-      ) : null}
-
-      <section className="section">
-        <p className="eyebrow">Übungsgegner</p>
-        <div className="feature-grid" aria-label="Übungsgegner">
-          {botCandidates.map((candidate) => (
-            <OpponentCard candidate={candidate} key={candidate.id} />
-          ))}
-        </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }

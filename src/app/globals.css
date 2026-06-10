@@ -1299,6 +1299,132 @@ h3 {
   line-height: 1.45;
 }
 
+.fight-page {
+  display: grid;
+  gap: 14px;
+}
+
+.fight-top {
+  padding: 16px 18px;
+}
+
+.fight-top h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.fight-top-lead {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+.fight-error {
+  margin: 0;
+}
+
+.fight-match {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+}
+
+.fight-match .eyebrow {
+  margin: 0 0 8px;
+}
+
+.fight-match h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.fight-match-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fight-match-emoji {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.fight-lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.fight-lists-single {
+  grid-template-columns: 1fr;
+}
+
+.fight-list-card {
+  padding: 14px 16px;
+}
+
+.fight-list-card .eyebrow {
+  margin: 0 0 10px;
+}
+
+.fight-opponent-list {
+  display: grid;
+  gap: 8px;
+}
+
+.fight-opponent-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 10px 12px;
+}
+
+.fight-opponent-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.fight-opponent-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fight-opponent-copy strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.92rem;
+}
+
+.fight-opponent-copy .muted {
+  font-size: 0.76rem;
+}
+
+.fight-opponent-tag {
+  border-radius: 999px;
+  background: rgba(159, 122, 234, 0.18);
+  color: var(--accent-strong);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  text-transform: uppercase;
+}
+
+.fight-opponent-row .button {
+  padding: 8px 12px;
+  font-size: 0.84rem;
+}
+
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2140,5 +2266,9 @@ h3 {
 
   .event-list {
     max-height: 180px;
+  }
+
+  .fight-lists {
+    grid-template-columns: 1fr;
   }
 }
