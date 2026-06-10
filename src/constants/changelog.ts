@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.2.4",
+    changes: [
+      "Branding — Spiel heisst jetzt Emojitsu (Repo, Vercel und UI)",
+    ],
+  },
+  {
     version: "1.2.3",
     changes: [
       "Inventar — kompakteres Layout mit kleineren Karten und Slots nebeneinander",

@@ -15,8 +15,8 @@ import type {
   InventorySlotData,
 } from "@/lib/inventory/types";
 
-const DRAG_CARD_MIME = "application/x-mojiwar-card";
-const DRAG_SLOT_MIME = "application/x-mojiwar-slot";
+const DRAG_CARD_MIME = "application/x-emojitsu-card";
+const DRAG_SLOT_MIME = "application/x-emojitsu-slot";
 
 const errorMessages: Record<DeckActionError, string> = {
   invalid: "Diese Karte konnte nicht platziert werden.",

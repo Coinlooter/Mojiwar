@@ -1,6 +1,6 @@
-# Mojiwar
+# Emojitsu
 
-Mojiwar is an async multiplayer emoji auto-battler RPG. Players pick an emoji,
+Emojitsu is an async multiplayer emoji auto-battler RPG. Players pick an emoji,
 name it, equip up to three permanent cards at the start, and challenge other
 emojis in server-simulated round battles. Opponents do not need to be online:
 when they return, they see how many battles happened, which ones were won or
@@ -63,13 +63,13 @@ Copy `.env.example` to `.env.local` for local development.
 
 Project:
 
-- Supabase project: `Mojiwar`
+- Supabase project: `Emojitsu`
 - Project ref: `xqbnqfntxeaqbcjakzfd`
 - Region: `eu-west-1`
 
 ## Auth flow
 
-Mojiwar starts with a kid-friendly anonymous Supabase account:
+Emojitsu starts with a kid-friendly anonymous Supabase account:
 
 1. A new player clicks **Sofort spielen**.
 2. The browser creates an anonymous Supabase Auth user.
