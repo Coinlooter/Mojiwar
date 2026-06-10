@@ -832,40 +832,21 @@ input {
 }
 
 .inventory-board-error {
-  margin: 0 0 16px;
+  margin: 0;
 }
 
 .inventory-board-status {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 16px;
+  margin: 0;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.86rem;
 }
 
 .inventory-board-hint {
-  margin: 0 0 16px;
-}
-
-.deck-slot-drop {
-  display: grid;
-  justify-items: center;
-  width: 100%;
-  min-height: 100%;
-}
-
-.deck-slot-drop-hover .deck-slot-empty,
-.deck-slot-drop-hover.deck-slot-drop-filled {
-  outline: 2px solid var(--accent-strong);
-  outline-offset: 4px;
-  border-radius: 16px;
-}
-
-.deck-slot-drop-hover .deck-slot-empty {
-  border-color: var(--accent-strong);
-  background: rgba(159, 122, 234, 0.14);
-  color: #e9d5ff;
+  margin: 0;
+  font-size: 0.82rem;
 }
 
 .inventory-draggable {
@@ -885,8 +866,8 @@ input {
 
 .inventory-collection {
   border: 2px dashed transparent;
-  border-radius: 24px;
-  padding: 8px;
+  border-radius: 18px;
+  padding: 6px;
   transition:
     border-color 160ms ease,
     background 160ms ease;
@@ -898,9 +879,6 @@ input {
   background: rgba(159, 122, 234, 0.08);
 }
 
-.inventory-collection-empty {
-  width: 100%;
-}
 
 .battle-result-loot-display {
   display: flex;
@@ -1423,6 +1401,126 @@ h3 {
 .fight-opponent-row .button {
   padding: 8px 12px;
   font-size: 0.84rem;
+}
+
+.inventory-page {
+  display: grid;
+  gap: 14px;
+}
+
+.inventory-top {
+  padding: 16px 18px;
+}
+
+.inventory-top h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.inventory-top-lead {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+.inventory-board {
+  display: grid;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+.inventory-section-head {
+  margin-bottom: 10px;
+}
+
+.inventory-section-head .eyebrow,
+.inventory-section-label {
+  margin: 0 0 4px;
+}
+
+.inventory-slots-section {
+  display: grid;
+  gap: 0;
+}
+
+.inventory-slots-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.inventory-slot {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+
+.inventory-slot-label {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.inventory-slot-drop {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  min-height: 100%;
+}
+
+.inventory-slot-empty {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 148px;
+  aspect-ratio: 5 / 7;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--muted);
+  font-size: 0.78rem;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.inventory-slot-drop-hover .inventory-slot-empty,
+.inventory-slot-drop-hover.inventory-slot-drop-filled {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.inventory-slot-drop-hover .inventory-slot-empty {
+  border-color: var(--accent-strong);
+  background: rgba(159, 122, 234, 0.14);
+  color: #e9d5ff;
+}
+
+.inventory-collection-section {
+  display: grid;
+  gap: 8px;
+}
+
+.inventory-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.inventory-card-item {
+  display: flex;
+  justify-content: center;
+}
+
+.inventory-collection-empty {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .feature-grid {
@@ -2270,5 +2368,23 @@ h3 {
 
   .fight-lists {
     grid-template-columns: 1fr;
+  }
+
+  .inventory-slots-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .inventory-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .inventory-slots-row {
+    grid-template-columns: 1fr;
+    max-width: 180px;
+    margin-inline: auto;
   }
 }

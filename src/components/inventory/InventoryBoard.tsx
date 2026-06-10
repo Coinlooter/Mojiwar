@@ -130,7 +130,9 @@ export function InventoryBoard({
   }
 
   return (
-    <div className={`inventory-board${isPending ? " inventory-board-pending" : ""}`}>
+    <div
+      className={`inventory-board panel battle-card${isPending ? " inventory-board-pending" : ""}`}
+    >
       {actionError ? (
         <p className="muted inventory-board-error" role="alert">
           {actionError}
@@ -144,23 +146,24 @@ export function InventoryBoard({
         </p>
       ) : null}
 
-      <section className="section">
-        <p className="eyebrow">Aktive Slots</p>
-        <p className="muted inventory-board-hint">
-          Ziehe Karten aus dem Inventar in einen Slot. Ziehe aus einem Slot
-          zurueck ins Inventar, um sie zu entfernen.
-        </p>
-        <div className="deck-slot-grid">
+      <section className="inventory-slots-section">
+        <div className="inventory-section-head">
+          <p className="eyebrow">Aktive Slots</p>
+          <p className="muted inventory-board-hint">
+            Ziehe Karten in einen Slot oder zurueck ins Inventar.
+          </p>
+        </div>
+        <div className="inventory-slots-row">
           {slots.map((slot) => {
             const isHover = hoverSlot === slot.slotIndex;
             const isDraggingFromHere =
               dragSource?.kind === "slot" && dragSource.slotIndex === slot.slotIndex;
 
             return (
-              <div className="deck-slot-card" key={slot.slotIndex}>
-                <p className="deck-slot-label">Slot {slot.slotIndex + 1}</p>
+              <div className="inventory-slot" key={slot.slotIndex}>
+                <p className="inventory-slot-label">Slot {slot.slotIndex + 1}</p>
                 <div
-                  className={`deck-slot-drop${isHover ? " deck-slot-drop-hover" : ""}${slot.card ? " deck-slot-drop-filled" : ""}`}
+                  className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}`}
                   onDragEnd={clearDragState}
                   onDragLeave={() => {
                     setHoverSlot((current) =>
@@ -188,14 +191,14 @@ export function InventoryBoard({
                     >
                       <GameCard
                         active
-                        description={slot.card.description}
                         emoji={slot.card.emoji}
                         name={slot.card.name}
                         rarity={slot.card.rarity}
+                        size="sm"
                       />
                     </div>
                   ) : (
-                    <div className="deck-slot-empty">
+                    <div className="inventory-slot-empty">
                       {isHover ? "Hier ablegen" : "Slot leer"}
                     </div>
                   )}
@@ -206,8 +209,8 @@ export function InventoryBoard({
         </div>
       </section>
 
-      <section className="section">
-        <p className="eyebrow">Inventar</p>
+      <section className="inventory-collection-section">
+        <p className="eyebrow inventory-section-label">Sammlung</p>
         <div
           className={`inventory-collection${inventoryHover ? " inventory-collection-hover" : ""}${dragSource?.kind === "slot" ? " inventory-collection-unequip" : ""}`}
           onDragEnd={clearDragState}
@@ -233,22 +236,20 @@ export function InventoryBoard({
           }}
         >
           {collection.length === 0 ? (
-            <article className="feature-card inventory-collection-empty">
-              <p className="muted">
-                {dragSource?.kind === "slot"
-                  ? "Hier ablegen, um die Karte aus dem Deck zu nehmen."
-                  : "Noch keine Karten im Inventar. Gewinne Kaempfe, um neue Karten zu sammeln."}
-              </p>
-            </article>
+            <p className="muted inventory-collection-empty">
+              {dragSource?.kind === "slot"
+                ? "Hier ablegen, um die Karte aus dem Deck zu nehmen."
+                : "Noch keine Karten im Inventar. Gewinne Kaempfe, um neue Karten zu sammeln."}
+            </p>
           ) : (
-            <div className="deck-card-grid" aria-label="Inventar">
+            <div className="inventory-card-grid" aria-label="Inventar">
               {collection.map((card) => {
                 const isDragging =
                   dragSource?.kind === "inventory" &&
                   dragSource.playerCardId === card.playerCardId;
 
                 return (
-                  <div className="deck-card-item" key={card.playerCardId}>
+                  <div className="inventory-card-item" key={card.playerCardId}>
                     <div
                       className={`inventory-draggable${isDragging ? " is-dragging" : ""}`}
                       draggable={!isPending}
@@ -258,10 +259,10 @@ export function InventoryBoard({
                       }}
                     >
                       <GameCard
-                        description={card.description}
                         emoji={card.emoji}
                         name={card.name}
                         rarity={card.rarity}
+                        size="sm"
                       />
                     </div>
                   </div>
