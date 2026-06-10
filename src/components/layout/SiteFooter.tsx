@@ -20,7 +20,7 @@ export function SiteFooter() {
           </span>
           <a
             className="footer-link"
-            href="https://github.com/Coinlooter/Mojiwar"
+            href="https://github.com/Coinlooter/Emojitsu"
             rel="noreferrer"
             target="_blank"
           >

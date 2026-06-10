@@ -25,7 +25,7 @@ values (
   '00000000-0000-0000-0000-000000000000',
   'authenticated',
   'authenticated',
-  'bots@mojiwar.local',
+  'bots@emojitsu.local',
   crypt('bot-pool-not-used', gen_salt('bf')),
   now(),
   '{"provider":"email","providers":["email"]}',

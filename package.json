@@ -1,6 +1,6 @@
 {
-  "name": "mojiwar",
-  "version": "1.2.3",
+  "name": "emojitsu",
+  "version": "1.2.4",
   "description": "Async multiplayer emoji auto-battler RPG.",
   "private": true,
   "scripts": {
@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Coinlooter/Mojiwar.git"
+    "url": "git+https://github.com/Coinlooter/Emojitsu.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Coinlooter/Mojiwar/issues"
+    "url": "https://github.com/Coinlooter/Emojitsu/issues"
   },
-  "homepage": "https://github.com/Coinlooter/Mojiwar#readme",
+  "homepage": "https://emojitsu.vercel.app",
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",

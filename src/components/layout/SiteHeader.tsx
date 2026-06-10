@@ -28,7 +28,7 @@ export async function SiteHeader() {
             ⚔️
           </span>
           <span className="brand-copy">
-            <span className="brand-title">Mojiwar</span>
+            <span className="brand-title">Emojitsu</span>
             <span className="brand-subtitle">Emoji-Kampfspiel</span>
           </span>
         </Link>

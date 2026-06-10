@@ -48,7 +48,7 @@ export default function Home() {
           <p className="eyebrow">Dein Emoji-Kampfspiel</p>
           <h1>Baue deinen Helden. Kaempfe. Gewinne Karten.</h1>
           <p className="lead">
-            In Mojiwar erstellst du dein eigenes Emoji und schickst es in
+            In Emojitsu erstellst du dein eigenes Emoji und schickst es in
             spannende Kaempfe. Gegner muessen nicht gleichzeitig online sein —
             dein Held kaempft auch, wenn du gerade etwas anderes machst.
           </p>

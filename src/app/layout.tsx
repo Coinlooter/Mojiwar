@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mojiwar",
+  title: "Emojitsu",
   description: "Baue dein Emoji, kaempfe gegen andere Spieler und sammle Karten.",
 };
 
