@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 
 import {
   equipDeckSlotById,
@@ -9,8 +8,12 @@ import {
   type DeckActionError,
 } from "@/app/deck/actions";
 import { GameCard } from "@/components/cards/GameCard";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { DECK_ERROR_MESSAGES } from "@/lib/ui/errors";
+import {
+  equipCardOptimistically,
+  unequipCardOptimistically,
+  type InventoryDeckState,
+} from "@/lib/inventory/optimistic-deck";
 import type {
   InventoryCardData,
   InventorySlotData,
@@ -32,29 +35,63 @@ export function InventoryBoard({
   collection: InventoryCardData[];
   initialError: DeckActionError | null;
 }) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
+  const [deckState, setDeckState] = useState<InventoryDeckState>({
+    slots,
+    collection,
+  });
+  const [savingKeys, setSavingKeys] = useState<string[]>([]);
   const [dragSource, setDragSource] = useState<DragSource | null>(null);
   const [hoverSlot, setHoverSlot] = useState<number | null>(null);
   const [inventoryHover, setInventoryHover] = useState(false);
   const [actionError, setActionError] = useState<string | null>(
     initialError ? DECK_ERROR_MESSAGES[initialError] : null,
   );
+  const rollbackRef = useRef<InventoryDeckState | null>(null);
 
-  const filledSlots = slots.filter((slot) => slot.card).length;
+  const filledSlots = deckState.slots.filter((slot) => slot.card).length;
+  const isSaving = savingKeys.length > 0;
 
-  function runDeckAction(action: () => Promise<{ ok: true } | { ok: false; error: DeckActionError }>) {
+  function beginSaving(key: string) {
+    setSavingKeys((current) => (current.includes(key) ? current : [...current, key]));
+  }
+
+  function endSaving(key: string) {
+    setSavingKeys((current) => current.filter((entry) => entry !== key));
+  }
+
+  function runDeckMutation({
+    savingKey,
+    optimisticState,
+    action,
+  }: {
+    savingKey: string;
+    optimisticState: InventoryDeckState | null;
+    action: () => Promise<{ ok: true } | { ok: false; error: DeckActionError }>;
+  }) {
+    if (!optimisticState) {
+      return;
+    }
+
     setActionError(null);
+    rollbackRef.current = deckState;
+    setDeckState(optimisticState);
+    beginSaving(savingKey);
 
-    startTransition(async () => {
-      const result = await action();
+    startTransition(() => {
+      void (async () => {
+        const result = await action();
 
-      if (!result.ok) {
-        setActionError(DECK_ERROR_MESSAGES[result.error]);
-        return;
-      }
+        endSaving(savingKey);
 
-      router.refresh();
+        if (!result.ok) {
+          if (rollbackRef.current) {
+            setDeckState(rollbackRef.current);
+          }
+
+          setActionError(DECK_ERROR_MESSAGES[result.error]);
+        }
+      })();
     });
   }
 
@@ -98,7 +135,11 @@ export function InventoryBoard({
       return;
     }
 
-    runDeckAction(() => equipDeckSlotById(playerCardId, slotIndex));
+    runDeckMutation({
+      savingKey: `equip:${playerCardId}:${slotIndex}`,
+      optimisticState: equipCardOptimistically(deckState, playerCardId, slotIndex),
+      action: () => equipDeckSlotById(playerCardId, slotIndex),
+    });
   }
 
   function handleDropOnInventory(event: React.DragEvent) {
@@ -117,7 +158,11 @@ export function InventoryBoard({
       return;
     }
 
-    runDeckAction(() => unequipDeckSlotByIndex(slotIndex));
+    runDeckMutation({
+      savingKey: `unequip:${slotIndex}`,
+      optimisticState: unequipCardOptimistically(deckState, slotIndex),
+      action: () => unequipDeckSlotByIndex(slotIndex),
+    });
   }
 
   function clearDragState() {
@@ -127,14 +172,13 @@ export function InventoryBoard({
   }
 
   return (
-    <div
-      className={`inventory-board panel battle-card${isPending ? " inventory-board-pending" : ""}`}
-    >
+    <div className={`inventory-board panel battle-card${isSaving ? " inventory-board-saving" : ""}`}>
       <header className="inventory-board-top">
         <div className="inventory-section-title-row">
           <p className="eyebrow">Inventar</p>
           <span className="inventory-slot-count">
-            {filledSlots}/{slots.length} im Build
+            {filledSlots}/{deckState.slots.length} im Build
+            {isSaving ? " · speichert..." : ""}
           </span>
         </div>
         <p className="muted inventory-board-lead">
@@ -148,13 +192,6 @@ export function InventoryBoard({
         </p>
       ) : null}
 
-      {isPending ? (
-        <p aria-live="polite" className="inventory-board-status">
-          <LoadingSpinner />
-          Inventar wird aktualisiert...
-        </p>
-      ) : null}
-
       <section className="inventory-deck-section">
         <div className="inventory-section-head">
           <p className="inventory-section-label">Dein Build</p>
@@ -162,13 +199,29 @@ export function InventoryBoard({
 
         <div className="inventory-deck-panel">
           <div className="inventory-slots-row">
-            {slots.map((slot) => {
+            {deckState.slots.map((slot) => {
               const isHover = hoverSlot === slot.slotIndex;
               const isDraggingFromHere =
                 dragSource?.kind === "slot" && dragSource.slotIndex === slot.slotIndex;
+              const slotSaving = savingKeys.some((key) => {
+                if (key === `unequip:${slot.slotIndex}`) {
+                  return true;
+                }
+
+                if (key.endsWith(`:${slot.slotIndex}`)) {
+                  return true;
+                }
+
+                return Boolean(
+                  slot.card && key.startsWith(`equip:${slot.card.playerCardId}:`),
+                );
+              });
 
               return (
-                <div className="inventory-slot" key={slot.slotIndex}>
+                <div
+                  className={`inventory-slot${slotSaving ? " inventory-slot-saving" : ""}`}
+                  key={slot.slotIndex}
+                >
                   <div
                     className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}`}
                     onDragEnd={clearDragState}
@@ -190,7 +243,7 @@ export function InventoryBoard({
                     {slot.card ? (
                       <div
                         className={`inventory-draggable inventory-slot-card${isDraggingFromHere ? " is-dragging" : ""}`}
-                        draggable={!isPending}
+                        draggable={!slotSaving}
                         onDragEnd={clearDragState}
                         onDragStart={(event) => {
                           handleDragStartSlot(slot, event);
@@ -214,9 +267,16 @@ export function InventoryBoard({
                   {slot.card ? (
                     <button
                       className="button button-compact inventory-slot-remove"
-                      disabled={isPending}
+                      disabled={slotSaving}
                       onClick={() => {
-                        runDeckAction(() => unequipDeckSlotByIndex(slot.slotIndex));
+                        runDeckMutation({
+                          savingKey: `unequip:${slot.slotIndex}`,
+                          optimisticState: unequipCardOptimistically(
+                            deckState,
+                            slot.slotIndex,
+                          ),
+                          action: () => unequipDeckSlotByIndex(slot.slotIndex),
+                        });
                       }}
                       type="button"
                     >
@@ -234,9 +294,10 @@ export function InventoryBoard({
         <div className="inventory-section-head">
           <div className="inventory-section-title-row">
             <p className="inventory-section-label">Sammlung</p>
-            {collection.length > 0 ? (
+            {deckState.collection.length > 0 ? (
               <span className="inventory-collection-count">
-                {collection.length} {collection.length === 1 ? "Karte" : "Karten"}
+                {deckState.collection.length}{" "}
+                {deckState.collection.length === 1 ? "Karte" : "Karten"}
               </span>
             ) : null}
           </div>
@@ -266,7 +327,7 @@ export function InventoryBoard({
             clearDragState();
           }}
         >
-          {collection.length === 0 ? (
+          {deckState.collection.length === 0 ? (
             <p className="muted inventory-collection-empty">
               {dragSource?.kind === "slot"
                 ? "Hier ablegen, um die Karte aus dem Deck zu nehmen."
@@ -274,19 +335,22 @@ export function InventoryBoard({
             </p>
           ) : (
             <div className="inventory-card-grid" aria-label="Sammlung">
-              {collection.map((card) => {
+              {deckState.collection.map((card) => {
                 const isDragging =
                   dragSource?.kind === "inventory" &&
                   dragSource.playerCardId === card.playerCardId;
+                const cardSaving = savingKeys.some((key) =>
+                  key.startsWith(`equip:${card.playerCardId}:`),
+                );
 
                 return (
                   <div
-                    className={`inventory-card-cell${isDragging ? " is-dragging" : ""}`}
+                    className={`inventory-card-cell${isDragging ? " is-dragging" : ""}${cardSaving ? " inventory-card-saving" : ""}`}
                     key={card.playerCardId}
                   >
                     <div
                       className="inventory-draggable"
-                      draggable={!isPending}
+                      draggable={!cardSaving}
                       onDragEnd={clearDragState}
                       onDragStart={(event) => {
                         handleDragStartInventory(card, event);

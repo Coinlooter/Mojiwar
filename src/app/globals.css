@@ -933,8 +933,15 @@ input {
     color 160ms ease;
 }
 
-.inventory-board-pending {
-  pointer-events: none;
+.inventory-board-saving .inventory-slot-saving,
+.inventory-board-saving .inventory-card-saving {
+  opacity: 0.82;
+}
+
+.inventory-slot-saving .game-card-frame,
+.inventory-card-saving .game-card-frame {
+  outline: 2px solid rgba(159, 122, 234, 0.45);
+  outline-offset: 2px;
 }
 
 .inventory-board-error {

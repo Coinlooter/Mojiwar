@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import type { Route } from "next";
 import { redirect } from "next/navigation";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
 import { requireCharacter } from "@/lib/auth/require-character";
@@ -10,6 +11,7 @@ import { calculatePower } from "@/lib/game/calculate-power";
 import { fetchCharacterLoadout } from "@/lib/game/loadout";
 import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
+import type { Database } from "@/lib/supabase/database.types";
 
 const equipSchema = z.object({
   playerCardId: z.string().uuid(),
@@ -22,8 +24,10 @@ const unequipSchema = z.object({
 
 export type DeckActionError = "invalid" | "card" | "slot";
 
-async function refreshCharacterPower(characterId: string) {
-  const { supabase } = await requireCharacter();
+async function refreshCharacterPower(
+  supabase: SupabaseClient<Database>,
+  characterId: string,
+) {
   const loadout = await fetchCharacterLoadout(supabase, characterId);
 
   if (!loadout) {
@@ -39,7 +43,6 @@ async function refreshCharacterPower(characterId: string) {
 }
 
 function revalidateDeckPaths() {
-  revalidatePath("/deck");
   revalidatePath("/dashboard");
   revalidatePath("/opponents");
 }
@@ -67,16 +70,17 @@ export async function equipDeckSlotById(
     return { ok: false, error: "card" };
   }
 
-  await supabase
-    .from("deck_slots")
-    .delete()
-    .eq("character_id", character.id)
-    .eq("slot_index", parsed.data.slotIndex);
-
-  await supabase
-    .from("deck_slots")
-    .delete()
-    .eq("player_card_id", parsed.data.playerCardId);
+  await Promise.all([
+    supabase
+      .from("deck_slots")
+      .delete()
+      .eq("character_id", character.id)
+      .eq("slot_index", parsed.data.slotIndex),
+    supabase
+      .from("deck_slots")
+      .delete()
+      .eq("player_card_id", parsed.data.playerCardId),
+  ]);
 
   const { error } = await supabase.from("deck_slots").insert({
     character_id: character.id,
@@ -88,7 +92,7 @@ export async function equipDeckSlotById(
     return { ok: false, error: "slot" };
   }
 
-  await refreshCharacterPower(character.id);
+  await refreshCharacterPower(supabase, character.id);
   revalidateDeckPaths();
 
   return { ok: true };
@@ -115,7 +119,7 @@ export async function unequipDeckSlotByIndex(
     return { ok: false, error: "slot" };
   }
 
-  await refreshCharacterPower(character.id);
+  await refreshCharacterPower(supabase, character.id);
   revalidateDeckPaths();
 
   return { ok: true };
