@@ -41,6 +41,8 @@ export function InventoryBoard({
     initialError ? DECK_ERROR_MESSAGES[initialError] : null,
   );
 
+  const filledSlots = slots.filter((slot) => slot.card).length;
+
   function runDeckAction(action: () => Promise<{ ok: true } | { ok: false; error: DeckActionError }>) {
     setActionError(null);
 
@@ -141,68 +143,74 @@ export function InventoryBoard({
         </p>
       ) : null}
 
-      <section className="inventory-slots-section">
+      <section className="inventory-deck-section">
         <div className="inventory-section-head">
-          <p className="eyebrow">Aktive Slots</p>
+          <div className="inventory-section-title-row">
+            <p className="eyebrow">Dein Build</p>
+            <span className="inventory-slot-count">
+              {filledSlots}/{slots.length} Slots
+            </span>
+          </div>
           <p className="muted inventory-board-hint">
-            Ziehe Karten in einen Slot, nutze die Tastatur-Buttons oder lege
-            zurueck ins Inventar.
+            Ziehe Karten aus der Sammlung in einen Slot. Zum Entfernen zurueck
+            in die Sammlung ziehen oder auf Entfernen tippen.
           </p>
         </div>
-        <div className="inventory-slots-row">
-          {slots.map((slot) => {
-            const isHover = hoverSlot === slot.slotIndex;
-            const isDraggingFromHere =
-              dragSource?.kind === "slot" && dragSource.slotIndex === slot.slotIndex;
 
-            return (
-              <div className="inventory-slot" key={slot.slotIndex}>
-                <p className="inventory-slot-label">Slot {slot.slotIndex + 1}</p>
-                <div
-                  className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}`}
-                  onDragEnd={clearDragState}
-                  onDragLeave={() => {
-                    setHoverSlot((current) =>
-                      current === slot.slotIndex ? null : current,
-                    );
-                  }}
-                  onDragOver={(event) => {
-                    event.preventDefault();
-                    event.dataTransfer.dropEffect = "move";
-                    setHoverSlot(slot.slotIndex);
-                  }}
-                  onDrop={(event) => {
-                    handleDropOnSlot(slot.slotIndex, event);
-                    clearDragState();
-                  }}
-                >
+        <div className="inventory-deck-panel">
+          <div className="inventory-slots-row">
+            {slots.map((slot) => {
+              const isHover = hoverSlot === slot.slotIndex;
+              const isDraggingFromHere =
+                dragSource?.kind === "slot" && dragSource.slotIndex === slot.slotIndex;
+
+              return (
+                <div className="inventory-slot" key={slot.slotIndex}>
+                  <p className="inventory-slot-label">Slot {slot.slotIndex + 1}</p>
+                  <div
+                    className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}`}
+                    onDragEnd={clearDragState}
+                    onDragLeave={() => {
+                      setHoverSlot((current) =>
+                        current === slot.slotIndex ? null : current,
+                      );
+                    }}
+                    onDragOver={(event) => {
+                      event.preventDefault();
+                      event.dataTransfer.dropEffect = "move";
+                      setHoverSlot(slot.slotIndex);
+                    }}
+                    onDrop={(event) => {
+                      handleDropOnSlot(slot.slotIndex, event);
+                      clearDragState();
+                    }}
+                  >
+                    {slot.card ? (
+                      <div
+                        className={`inventory-draggable inventory-slot-card${isDraggingFromHere ? " is-dragging" : ""}`}
+                        draggable={!isPending}
+                        onDragEnd={clearDragState}
+                        onDragStart={(event) => {
+                          handleDragStartSlot(slot, event);
+                        }}
+                      >
+                        <GameCard
+                          active
+                          emoji={slot.card.emoji}
+                          name={slot.card.name}
+                          rarity={slot.card.rarity}
+                          size="sm"
+                        />
+                      </div>
+                    ) : (
+                      <div className="inventory-slot-empty">
+                        {isHover ? "Hier ablegen" : "Leer"}
+                      </div>
+                    )}
+                  </div>
                   {slot.card ? (
-                    <div
-                      className={`inventory-draggable${isDraggingFromHere ? " is-dragging" : ""}`}
-                      draggable={!isPending}
-                      onDragEnd={clearDragState}
-                      onDragStart={(event) => {
-                        handleDragStartSlot(slot, event);
-                      }}
-                    >
-                      <GameCard
-                        active
-                        emoji={slot.card.emoji}
-                        name={slot.card.name}
-                        rarity={slot.card.rarity}
-                        size="sm"
-                      />
-                    </div>
-                  ) : (
-                    <div className="inventory-slot-empty">
-                      {isHover ? "Hier ablegen" : "Slot leer"}
-                    </div>
-                  )}
-                </div>
-                {slot.card ? (
-                  <div className="inventory-keyboard-actions">
                     <button
-                      className="button inventory-keyboard-button"
+                      className="button button-compact inventory-slot-remove"
                       disabled={isPending}
                       onClick={() => {
                         runDeckAction(() => unequipDeckSlotByIndex(slot.slotIndex));
@@ -211,16 +219,29 @@ export function InventoryBoard({
                     >
                       Entfernen
                     </button>
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       <section className="inventory-collection-section">
-        <p className="eyebrow inventory-section-label">Sammlung</p>
+        <div className="inventory-section-head">
+          <div className="inventory-section-title-row">
+            <p className="eyebrow">Sammlung</p>
+            {collection.length > 0 ? (
+              <span className="inventory-collection-count">
+                {collection.length} {collection.length === 1 ? "Karte" : "Karten"}
+              </span>
+            ) : null}
+          </div>
+          <p className="muted inventory-board-hint">
+            Halte eine Karte gedrueckt und ziehe sie in einen freien Slot.
+          </p>
+        </div>
+
         <div
           className={`inventory-collection${inventoryHover ? " inventory-collection-hover" : ""}${dragSource?.kind === "slot" ? " inventory-collection-unequip" : ""}`}
           onDragEnd={clearDragState}
@@ -249,19 +270,22 @@ export function InventoryBoard({
             <p className="muted inventory-collection-empty">
               {dragSource?.kind === "slot"
                 ? "Hier ablegen, um die Karte aus dem Deck zu nehmen."
-                : "Noch keine Karten im Inventar. Gewinne Kaempfe, um neue Karten zu sammeln."}
+                : "Alle Karten sind im Build — oder du hast noch keine gesammelt. Gewinne Kaempfe fuer neue Karten."}
             </p>
           ) : (
-            <div className="inventory-card-grid" aria-label="Inventar">
+            <div className="inventory-card-grid" aria-label="Sammlung">
               {collection.map((card) => {
                 const isDragging =
                   dragSource?.kind === "inventory" &&
                   dragSource.playerCardId === card.playerCardId;
 
                 return (
-                  <div className="inventory-card-item" key={card.playerCardId}>
+                  <div
+                    className={`inventory-card-cell${isDragging ? " is-dragging" : ""}`}
+                    key={card.playerCardId}
+                  >
                     <div
-                      className={`inventory-draggable${isDragging ? " is-dragging" : ""}`}
+                      className="inventory-draggable"
                       draggable={!isPending}
                       onDragEnd={clearDragState}
                       onDragStart={(event) => {
@@ -274,30 +298,6 @@ export function InventoryBoard({
                         rarity={card.rarity}
                         size="sm"
                       />
-                    </div>
-                    <div
-                      aria-label={`${card.name} in Slot legen`}
-                      className="inventory-keyboard-actions"
-                      role="group"
-                    >
-                      {slots.map((targetSlot) => (
-                        <button
-                          className="button inventory-keyboard-button"
-                          disabled={isPending}
-                          key={targetSlot.slotIndex}
-                          onClick={() => {
-                            runDeckAction(() =>
-                              equipDeckSlotById(
-                                card.playerCardId,
-                                targetSlot.slotIndex,
-                              ),
-                            );
-                          }}
-                          type="button"
-                        >
-                          Slot {targetSlot.slotIndex + 1}
-                        </button>
-                      ))}
                     </div>
                   </div>
                 );

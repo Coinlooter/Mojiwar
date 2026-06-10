@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.5.3",
+    changes: [
+      "Inventar — Sammlung ohne Slot-Buttons, einheitliche Karten-Groesse, klarer Build-Bereich",
+    ],
+  },
+  {
     version: "1.5.2",
     changes: [
       "Header — eingeloggt nur noch Logo und Logout, Navigation ueber das Dashboard",

@@ -33,8 +33,8 @@ export default async function DeckPage({
           <p className="eyebrow">Inventar</p>
           <h1>{MAX_STARTER_DECK_SIZE} Karten entscheiden deinen Build.</h1>
           <p className="muted inventory-top-lead">
-            Ziehe Karten in die Slots — staerkere Kombos machen dein Emoji im
-            Kampf gefaehrlicher.
+            Baue dein Deck mit Drag-and-Drop — drei Karten, unendlich viele
+            Kombos.
           </p>
         </div>
       </header>

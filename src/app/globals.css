@@ -958,19 +958,10 @@ input {
   transform: scale(0.96);
 }
 
-.inventory-collection {
-  border: 2px dashed transparent;
-  border-radius: 18px;
-  padding: 6px;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease;
-}
-
 .inventory-collection-hover,
 .inventory-collection-unequip.inventory-collection-hover {
   border-color: var(--accent-strong);
-  background: rgba(159, 122, 234, 0.08);
+  background: rgba(159, 122, 234, 0.1);
 }
 
 
@@ -1518,7 +1509,7 @@ h3 {
 
 .inventory-board {
   display: grid;
-  gap: 16px;
+  gap: 20px;
   padding: 16px 18px;
 }
 
@@ -1526,25 +1517,53 @@ h3 {
   margin-bottom: 10px;
 }
 
-.inventory-section-head .eyebrow,
-.inventory-section-label {
-  margin: 0 0 4px;
+.inventory-section-head .eyebrow {
+  margin: 0;
 }
 
-.inventory-slots-section {
+.inventory-section-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 4px;
+}
+
+.inventory-slot-count,
+.inventory-collection-count {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+}
+
+.inventory-deck-section {
   display: grid;
   gap: 0;
+}
+
+.inventory-deck-panel {
+  border: 1px solid rgba(159, 122, 234, 0.22);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(159, 122, 234, 0.12), transparent 58%),
+    rgba(0, 0, 0, 0.2);
+  padding: 14px 12px 12px;
 }
 
 .inventory-slots-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .inventory-slot {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   justify-items: center;
 }
 
@@ -1559,26 +1578,32 @@ h3 {
 
 .inventory-slot-drop {
   display: grid;
-  justify-items: center;
+  justify-items: stretch;
   width: 100%;
-  min-height: 100%;
+}
+
+.inventory-slot-card,
+.inventory-slot-card .game-card {
+  width: 100%;
+  max-width: none;
 }
 
 .inventory-slot-empty {
   display: grid;
   place-items: center;
   width: 100%;
-  max-width: 148px;
   aspect-ratio: 5 / 7;
-  border: 2px dashed var(--border);
+  border: 2px dashed rgba(255, 255, 255, 0.18);
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.22);
   color: var(--muted);
   font-size: 0.78rem;
+  font-weight: 700;
   transition:
     border-color 160ms ease,
     background 160ms ease,
-    color 160ms ease;
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .inventory-slot-drop-hover .inventory-slot-empty,
@@ -1592,29 +1617,60 @@ h3 {
   border-color: var(--accent-strong);
   background: rgba(159, 122, 234, 0.14);
   color: #e9d5ff;
+  transform: scale(1.02);
+}
+
+.inventory-slot-remove {
+  width: 100%;
+  max-width: 132px;
 }
 
 .inventory-collection-section {
   display: grid;
-  gap: 8px;
+  gap: 0;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.inventory-collection {
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
 }
 
 .inventory-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 12px;
 }
 
-.inventory-card-item {
-  display: flex;
-  justify-content: center;
+.inventory-card-cell {
+  display: grid;
+  min-width: 0;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.inventory-card-cell .inventory-draggable,
+.inventory-card-cell .game-card {
+  width: 100%;
+  max-width: none;
+}
+
+.inventory-card-cell.is-dragging {
+  opacity: 0.45;
+  transform: scale(0.96);
 }
 
 .inventory-collection-empty {
   margin: 0;
-  padding: 12px 14px;
+  padding: 18px 14px;
   font-size: 0.86rem;
   line-height: 1.45;
+  text-align: center;
 }
 
 .feature-grid {
@@ -2489,21 +2545,32 @@ h3 {
   }
 
   .inventory-slots-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
 
+  .inventory-deck-panel {
+    padding: 12px 10px 10px;
+  }
+
   .inventory-card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 10px;
   }
 }
 
 @media (max-width: 520px) {
   .inventory-slots-row {
-    grid-template-columns: 1fr;
-    max-width: 180px;
-    margin-inline: auto;
+    gap: 6px;
+  }
+
+  .inventory-slot-label {
+    font-size: 0.66rem;
+  }
+
+  .inventory-slot-remove {
+    max-width: 100%;
+    padding-inline: 10px;
+    font-size: 0.72rem;
   }
 }
 
