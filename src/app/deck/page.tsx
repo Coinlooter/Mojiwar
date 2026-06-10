@@ -89,21 +89,23 @@ export default async function DeckPage({
   });
 
   return (
-    <>
-      <section>
-        <p className="eyebrow">Inventar</p>
-        <h1>{MAX_STARTER_DECK_SIZE} Karten entscheiden deinen Build.</h1>
-        <p className="lead">
-          Ziehe Karten aus deinem Inventar in die Slots. Staerkere Kombos machen
-          dein Emoji im Kampf gefaehrlicher.
-        </p>
-      </section>
+    <div className="inventory-page">
+      <header className="inventory-top panel battle-card">
+        <div>
+          <p className="eyebrow">Inventar</p>
+          <h1>{MAX_STARTER_DECK_SIZE} Karten entscheiden deinen Build.</h1>
+          <p className="muted inventory-top-lead">
+            Ziehe Karten in die Slots — staerkere Kombos machen dein Emoji im
+            Kampf gefaehrlicher.
+          </p>
+        </div>
+      </header>
 
       <InventoryBoard
         collection={collection}
         initialError={initialError}
         slots={slots}
       />
-    </>
+    </div>
   );
 }
