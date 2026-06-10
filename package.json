@@ -1,6 +1,6 @@
 {
   "name": "mojiwar",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Async multiplayer emoji auto-battler RPG.",
   "private": true,
   "scripts": {

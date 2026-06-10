@@ -91,7 +91,7 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
             Dashboard
           </Link>
           <Link className="button" href={"/opponents" as Route}>
-            Naechster Gegner
+            Neuer Kampf
           </Link>
           {won && loot ? (
             <Link className="button" href={"/deck" as Route}>

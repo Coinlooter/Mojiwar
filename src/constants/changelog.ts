@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.2.2",
+    changes: [
+      "Navigation — Gegner heisst Kampf und erscheint erst nach Login",
+      "Kampf-Seite — kompakte Gegnerauswahl mit Listen statt grosser Karten",
+    ],
+  },
+  {
     version: "1.2.1",
     changes: [
       "Kampf — kompakter Replay-Bildschirm wie Sieg/Niederlage, weniger Scrollen auf Desktop",
