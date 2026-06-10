@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
-export function SignOutButton() {
+export function LogoutButton({ compact = false }: { compact?: boolean }) {
   const [pending, setPending] = useState(false);
 
   return (
@@ -17,17 +17,17 @@ export function SignOutButton() {
     >
       <button
         aria-busy={pending}
-        className={`button${pending ? " is-loading" : ""}`}
+        className={`button${compact ? " button-compact" : ""}${pending ? " is-loading" : ""}`}
         disabled={pending}
         type="submit"
       >
         {pending ? (
           <>
             <LoadingSpinner />
-            Wird abgemeldet...
+            Logout...
           </>
         ) : (
-          "Abmelden"
+          "Logout"
         )}
       </button>
     </form>

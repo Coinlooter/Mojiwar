@@ -8,7 +8,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { signalNavigationStart } from "@/lib/ui/navigation-feedback";
 
 export function StartPlayingButton({
-  children = "Sofort spielen",
+  children = "Neu spielen",
 }: {
   children?: string;
 }) {

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
-import { SignOutButton } from "@/components/auth/SignOutButton";
+import { AccountPanel } from "@/components/account/AccountPanel";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { getPrimaryCharacter } from "@/lib/auth/character";
 import { getVerifiedUser } from "@/lib/auth/session";
@@ -14,8 +14,13 @@ function formatValue(value: number | null) {
   return String(value ?? 0);
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ login?: string; "login-error"?: string }>;
+}) {
   const { supabase, user } = await getVerifiedUser();
+  const params = await searchParams;
 
   if (!user) {
     return (
@@ -28,7 +33,7 @@ export default async function DashboardPage() {
             damit du beim naechsten Besuch weiterspielen kannst.
           </p>
           <div className="actions">
-            <StartPlayingButton />
+            <StartPlayingButton>Neu spielen</StartPlayingButton>
           </div>
         </div>
       </section>
@@ -46,7 +51,7 @@ export default async function DashboardPage() {
     user.id,
     character,
   );
-  const isAnonymous = user.is_anonymous;
+  const isAnonymous = user.is_anonymous ?? false;
 
   return (
     <div className="dashboard-page">
@@ -137,25 +142,13 @@ export default async function DashboardPage() {
         </section>
 
         <aside className="dashboard-side">
-          <article className="panel battle-card dashboard-account">
-            <p className="eyebrow">Account</p>
-            <p className="muted dashboard-account-copy">
-              {isAnonymous
-                ? "Anonymer Account — sichere deinen Fortschritt mit Speicher-Code oder Eltern-E-Mail."
-                : `Account gesichert${user.email ? ` als ${user.email}` : ""}.`}
-            </p>
-            <div className="actions dashboard-account-actions">
-              {isAnonymous ? (
-                <Link className="button primary" href={"/account/secure" as Route}>
-                  Fortschritt sichern
-                </Link>
-              ) : null}
-              <Link className="button" href={"/account/load" as Route}>
-                Auf Geraet laden
-              </Link>
-            </div>
-            <SignOutButton />
-          </article>
+          <AccountPanel
+            email={user.email}
+            isAnonymous={isAnonymous}
+            loginError={params["login-error"]}
+            loginStatus={params.login}
+            userId={user.id}
+          />
         </aside>
       </div>
     </div>

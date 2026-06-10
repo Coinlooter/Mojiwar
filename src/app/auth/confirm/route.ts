@@ -24,6 +24,6 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(
-    new URL("/account/secure?error=email-failed", request.url),
+    new URL("/dashboard?login-error=email-failed", request.url),
   );
 }

@@ -15,28 +15,26 @@ export async function createRecoveryCode() {
   const { user } = await requireUser();
 
   if (!user.is_anonymous) {
-    redirect("/account/secure?error=already-secured" as Route);
+    redirect("/dashboard?login-error=already-secured" as Route);
   }
 
   await assignRecoveryCodeForUser(user.id);
 
-  revalidatePath("/account/secure");
   revalidatePath("/dashboard");
-  redirect("/account/secure?created=1" as Route);
+  redirect("/dashboard?login=created" as Route);
 }
 
 export async function regenerateRecoveryCode() {
   const { user } = await requireUser();
 
   if (!user.is_anonymous) {
-    redirect("/account/secure?error=already-secured" as Route);
+    redirect("/dashboard?login-error=already-secured" as Route);
   }
 
   await assignRecoveryCodeForUser(user.id);
 
-  revalidatePath("/account/secure");
   revalidatePath("/dashboard");
-  redirect("/account/secure?regenerated=1" as Route);
+  redirect("/dashboard?login=regenerated" as Route);
 }
 
 export async function linkParentEmail(formData: FormData) {
@@ -44,7 +42,7 @@ export async function linkParentEmail(formData: FormData) {
   const parsed = emailSchema.safeParse(formData.get("email"));
 
   if (!parsed.success) {
-    redirect("/account/secure?error=invalid-email" as Route);
+    redirect("/dashboard?login-error=invalid-email" as Route);
   }
 
   const siteUrl =
@@ -64,10 +62,9 @@ export async function linkParentEmail(formData: FormData) {
   );
 
   if (error) {
-    redirect("/account/secure?error=email-failed" as Route);
+    redirect("/dashboard?login-error=email-failed" as Route);
   }
 
-  revalidatePath("/account/secure");
   revalidatePath("/dashboard");
-  redirect("/account/secure?email-sent=1" as Route);
+  redirect("/dashboard?login=email-sent" as Route);
 }

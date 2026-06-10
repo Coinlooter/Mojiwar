@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.4.1",
+    changes: [
+      "Login/Logout — einheitliche Begriffe statt Fortschritt sichern/laden",
+      "Login-Seite — Code eingeben oder neu spielen an einem Ort",
+      "Dashboard — Login-Code und E-Mail direkt in der Seitenleiste",
+    ],
+  },
+  {
     version: "1.4.0",
     changes: [
       "Fortschritt sichern — Speicher-Code aus Farbe, Tier und zwei Zahlen",

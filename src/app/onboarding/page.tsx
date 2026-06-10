@@ -44,8 +44,8 @@ export default async function OnboardingPage({
         <p className="eyebrow">Erster Start</p>
         <h1>Waehle dein Emoji und gib ihm einen Namen.</h1>
         <p className="lead">
-          Such dir einen Helden aus und gib ihm einen coolen Namen. Dein
-          Fortschritt wird ab jetzt mit diesem Geraet gespeichert.
+          Such dir einen Helden aus und gib ihm einen coolen Namen. Im Dashboard
+          bekommst du danach deinen Login-Code.
         </p>
       </div>
 

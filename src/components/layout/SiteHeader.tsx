@@ -1,11 +1,11 @@
 import type { Route } from "next";
 import Link from "next/link";
 
-import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { getVerifiedUser } from "@/lib/auth/session";
 
 const guestNavItems = [
-  { href: "/account/load", label: "Fortschritt laden" },
+  { href: "/login", label: "Login" },
   { href: "/leaderboard", label: "Rangliste" },
 ] as const;
 
@@ -41,7 +41,7 @@ export async function SiteHeader() {
               </Link>
             ))}
           </div>
-          {user ? null : <StartPlayingButton>Jetzt spielen</StartPlayingButton>}
+          {user ? <LogoutButton compact /> : null}
         </nav>
       </div>
     </header>

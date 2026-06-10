@@ -1,15 +1,10 @@
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { RECOVERY_ANIMALS, RECOVERY_COLORS } from "@/lib/auth/recovery-words";
-import { loadProgressWithRecoveryCode } from "@/app/account/load/actions";
+import { loginWithRecoveryCode } from "@/app/login/actions";
 
-export function LoadProgressForm() {
+export function LoginForm() {
   return (
-    <form action={loadProgressWithRecoveryCode} className="panel battle-card form-card">
-      <p className="eyebrow">Speicher-Code</p>
-      <p className="muted account-form-copy">
-        Waehle Farbe, Tier und die zwei Zahlen von deinem Zettel.
-      </p>
-
+    <form action={loginWithRecoveryCode} className="panel battle-card form-card">
       <label className="field-label" htmlFor="colorSlug">
         Farbe
       </label>
@@ -54,7 +49,7 @@ export function LoadProgressForm() {
       />
 
       <details className="account-details">
-        <summary>Oder Code als Text eingeben</summary>
+        <summary>Code als Text eingeben</summary>
         <label className="field-label" htmlFor="combined">
           Kompletter Code
         </label>
@@ -68,8 +63,8 @@ export function LoadProgressForm() {
         />
       </details>
 
-      <SubmitButton pendingLabel="Fortschritt wird geladen..." variant="primary">
-        Fortschritt laden
+      <SubmitButton pendingLabel="Login..." variant="primary">
+        Login
       </SubmitButton>
     </form>
   );

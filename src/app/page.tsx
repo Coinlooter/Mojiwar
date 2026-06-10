@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { GameCard } from "@/components/cards/GameCard";
@@ -53,7 +54,10 @@ export default function Home() {
             dein Held kaempft auch, wenn du gerade etwas anderes machst.
           </p>
           <div className="actions">
-            <StartPlayingButton>Jetzt spielen</StartPlayingButton>
+            <Link className="button primary" href={"/login" as Route}>
+              Login
+            </Link>
+            <StartPlayingButton>Neu spielen</StartPlayingButton>
             <Link className="button" href="/battle/demo">
               Kampf ansehen
             </Link>
