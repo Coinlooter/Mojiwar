@@ -253,6 +253,7 @@ export type Database = {
       };
       resolve_battle: {
         Args: {
+          p_requesting_user_id: string;
           p_attacker_character_id: string;
           p_defender_character_id: string;
           p_winner_character_id: string;

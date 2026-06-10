@@ -9,6 +9,7 @@ import { requireCharacter } from "@/lib/auth/require-character";
 import { calculatePower } from "@/lib/game/calculate-power";
 import { fetchCharacterLoadout } from "@/lib/game/loadout";
 import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
+import { createSupabaseServiceClient } from "@/lib/supabase/service";
 
 const equipSchema = z.object({
   playerCardId: z.string().uuid(),
@@ -29,7 +30,9 @@ async function refreshCharacterPower(characterId: string) {
     return;
   }
 
-  await supabase
+  const serviceSupabase = createSupabaseServiceClient();
+
+  await serviceSupabase
     .from("characters")
     .update({ power: calculatePower(loadout) })
     .eq("id", characterId);

@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { getPrimaryCharacter } from "@/lib/auth/character";
 import { requireUser } from "@/lib/auth/require-character";
 import { fetchLeaderboard } from "@/lib/game/leaderboard";
 
@@ -9,14 +11,8 @@ export const dynamic = "force-dynamic";
 export default async function LeaderboardPage() {
   const { supabase, user } = await requireUser();
 
-  const [{ data: character }, entries] = await Promise.all([
-    supabase
-      .from("characters")
-      .select("id")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle(),
+  const [{ character }, entries] = await Promise.all([
+    getPrimaryCharacter(supabase, user.id).then((row) => ({ character: row })),
     fetchLeaderboard(supabase),
   ]);
 
@@ -25,18 +21,17 @@ export default async function LeaderboardPage() {
     : undefined;
 
   return (
-    <>
-      <section>
-        <p className="eyebrow">Rangliste</p>
-        <h1>Die staerksten Emoji-Helden im Land.</h1>
-        <p className="lead">
-          Hier siehst du, wer die meisten Kaempfe gewonnen hat. Uebungsgegner
-          sind nicht dabei — nur echte Spieler.
-        </p>
-      </section>
+    <div className="leaderboard-page">
+      <header className="leaderboard-top panel battle-card">
+        <PageHeader
+          eyebrow="Rangliste"
+          lead="Hier siehst du, wer die meisten Kaempfe gewonnen hat. Uebungsgegner sind nicht dabei — nur echte Spieler."
+          title="Die staerksten Emoji-Helden im Land."
+        />
+      </header>
 
       {currentEntry ? (
-        <section className="section panel battle-card leaderboard-summary">
+        <section className="leaderboard-summary panel battle-card">
           <p className="eyebrow">Dein Platz</p>
           <div className="leaderboard-summary-row">
             <span className="leaderboard-summary-rank">#{currentEntry.rank}</span>
@@ -53,7 +48,7 @@ export default async function LeaderboardPage() {
           </div>
         </section>
       ) : (
-        <section className="section panel battle-card">
+        <section className="panel battle-card">
           <p className="muted">
             Du hast noch keinen Helden.{" "}
             <Link href="/onboarding">Erstelle dein Emoji</Link>, um in der
@@ -62,13 +57,13 @@ export default async function LeaderboardPage() {
         </section>
       )}
 
-      <section className="section">
+      <section className="leaderboard-table-section panel battle-card">
         <p className="eyebrow">Top-Spieler</p>
         <LeaderboardTable
           currentCharacterId={character?.id}
           entries={entries}
         />
       </section>
-    </>
+    </div>
   );
 }
