@@ -198,6 +198,7 @@ export function InventoryBoard({
                       >
                         <GameCard
                           active
+                          description={slot.card.description}
                           emoji={slot.card.emoji}
                           name={slot.card.name}
                           rarity={slot.card.rarity}
@@ -292,6 +293,7 @@ export function InventoryBoard({
                       }}
                     >
                       <GameCard
+                        description={card.description}
                         emoji={card.emoji}
                         name={card.name}
                         rarity={card.rarity}

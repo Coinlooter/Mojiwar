@@ -25,24 +25,40 @@ export function GameCard({
     `game-card-${rarity}`,
     `game-card-${size}`,
     active ? "game-card-active" : "",
+    description ? "game-card-has-stats" : "",
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <article aria-label={`${name}, ${CARD_RARITY_LABEL[rarity]}`} className={classes}>
+    <article
+      aria-label={
+        description
+          ? `${name}, ${CARD_RARITY_LABEL[rarity]}, ${description}`
+          : `${name}, ${CARD_RARITY_LABEL[rarity]}`
+      }
+      className={classes}
+      tabIndex={description ? 0 : undefined}
+    >
       <div className="game-card-frame">
-        <div aria-hidden className="game-card-pattern" />
         <div className="game-card-inner">
+          <div aria-hidden className="game-card-pattern" />
           <span className="game-card-rarity">{CARD_RARITY_LABEL[rarity]}</span>
           <div aria-hidden className="game-card-art">
             {emoji}
           </div>
           <h3 className="game-card-name">{name}</h3>
-          {description ? <p className="game-card-description">{description}</p> : null}
         </div>
       </div>
+
+      {description ? (
+        <div className="game-card-tooltip" role="tooltip">
+          <p className="game-card-tooltip-title">{name}</p>
+          <p className="game-card-tooltip-stat">{description}</p>
+        </div>
+      ) : null}
+
       {active ? <span className="game-card-active-badge">Im Deck</span> : null}
     </article>
   );

@@ -668,11 +668,14 @@ input {
   width: 100%;
   max-width: 220px;
   aspect-ratio: 5 / 7;
+  overflow: visible;
   transition: transform 180ms ease;
 }
 
-.game-card:hover {
+.game-card:hover,
+.game-card:focus-within {
   transform: translateY(-4px) rotate(-0.6deg);
+  z-index: 5;
 }
 
 .game-card-frame {
@@ -699,7 +702,7 @@ input {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-rows: auto 1fr auto;
   align-content: start;
   height: 100%;
   overflow: hidden;
@@ -713,55 +716,26 @@ input {
 .game-card-pattern {
   position: absolute;
   inset: 0;
-  opacity: 0.42;
+  background-image: url("/images/card-pattern.png");
+  background-repeat: repeat;
+  background-size: 96px 64px;
+  opacity: 0.34;
   pointer-events: none;
 }
 
 .game-card-common .game-card-pattern {
-  background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 0 2px,
-      transparent 2px 8px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, 0.04) 0 2px,
-      transparent 2px 8px
-    ),
-    radial-gradient(circle at 50% 0%, rgba(156, 163, 175, 0.18), transparent 55%);
+  filter: grayscale(0.35) brightness(0.92);
+  mix-blend-mode: screen;
 }
 
 .game-card-rare .game-card-pattern {
-  background:
-    repeating-linear-gradient(
-      60deg,
-      rgba(96, 165, 250, 0.12) 0 3px,
-      transparent 3px 14px
-    ),
-    repeating-linear-gradient(
-      -60deg,
-      rgba(192, 132, 252, 0.1) 0 3px,
-      transparent 3px 14px
-    ),
-    radial-gradient(circle at 20% 15%, rgba(124, 58, 237, 0.28), transparent 42%),
-    radial-gradient(circle at 80% 85%, rgba(96, 165, 250, 0.22), transparent 40%);
+  filter: hue-rotate(24deg) saturate(1.15) brightness(1.05);
+  mix-blend-mode: screen;
 }
 
 .game-card-epic .game-card-pattern {
-  background:
-    radial-gradient(circle at 15% 20%, rgba(251, 191, 36, 0.35) 0 2px, transparent 3px),
-    radial-gradient(circle at 75% 28%, rgba(253, 224, 71, 0.28) 0 2px, transparent 3px),
-    radial-gradient(circle at 42% 72%, rgba(168, 85, 247, 0.3) 0 2px, transparent 3px),
-    radial-gradient(circle at 88% 78%, rgba(251, 191, 36, 0.25) 0 2px, transparent 3px),
-    conic-gradient(
-      from 210deg at 50% 50%,
-      rgba(251, 191, 36, 0.12),
-      rgba(168, 85, 247, 0.16),
-      rgba(253, 224, 71, 0.12),
-      rgba(168, 85, 247, 0.16),
-      rgba(251, 191, 36, 0.12)
-    );
+  filter: hue-rotate(-18deg) saturate(1.35) brightness(1.1);
+  mix-blend-mode: screen;
 }
 
 .game-card-rarity {
@@ -811,13 +785,54 @@ input {
   line-height: 1.2;
 }
 
-.game-card-description {
-  position: relative;
-  z-index: 2;
-  margin: 6px 0 0;
-  color: var(--muted);
-  font-size: 0.68rem;
-  line-height: 1.35;
+.game-card-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  z-index: 12;
+  width: max-content;
+  max-width: min(220px, 72vw);
+  padding: 10px 12px;
+  border: 1px solid rgba(159, 122, 234, 0.45);
+  border-radius: 12px;
+  background: rgba(17, 12, 32, 0.96);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-6px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms ease;
+}
+
+.game-card-tooltip-title {
+  margin: 0 0 4px;
+  color: #f3e8ff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.game-card-tooltip-stat {
+  margin: 0;
+  color: #c4b5fd;
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.game-card-has-stats:hover .game-card-tooltip,
+.game-card-has-stats:focus-within .game-card-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.game-card-has-stats:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 4px;
+  border-radius: 12px;
 }
 
 .game-card-sm {
@@ -840,9 +855,6 @@ input {
   font-size: 0.95rem;
 }
 
-.game-card-lg .game-card-description {
-  font-size: 0.74rem;
-}
 
 .game-card-active .game-card-frame {
   box-shadow:
@@ -1497,6 +1509,7 @@ h3 {
   display: grid;
   gap: 10px;
   padding: 12px 14px 14px;
+  overflow: visible;
 }
 
 .inventory-board-top {

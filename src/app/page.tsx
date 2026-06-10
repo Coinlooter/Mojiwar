@@ -131,6 +131,7 @@ export default async function Home() {
         <div className="landing-card-showcase">
           {starterCards.map((card) => (
             <GameCard
+              description={card.description}
               emoji={card.emoji}
               key={card.id}
               name={card.name}
