@@ -2503,3 +2503,130 @@ h3 {
   padding: 6px 10px;
   font-size: 0.72rem;
 }
+
+.account-page {
+  display: grid;
+  gap: 16px;
+}
+
+.account-top {
+  padding: 18px 20px;
+}
+
+.account-top h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.account-top-copy {
+  margin: 8px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.account-grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .account-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.account-panel {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px;
+}
+
+.account-form-copy {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.account-email-form {
+  display: grid;
+  gap: 12px;
+}
+
+.account-status,
+.account-error {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.account-status {
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.12);
+}
+
+.account-error {
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  background: rgba(251, 113, 133, 0.12);
+}
+
+.account-actions {
+  flex-wrap: wrap;
+}
+
+.account-details {
+  display: grid;
+  gap: 10px;
+}
+
+.account-details summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.recovery-code-display {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.recovery-code-label {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.recovery-code-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 700;
+}
+
+.recovery-code-hint,
+.recovery-code-compact {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.recovery-code-compact code {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.92rem;
+}
+
+.dashboard-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

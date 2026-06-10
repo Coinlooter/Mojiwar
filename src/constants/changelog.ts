@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.4.0",
+    changes: [
+      "Fortschritt sichern — Speicher-Code aus Farbe, Tier und zwei Zahlen",
+      "Fortschritt sichern — Eltern-E-Mail zum Verknuepfen des anonymen Accounts",
+      "Fortschritt laden — Code auf neuem Geraet eingeben und Session wiederherstellen",
+    ],
+  },
+  {
     version: "1.3.0",
     changes: [
       "Sicherheit — Kampf-RPC nur serverseitig, Character-Progression per Trigger geschuetzt",

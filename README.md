@@ -78,8 +78,15 @@ Emojitsu starts with a kid-friendly anonymous Supabase account:
 5. Returning on the same device reuses the cookie-backed session.
 
 Enable **Anonymous Sign-ins** in the Supabase project's Auth providers before
-using the flow in production. Later, anonymous users can be linked to an email
-or OAuth identity to secure progress across devices.
+using the flow in production.
+
+Progress can be secured in two ways:
+
+1. **Storage code** — color + animal + two digits (e.g. `blauerelefant65`) on `/account/secure`
+2. **Parent email** — links the anonymous account via Supabase `updateUser`
+
+Load saved progress on a new device via `/account/load`. Set the Supabase Auth
+redirect URL to `https://<your-domain>/auth/confirm` for email confirmation.
 
 ## Local development
 

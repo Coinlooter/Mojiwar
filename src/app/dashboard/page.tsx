@@ -141,9 +141,19 @@ export default async function DashboardPage() {
             <p className="eyebrow">Account</p>
             <p className="muted dashboard-account-copy">
               {isAnonymous
-                ? "Anonymer Account — sichere ihn spaeter mit einer Eltern-E-Mail."
-                : "Account ist mit einer Login-Methode gesichert."}
+                ? "Anonymer Account — sichere deinen Fortschritt mit Speicher-Code oder Eltern-E-Mail."
+                : `Account gesichert${user.email ? ` als ${user.email}` : ""}.`}
             </p>
+            <div className="actions dashboard-account-actions">
+              {isAnonymous ? (
+                <Link className="button primary" href={"/account/secure" as Route}>
+                  Fortschritt sichern
+                </Link>
+              ) : null}
+              <Link className="button" href={"/account/load" as Route}>
+                Auf Geraet laden
+              </Link>
+            </div>
             <SignOutButton />
           </article>
         </aside>

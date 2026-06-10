@@ -240,6 +240,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      progress_recovery_codes: {
+        Row: {
+          id: string;
+          user_id: string;
+          color_slug: string;
+          animal_slug: string;
+          number_suffix: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          color_slug: string;
+          animal_slug: string;
+          number_suffix: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          color_slug?: string;
+          animal_slug?: string;
+          number_suffix?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      progress_recovery_attempts: {
+        Row: {
+          id: string;
+          ip_hash: string;
+          attempted_at: string;
+        };
+        Insert: {
+          id?: string;
+          ip_hash: string;
+          attempted_at?: string;
+        };
+        Update: {
+          id?: string;
+          ip_hash?: string;
+          attempted_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -290,6 +335,14 @@ export type Database = {
           wins: number;
           losses: number;
         }[];
+      };
+      lookup_progress_recovery_code: {
+        Args: {
+          p_color_slug: string;
+          p_animal_slug: string;
+          p_number_suffix: string;
+        };
+        Returns: string;
       };
     };
     Enums: {

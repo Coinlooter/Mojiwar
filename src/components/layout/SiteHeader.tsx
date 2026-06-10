@@ -4,7 +4,10 @@ import Link from "next/link";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { getVerifiedUser } from "@/lib/auth/session";
 
-const guestNavItems = [{ href: "/leaderboard", label: "Rangliste" }] as const;
+const guestNavItems = [
+  { href: "/account/load", label: "Fortschritt laden" },
+  { href: "/leaderboard", label: "Rangliste" },
+] as const;
 
 const memberNavItems = [
   { href: "/dashboard", label: "Dashboard" },
