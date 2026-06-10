@@ -2,15 +2,21 @@ import type { Route } from "next";
 import Link from "next/link";
 
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
+import { getVerifiedUser } from "@/lib/auth/session";
 
-const navItems = [
-  { href: "/dashboard", label: "Mein Spiel" },
+const publicNavItems = [
   { href: "/opponents", label: "Gegner" },
   { href: "/deck", label: "Inventar" },
   { href: "/leaderboard", label: "Rangliste" },
 ] as const;
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const { user } = await getVerifiedUser();
+
+  const navItems = user
+    ? [{ href: "/dashboard", label: "Dashboard" }, ...publicNavItems]
+    : publicNavItems;
+
   return (
     <header className="site-header glass-chrome">
       <div className="site-chrome-inner">
@@ -32,7 +38,7 @@ export function SiteHeader() {
               </Link>
             ))}
           </div>
-          <StartPlayingButton>Jetzt spielen</StartPlayingButton>
+          {user ? null : <StartPlayingButton>Jetzt spielen</StartPlayingButton>}
         </nav>
       </div>
     </header>

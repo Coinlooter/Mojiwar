@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.2.0",
+    changes: [
+      "Navigation — Mein Spiel heisst jetzt Dashboard und erscheint erst nach Login",
+      "Dashboard — kompakteres Layout mit weniger Scrollen auf Desktop",
+    ],
+  },
+  {
     version: "1.1.9",
     changes: [
       "Hintergrund — Comic-Kampfszene mit kaempfenden Emojis als App-Wallpaper",

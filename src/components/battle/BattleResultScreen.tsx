@@ -88,7 +88,7 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
 
         <div className="actions battle-result-actions">
           <Link className="button primary" href={"/dashboard" as Route}>
-            Mein Spiel
+            Dashboard
           </Link>
           <Link className="button" href={"/opponents" as Route}>
             Naechster Gegner
