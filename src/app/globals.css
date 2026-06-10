@@ -1550,6 +1550,8 @@ h3 {
 }
 
 .inventory-deck-panel {
+  display: flex;
+  justify-content: center;
   border: 1px solid rgba(159, 122, 234, 0.2);
   border-radius: 14px;
   background:
@@ -1562,22 +1564,30 @@ h3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+  justify-items: center;
+  width: min(100%, 382px);
 }
 
 .inventory-slot {
   display: grid;
   gap: 4px;
-  justify-items: stretch;
+  justify-items: center;
+  width: 100%;
+  max-width: 118px;
 }
 
 .inventory-slot-drop {
   display: grid;
-  justify-items: stretch;
+  justify-items: center;
   width: 100%;
 }
 
 .inventory-slot-card,
-.inventory-slot-card .game-card,
+.inventory-slot-card .game-card {
+  width: 100%;
+  max-width: 118px;
+}
+
 .inventory-card-cell .inventory-draggable,
 .inventory-card-cell .game-card {
   width: 100%;
@@ -1621,6 +1631,7 @@ h3 {
   display: grid;
   place-items: center;
   width: 100%;
+  max-width: 118px;
   aspect-ratio: 5 / 7;
   border: 1.5px dashed rgba(255, 255, 255, 0.16);
   border-radius: 10px;
@@ -1649,6 +1660,7 @@ h3 {
 
 .inventory-slot-remove {
   width: 100%;
+  max-width: 118px;
   padding: 6px 10px;
   font-size: 0.68rem;
 }
