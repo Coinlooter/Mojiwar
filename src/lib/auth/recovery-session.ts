@@ -1,10 +1,8 @@
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const RECOVERY_EMAIL_DOMAIN = "recovery.emojitsu.app";
-
 export function buildInternalRecoveryEmail(userId: string) {
-  return `player+${userId.replace(/-/g, "")}@${RECOVERY_EMAIL_DOMAIN}`;
+  return `player+${userId.replace(/-/g, "")}@recovery.emojitsu.app`;
 }
 
 export async function ensureInternalRecoveryEmail(userId: string) {

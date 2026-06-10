@@ -1,5 +1,10 @@
 import { RecoveryCodeDisplay } from "@/components/account/RecoveryCodeDisplay";
 import { SubmitButton } from "@/components/ui/SubmitButton";
+import {
+  getDisplayEmail,
+  hasSecuredEmailAccount,
+  usesLoginCodeAccount,
+} from "@/lib/auth/account-email";
 import { getRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
 import {
   createRecoveryCode,
@@ -33,6 +38,9 @@ export async function AccountPanel({
   loginError?: string;
 }) {
   const recoveryCode = await getRecoveryCodeForUser(userId);
+  const displayEmail = getDisplayEmail(email);
+  const securedWithEmail = hasSecuredEmailAccount({ isAnonymous, email });
+  const showLoginCodeFlow = usesLoginCodeAccount({ isAnonymous, email });
   const statusMessage = loginStatus ? statusMessages[loginStatus] : null;
   const errorMessage = loginError ? errorMessages[loginError] : null;
 
@@ -52,9 +60,9 @@ export async function AccountPanel({
         </p>
       ) : null}
 
-      {!isAnonymous ? (
+      {securedWithEmail && displayEmail ? (
         <p className="muted dashboard-account-copy">
-          Eingeloggt{email ? ` als ${email}` : ""}.
+          Eingeloggt als {displayEmail}.
         </p>
       ) : recoveryCode ? (
         <>
@@ -62,11 +70,13 @@ export async function AccountPanel({
             Mit diesem Code kannst du dich auf anderen Geraeten einloggen.
           </p>
           <RecoveryCodeDisplay parts={recoveryCode} />
-          <form action={regenerateRecoveryCode}>
-            <SubmitButton pendingLabel="Neuer Code...">Neuen Code</SubmitButton>
-          </form>
+          {showLoginCodeFlow ? (
+            <form action={regenerateRecoveryCode}>
+              <SubmitButton pendingLabel="Neuer Code...">Neuen Code</SubmitButton>
+            </form>
+          ) : null}
         </>
-      ) : (
+      ) : showLoginCodeFlow ? (
         <>
           <p className="muted dashboard-account-copy">
             Erstelle deinen Login-Code, damit du dich spaeter wieder einloggen
@@ -78,9 +88,9 @@ export async function AccountPanel({
             </SubmitButton>
           </form>
         </>
-      )}
+      ) : null}
 
-      {isAnonymous ? (
+      {showLoginCodeFlow ? (
         <details className="account-details dashboard-account-details">
           <summary>Oder mit E-Mail einloggen</summary>
           <form action={linkParentEmail} className="account-email-form">

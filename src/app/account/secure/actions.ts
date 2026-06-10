@@ -5,6 +5,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { hasSecuredEmailAccount } from "@/lib/auth/account-email";
 import { requireUser } from "@/lib/auth/require-character";
 import { assignRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -14,7 +15,7 @@ const emailSchema = z.email();
 export async function createRecoveryCode() {
   const { user } = await requireUser();
 
-  if (!user.is_anonymous) {
+  if (hasSecuredEmailAccount({ isAnonymous: user.is_anonymous ?? false, email: user.email })) {
     redirect("/dashboard?login-error=already-secured" as Route);
   }
 
@@ -27,7 +28,7 @@ export async function createRecoveryCode() {
 export async function regenerateRecoveryCode() {
   const { user } = await requireUser();
 
-  if (!user.is_anonymous) {
+  if (hasSecuredEmailAccount({ isAnonymous: user.is_anonymous ?? false, email: user.email })) {
     redirect("/dashboard?login-error=already-secured" as Route);
   }
 

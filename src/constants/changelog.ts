@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.4.5",
+    changes: [
+      "Dashboard — interne Recovery-E-Mail wird Spielern nicht mehr angezeigt",
+    ],
+  },
+  {
     version: "1.4.4",
     changes: [
       "Dashboard — E-Mail statt Eltern-E-Mail in der Login-Seitenleiste",
