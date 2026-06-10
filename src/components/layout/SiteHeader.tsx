@@ -9,21 +9,13 @@ const guestNavItems = [
   { href: "/leaderboard", label: "Rangliste" },
 ] as const;
 
-const memberNavItems = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/opponents", label: "Kampf" },
-  { href: "/deck", label: "Inventar" },
-  { href: "/leaderboard", label: "Rangliste" },
-] as const;
-
 export async function SiteHeader() {
   const { user } = await getVerifiedUser();
-  const navItems = user ? memberNavItems : guestNavItems;
 
   return (
     <header className="site-header glass-chrome">
       <div className="site-chrome-inner">
-        <Link className="brand" href="/">
+        <Link className="brand" href={user ? "/dashboard" : "/"}>
           <span className="brand-mark" aria-hidden>
             ⚔️
           </span>
@@ -34,24 +26,21 @@ export async function SiteHeader() {
         </Link>
 
         <nav className="site-nav" aria-label="Hauptnavigation">
-          <div className="nav-links">
-            {navItems.map((item) => {
-              const isPrimary =
-                (!user && item.href === "/login") ||
-                (user && item.href === "/opponents");
-
-              return (
+          {user ? (
+            <LogoutButton compact />
+          ) : (
+            <div className="nav-links">
+              {guestNavItems.map((item) => (
                 <Link
-                  className={`button button-compact${isPrimary ? " primary" : ""}`}
+                  className={`button button-compact${item.href === "/login" ? " primary" : ""}`}
                   href={item.href as Route}
                   key={item.href}
                 >
                   {item.label}
                 </Link>
-              );
-            })}
-          </div>
-          {user ? <LogoutButton compact /> : null}
+              ))}
+            </div>
+          )}
         </nav>
       </div>
     </header>
