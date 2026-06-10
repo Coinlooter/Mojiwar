@@ -1,5 +1,4 @@
 import { RecoveryCodeDisplay } from "@/components/account/RecoveryCodeDisplay";
-import { LogoutButton } from "@/components/auth/LogoutButton";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { getRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
 import {
@@ -103,8 +102,6 @@ export async function AccountPanel({
           </form>
         </details>
       ) : null}
-
-      <LogoutButton />
     </article>
   );
 }
