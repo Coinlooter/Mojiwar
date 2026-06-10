@@ -82,17 +82,17 @@ export async function AccountPanel({
 
       {isAnonymous ? (
         <details className="account-details dashboard-account-details">
-          <summary>Oder mit Eltern-E-Mail einloggen</summary>
+          <summary>Oder mit E-Mail einloggen</summary>
           <form action={linkParentEmail} className="account-email-form">
-            <label className="field-label" htmlFor="parent-email">
+            <label className="field-label" htmlFor="account-email">
               E-Mail-Adresse
             </label>
             <input
               autoComplete="email"
               className="text-input"
-              id="parent-email"
+              id="account-email"
               name="email"
-              placeholder="eltern@beispiel.de"
+              placeholder="deine@email.de"
               required
               type="email"
             />

@@ -83,7 +83,7 @@ using the flow in production.
 Progress can be secured in two ways:
 
 1. **Login code** — color + animal + two digits (e.g. `blauerelefant65`), created in the dashboard
-2. **Parent email** — links the anonymous account via Supabase `updateUser`
+2. **Email** — links the anonymous account via Supabase `updateUser`
 
 Log in on a new device via `/login`. Set the Supabase Auth
 redirect URL to `https://<your-domain>/auth/confirm` for email confirmation.

@@ -1,6 +1,6 @@
 {
   "name": "emojitsu",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Async multiplayer emoji auto-battler RPG.",
   "private": true,
   "scripts": {

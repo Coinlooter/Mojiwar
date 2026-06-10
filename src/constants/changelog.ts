@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.4.4",
+    changes: [
+      "Dashboard — E-Mail statt Eltern-E-Mail in der Login-Seitenleiste",
+    ],
+  },
+  {
     version: "1.4.3",
     changes: [
       "Dashboard — Logout nur noch im Header, nicht doppelt in der Seitenleiste",
