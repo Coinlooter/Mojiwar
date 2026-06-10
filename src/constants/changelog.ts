@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.5.0",
+    changes: [
+      "UI — dicke bunte Bubble-Buttons mit 3D-Effekt statt flacher Tabellen-Optik",
+      "Kampf — Herausfordern-Buttons als lila Primär-Bubbles",
+      "Onboarding — Emoji-Auswahl als farbige Bubble-Kacheln",
+    ],
+  },
+  {
     version: "1.4.5",
     changes: [
       "Dashboard — interne Recovery-E-Mail wird Spielern nicht mehr angezeigt",

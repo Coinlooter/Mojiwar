@@ -24,7 +24,9 @@ export function OpponentRow({ candidate }: { candidate: CharacterLoadout }) {
       </div>
       <form action={challengeCharacter}>
         <input name="defenderCharacterId" type="hidden" value={candidate.id} />
-        <SubmitButton pendingLabel="Startet...">Kampf</SubmitButton>
+        <SubmitButton pendingLabel="Startet..." variant="primary">
+          Kampf
+        </SubmitButton>
       </form>
     </article>
   );
