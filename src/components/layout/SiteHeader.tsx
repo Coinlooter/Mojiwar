@@ -15,7 +15,10 @@ export async function SiteHeader() {
   return (
     <header className="site-header glass-chrome">
       <div className="site-chrome-inner">
-        <Link className="brand" href={user ? "/dashboard" : "/"}>
+        <Link
+          className="brand"
+          href={(user ? "/dashboard" : "/") as Route}
+        >
           <span className="brand-mark" aria-hidden>
             ⚔️
           </span>
