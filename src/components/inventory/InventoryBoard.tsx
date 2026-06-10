@@ -130,6 +130,18 @@ export function InventoryBoard({
     <div
       className={`inventory-board panel battle-card${isPending ? " inventory-board-pending" : ""}`}
     >
+      <header className="inventory-board-top">
+        <div className="inventory-section-title-row">
+          <p className="eyebrow">Inventar</p>
+          <span className="inventory-slot-count">
+            {filledSlots}/{slots.length} im Build
+          </span>
+        </div>
+        <p className="muted inventory-board-lead">
+          Karten zwischen Build und Sammlung ziehen.
+        </p>
+      </header>
+
       {actionError ? (
         <p className="muted inventory-board-error" role="alert">
           {actionError}
@@ -145,16 +157,7 @@ export function InventoryBoard({
 
       <section className="inventory-deck-section">
         <div className="inventory-section-head">
-          <div className="inventory-section-title-row">
-            <p className="eyebrow">Dein Build</p>
-            <span className="inventory-slot-count">
-              {filledSlots}/{slots.length} Slots
-            </span>
-          </div>
-          <p className="muted inventory-board-hint">
-            Ziehe Karten aus der Sammlung in einen Slot. Zum Entfernen zurueck
-            in die Sammlung ziehen oder auf Entfernen tippen.
-          </p>
+          <p className="inventory-section-label">Dein Build</p>
         </div>
 
         <div className="inventory-deck-panel">
@@ -166,7 +169,6 @@ export function InventoryBoard({
 
               return (
                 <div className="inventory-slot" key={slot.slotIndex}>
-                  <p className="inventory-slot-label">Slot {slot.slotIndex + 1}</p>
                   <div
                     className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}`}
                     onDragEnd={clearDragState}
@@ -230,16 +232,13 @@ export function InventoryBoard({
       <section className="inventory-collection-section">
         <div className="inventory-section-head">
           <div className="inventory-section-title-row">
-            <p className="eyebrow">Sammlung</p>
+            <p className="inventory-section-label">Sammlung</p>
             {collection.length > 0 ? (
               <span className="inventory-collection-count">
                 {collection.length} {collection.length === 1 ? "Karte" : "Karten"}
               </span>
             ) : null}
           </div>
-          <p className="muted inventory-board-hint">
-            Halte eine Karte gedrueckt und ziehe sie in einen freien Slot.
-          </p>
         </div>
 
         <div

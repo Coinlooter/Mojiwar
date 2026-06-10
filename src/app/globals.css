@@ -940,7 +940,7 @@ input {
 
 .inventory-board-hint {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.76rem;
 }
 
 .inventory-draggable {
@@ -1490,44 +1490,47 @@ h3 {
 
 .inventory-page {
   display: grid;
-  gap: 14px;
-}
-
-.inventory-top {
-  padding: 16px 18px;
-}
-
-.inventory-top h1 {
-  margin: 0;
-  font-size: clamp(1.45rem, 3vw, 2rem);
-}
-
-.inventory-top-lead {
-  margin: 6px 0 0;
-  font-size: 0.9rem;
+  gap: 0;
 }
 
 .inventory-board {
   display: grid;
-  gap: 20px;
-  padding: 16px 18px;
+  gap: 10px;
+  padding: 12px 14px 14px;
+}
+
+.inventory-board-top {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.inventory-board-lead {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
 }
 
 .inventory-section-head {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
-.inventory-section-head .eyebrow {
+.inventory-section-label {
   margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .inventory-section-title-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 8px 12px;
-  margin-bottom: 4px;
+  gap: 6px 10px;
 }
 
 .inventory-slot-count,
@@ -1535,10 +1538,10 @@ h3 {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 4px 10px;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
 }
 
 .inventory-deck-section {
@@ -1547,33 +1550,24 @@ h3 {
 }
 
 .inventory-deck-panel {
-  border: 1px solid rgba(159, 122, 234, 0.22);
-  border-radius: 18px;
+  border: 1px solid rgba(159, 122, 234, 0.2);
+  border-radius: 14px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(159, 122, 234, 0.12), transparent 58%),
-    rgba(0, 0, 0, 0.2);
-  padding: 14px 12px 12px;
+    radial-gradient(circle at 50% 0%, rgba(159, 122, 234, 0.1), transparent 58%),
+    rgba(0, 0, 0, 0.18);
+  padding: 8px;
 }
 
 .inventory-slots-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 .inventory-slot {
   display: grid;
-  gap: 8px;
-  justify-items: center;
-}
-
-.inventory-slot-label {
-  margin: 0;
-  color: var(--accent-strong);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  gap: 4px;
+  justify-items: stretch;
 }
 
 .inventory-slot-drop {
@@ -1583,9 +1577,44 @@ h3 {
 }
 
 .inventory-slot-card,
-.inventory-slot-card .game-card {
+.inventory-slot-card .game-card,
+.inventory-card-cell .inventory-draggable,
+.inventory-card-cell .game-card {
   width: 100%;
   max-width: none;
+}
+
+.inventory-board .game-card-frame {
+  border-radius: 10px;
+  padding: 3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+}
+
+.inventory-board .game-card-inner {
+  padding: 6px 6px 7px;
+}
+
+.inventory-board .game-card-rarity {
+  font-size: 0.54rem;
+  padding: 2px 6px;
+  letter-spacing: 0.1em;
+}
+
+.inventory-board .game-card-art {
+  font-size: clamp(1.45rem, 32%, 1.9rem);
+}
+
+.inventory-board .game-card-name {
+  margin-top: 4px;
+  font-size: 0.64rem;
+  line-height: 1.15;
+}
+
+.inventory-board .game-card-active-badge {
+  top: -6px;
+  right: -4px;
+  font-size: 0.52rem;
+  padding: 2px 6px;
 }
 
 .inventory-slot-empty {
@@ -1593,50 +1622,49 @@ h3 {
   place-items: center;
   width: 100%;
   aspect-ratio: 5 / 7;
-  border: 2px dashed rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.22);
+  border: 1.5px dashed rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 700;
   transition:
     border-color 160ms ease,
     background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+    color 160ms ease;
 }
 
 .inventory-slot-drop-hover .inventory-slot-empty,
 .inventory-slot-drop-hover.inventory-slot-drop-filled {
   outline: 2px solid var(--accent-strong);
-  outline-offset: 3px;
-  border-radius: 12px;
+  outline-offset: 2px;
+  border-radius: 10px;
 }
 
 .inventory-slot-drop-hover .inventory-slot-empty {
   border-color: var(--accent-strong);
   background: rgba(159, 122, 234, 0.14);
   color: #e9d5ff;
-  transform: scale(1.02);
 }
 
 .inventory-slot-remove {
   width: 100%;
-  max-width: 132px;
+  padding: 6px 10px;
+  font-size: 0.68rem;
 }
 
 .inventory-collection-section {
   display: grid;
   gap: 0;
-  padding-top: 4px;
+  padding-top: 2px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .inventory-collection {
-  border: 2px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  background: rgba(0, 0, 0, 0.12);
-  padding: 12px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 8px;
   transition:
     border-color 160ms ease,
     background 160ms ease;
@@ -1644,20 +1672,14 @@ h3 {
 
 .inventory-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
 }
 
 .inventory-card-cell {
   display: grid;
   min-width: 0;
   transition: opacity 160ms ease, transform 160ms ease;
-}
-
-.inventory-card-cell .inventory-draggable,
-.inventory-card-cell .game-card {
-  width: 100%;
-  max-width: none;
 }
 
 .inventory-card-cell.is-dragging {
@@ -1667,9 +1689,9 @@ h3 {
 
 .inventory-collection-empty {
   margin: 0;
-  padding: 18px 14px;
-  font-size: 0.86rem;
-  line-height: 1.45;
+  padding: 10px 8px;
+  font-size: 0.78rem;
+  line-height: 1.4;
   text-align: center;
 }
 
@@ -2544,33 +2566,37 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .inventory-slots-row {
-    gap: 8px;
+  .inventory-board {
+    padding: 10px 12px 12px;
   }
 
-  .inventory-deck-panel {
-    padding: 12px 10px 10px;
+  .inventory-slots-row {
+    gap: 6px;
+  }
+
+  .inventory-deck-panel,
+  .inventory-collection {
+    padding: 6px;
   }
 
   .inventory-card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 6px;
   }
 }
 
 @media (max-width: 520px) {
   .inventory-slots-row {
-    gap: 6px;
-  }
-
-  .inventory-slot-label {
-    font-size: 0.66rem;
+    gap: 5px;
   }
 
   .inventory-slot-remove {
-    max-width: 100%;
-    padding-inline: 10px;
-    font-size: 0.72rem;
+    padding: 5px 8px;
+    font-size: 0.62rem;
+  }
+
+  .inventory-board .game-card-name {
+    font-size: 0.58rem;
   }
 }
 

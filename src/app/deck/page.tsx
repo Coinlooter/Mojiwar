@@ -1,6 +1,5 @@
 import { InventoryBoard } from "@/components/inventory/InventoryBoard";
 import { requireCharacter } from "@/lib/auth/require-character";
-import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
 import { fetchDeckPageData } from "@/lib/game/deck-page";
 import type { DeckActionError } from "@/app/deck/actions";
 
@@ -28,17 +27,6 @@ export default async function DeckPage({
 
   return (
     <div className="inventory-page">
-      <header className="inventory-top panel battle-card">
-        <div>
-          <p className="eyebrow">Inventar</p>
-          <h1>{MAX_STARTER_DECK_SIZE} Karten entscheiden deinen Build.</h1>
-          <p className="muted inventory-top-lead">
-            Baue dein Deck mit Drag-and-Drop — drei Karten, unendlich viele
-            Kombos.
-          </p>
-        </div>
-      </header>
-
       <InventoryBoard
         collection={collection}
         initialError={initialError}
