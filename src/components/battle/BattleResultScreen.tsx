@@ -26,11 +26,11 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
   return (
     <section
       aria-labelledby="battle-result-title"
-      className={`battle-result-screen${won ? " battle-result-win" : " battle-result-lose"}`}
+      className={`battle-phase-screen battle-result-screen${won ? " battle-result-win" : " battle-result-lose"}`}
     >
       <div className="battle-result-backdrop" aria-hidden="true" />
 
-      <article className="panel battle-result-card">
+      <article className="panel battle-card battle-experience-card battle-result-card">
         <p className="eyebrow">{won ? "Sieg!" : "Niederlage"}</p>
         <h2 className="battle-result-title" id="battle-result-title">
           {won ? "Du hast gewonnen!" : "Leider verloren."}
@@ -69,7 +69,7 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
                 emoji={loot.emoji}
                 name={loot.name}
                 rarity={loot.rarity}
-                size="lg"
+                size="md"
               />
             </div>
             <p className="muted battle-result-loot-hint">

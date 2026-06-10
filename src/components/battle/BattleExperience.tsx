@@ -29,16 +29,10 @@ export function BattleExperience({
   }
 
   return (
-    <>
-      <section style={{ marginBottom: 32 }}>
-        <p className="eyebrow">Kampf laeuft</p>
-        <h1>Schau zu, wie der Kampf ablaeuft.</h1>
-        <p className="lead">
-          Gleich danach siehst du dein Ergebnis und eventuelle Beute.
-        </p>
-      </section>
-
-      <BattleReplay onComplete={showResult} result={result} />
-    </>
+    <section className="battle-phase-screen" aria-label="Kampf">
+      <article className="panel battle-card battle-experience-card">
+        <BattleReplay onComplete={showResult} result={result} />
+      </article>
+    </section>
   );
 }
