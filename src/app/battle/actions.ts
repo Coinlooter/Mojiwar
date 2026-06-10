@@ -11,19 +11,21 @@ import { persistBattleResult } from "@/lib/game/persist-battle";
 import { resolveBattleBetween } from "@/lib/game/resolve-battle";
 import { challengeCharacterSchema } from "@/lib/game/schemas";
 
-export async function challengeCharacter(formData: FormData) {
-  const { supabase, user, character } = await requireCharacter();
+export type ChallengeError = "invalid" | "self" | "missing" | "battle";
 
-  const parsed = challengeCharacterSchema.safeParse({
-    defenderCharacterId: formData.get("defenderCharacterId"),
-  });
+export async function startChallenge(
+  defenderCharacterId: string,
+): Promise<{ ok: true; battleId: string } | { ok: false; error: ChallengeError }> {
+  const parsed = challengeCharacterSchema.safeParse({ defenderCharacterId });
 
   if (!parsed.success) {
-    redirect("/opponents?error=invalid" as Route);
+    return { ok: false, error: "invalid" };
   }
 
+  const { supabase, user, character } = await requireCharacter();
+
   if (parsed.data.defenderCharacterId === character.id) {
-    redirect("/opponents?error=self" as Route);
+    return { ok: false, error: "self" };
   }
 
   const [attacker, defender] = await Promise.all([
@@ -32,23 +34,32 @@ export async function challengeCharacter(formData: FormData) {
   ]);
 
   if (!attacker || !defender) {
-    redirect("/opponents?error=missing" as Route);
+    return { ok: false, error: "missing" };
   }
 
   const persistenceInput = resolveBattleBetween({ attacker, defender });
 
-  let battleId: string;
-
   try {
-    battleId = await persistBattleResult(user.id, persistenceInput);
+    const battleId = await persistBattleResult(user.id, persistenceInput);
+
+    revalidatePath("/dashboard");
+    revalidatePath("/opponents");
+
+    return { ok: true, battleId };
   } catch {
-    redirect("/opponents?error=battle" as Route);
+    return { ok: false, error: "battle" };
+  }
+}
+
+export async function challengeCharacter(formData: FormData) {
+  const defenderCharacterId = String(formData.get("defenderCharacterId") ?? "");
+  const result = await startChallenge(defenderCharacterId);
+
+  if (!result.ok) {
+    redirect(`/opponents?error=${result.error}` as Route);
   }
 
-  revalidatePath("/dashboard");
-  revalidatePath("/deck");
-  revalidatePath("/opponents");
-  redirect(`/battle/${battleId}` as Route);
+  redirect(`/battle/${result.battleId}` as Route);
 }
 
 export async function markBattleViewed(battleId: string) {

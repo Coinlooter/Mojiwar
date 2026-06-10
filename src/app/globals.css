@@ -1507,6 +1507,131 @@ h3 {
   font-size: 0.88rem;
 }
 
+.battle-launch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: battle-launch-fade-in 220ms ease;
+}
+
+.battle-launch-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(159, 122, 234, 0.24), transparent 58%),
+    rgba(4, 7, 18, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.battle-launch-card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  width: min(100%, 360px);
+  padding: 20px 22px 18px;
+  text-align: center;
+  animation: battle-launch-card-pop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.battle-launch-emojis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.battle-launch-fighter {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.28);
+  font-size: 2.4rem;
+  line-height: 1;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.battle-launch-fighter-player {
+  animation: battle-launch-bounce-left 900ms ease-in-out infinite;
+}
+
+.battle-launch-fighter-opponent {
+  animation: battle-launch-bounce-right 900ms ease-in-out infinite;
+}
+
+.battle-launch-vs {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.battle-launch-opponent {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.battle-launch-label {
+  margin: 0;
+  color: #ddd6fe;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.battle-launch-spinner {
+  display: inline-flex;
+}
+
+@keyframes battle-launch-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes battle-launch-card-pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes battle-launch-bounce-left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes battle-launch-bounce-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-6px);
+  }
+}
+
 .inventory-page {
   display: grid;
   gap: 0;

@@ -1,10 +1,17 @@
-import { challengeCharacter } from "@/app/battle/actions";
-import { SubmitButton } from "@/components/ui/SubmitButton";
+import { ChallengeOpponentButton } from "@/components/opponents/ChallengeOpponentButton";
 import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
 import { calculatePower } from "@/lib/game/calculate-power";
 import type { CharacterLoadout } from "@/lib/game/types";
 
-export function OpponentRow({ candidate }: { candidate: CharacterLoadout }) {
+export function OpponentRow({
+  candidate,
+  playerEmoji,
+  onError,
+}: {
+  candidate: CharacterLoadout;
+  playerEmoji: string;
+  onError?: (message: string) => void;
+}) {
   const isBot = BOT_OPPONENT_IDS.has(candidate.id);
   const power = calculatePower(candidate);
 
@@ -22,12 +29,16 @@ export function OpponentRow({ candidate }: { candidate: CharacterLoadout }) {
           Lv {candidate.level} · {power} · {candidate.deck.length} Karten
         </span>
       </div>
-      <form action={challengeCharacter}>
-        <input name="defenderCharacterId" type="hidden" value={candidate.id} />
-        <SubmitButton pendingLabel="Startet..." variant="primary">
-          Kampf
-        </SubmitButton>
-      </form>
+      <ChallengeOpponentButton
+        className="button primary"
+        defenderCharacterId={candidate.id}
+        onError={onError}
+        opponentEmoji={candidate.emoji}
+        opponentName={candidate.name}
+        playerEmoji={playerEmoji}
+      >
+        Kampf
+      </ChallengeOpponentButton>
     </article>
   );
 }
