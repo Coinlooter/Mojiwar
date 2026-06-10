@@ -308,31 +308,8 @@ input {
 .nav-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-}
-
-.nav-links a {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--foreground);
-  font-weight: 700;
-  padding: 8px 14px;
-  text-decoration: none;
-  transition:
-    border-color 140ms ease,
-    background 140ms ease,
-    transform 140ms ease;
-}
-
-.nav-links a:hover {
-  border-color: var(--accent-strong);
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-1px);
-}
-
-.nav-links a:active {
-  transform: translateY(0) scale(0.98);
+  align-items: center;
+  gap: 8px;
 }
 
 .button {
@@ -2550,7 +2527,6 @@ h3 {
 }
 
 .button:focus-visible,
-.nav-links a:focus-visible,
 .footer-link:focus-visible,
 .footer-version:focus-visible,
 .emoji-picker-option:focus-visible,

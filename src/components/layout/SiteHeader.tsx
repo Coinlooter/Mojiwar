@@ -35,11 +35,21 @@ export async function SiteHeader() {
 
         <nav className="site-nav" aria-label="Hauptnavigation">
           <div className="nav-links">
-            {navItems.map((item) => (
-              <Link href={item.href as Route} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isPrimary =
+                (!user && item.href === "/login") ||
+                (user && item.href === "/opponents");
+
+              return (
+                <Link
+                  className={`button button-compact${isPrimary ? " primary" : ""}`}
+                  href={item.href as Route}
+                  key={item.href}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
           {user ? <LogoutButton compact /> : null}
         </nav>
