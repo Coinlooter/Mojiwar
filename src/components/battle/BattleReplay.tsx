@@ -74,15 +74,21 @@ export function BattleReplay({
   }, [isComplete, onComplete]);
 
   return (
-    <section className="replay-shell" aria-label="Kampf-Replay">
-      <div className="panel battle-card battle-replay-main">
-        <div className="battle-replay-header">
-          <p className="eyebrow">Kampf-Arena · Regeln v{result.rulesVersion}</p>
-          <p className="battle-round-pill">
-            {isComplete ? "Kampf beendet" : `Runde ${currentRound}`}
+    <div className="battle-replay-compact" aria-label="Kampf-Replay">
+      <header className="battle-replay-header">
+        <div>
+          <p className="eyebrow">Kampf-Arena</p>
+          <p className="muted battle-replay-subtitle">
+            {result.attackerSnapshot.emoji} {result.attackerSnapshot.name} vs{" "}
+            {result.defenderSnapshot.emoji} {result.defenderSnapshot.name}
           </p>
         </div>
+        <p className="battle-round-pill">
+          {isComplete ? "Beendet" : `Runde ${currentRound}`}
+        </p>
+      </header>
 
+      <div className="battle-replay-body">
         <BattleArena
           animate={!prefersReducedMotion}
           events={shownEvents}
@@ -90,42 +96,38 @@ export function BattleReplay({
           result={result}
         />
 
-        <div className="actions">
-          {!isComplete ? (
-            <p className="muted replay-status" aria-live="polite">
-              Die Emojis kaempfen gerade...
-            </p>
-          ) : (
-            <p className="muted replay-status" aria-live="polite">
-              Kampf beendet — Ergebnis folgt gleich.
-            </p>
-          )}
-          <button
-            className="button"
-            disabled={isComplete}
-            onClick={() => {
-              setVisibleEvents(result.events.length);
-            }}
-            type="button"
-          >
-            {isComplete ? "Fertig" : "Ueberspringen"}
-          </button>
-        </div>
+        <aside className="battle-log-panel">
+          <p className="eyebrow">Log</p>
+          <div className="event-list" aria-live="polite">
+            {shownEvents.map((event, index) => (
+              <BattleEventCard
+                event={event}
+                isLatest={index === shownEvents.length - 1 && !isComplete}
+                key={`${event.type}-${event.round}-${index}`}
+              />
+            ))}
+          </div>
+        </aside>
       </div>
 
-      <aside className="panel battle-card">
-        <p className="eyebrow">Kampf-Log</p>
-        <div className="event-list" aria-live="polite">
-          {shownEvents.map((event, index) => (
-            <BattleEventCard
-              event={event}
-              isLatest={index === shownEvents.length - 1 && !isComplete}
-              key={`${event.type}-${event.round}-${index}`}
-            />
-          ))}
-        </div>
-      </aside>
-    </section>
+      <footer className="battle-replay-footer">
+        <p className="muted replay-status" aria-live="polite">
+          {isComplete
+            ? "Ergebnis folgt gleich..."
+            : "Die Emojis kaempfen..."}
+        </p>
+        <button
+          className="button"
+          disabled={isComplete}
+          onClick={() => {
+            setVisibleEvents(result.events.length);
+          }}
+          type="button"
+        >
+          {isComplete ? "Fertig" : "Ueberspringen"}
+        </button>
+      </footer>
+    </div>
   );
 }
 
@@ -191,9 +193,7 @@ function BattleEventCard({
   return (
     <article className={`event-card${isLatest ? " event-card-latest" : ""}`}>
       <strong>{formatEventTitle(event)}</strong>
-      <p className="muted" style={{ margin: "6px 0 0" }}>
-        {formatEventDetails(event)}
-      </p>
+      <p className="muted event-card-detail">{formatEventDetails(event)}</p>
     </article>
   );
 }
@@ -203,31 +203,31 @@ function formatEventTitle(event: BattleEvent) {
     case "battle_started":
       return "Kampf startet";
     case "attack":
-      return `Runde ${event.round}: ${sideLabel[event.actor]} greift an`;
+      return `R${event.round}: ${sideLabel[event.actor]}`;
     case "card_effect":
-      return `Runde ${event.round}: ${event.cardName}`;
+      return `R${event.round}: ${event.cardName}`;
     case "fighter_defeated":
       return `${sideLabel[event.loser]} faellt`;
     case "battle_finished":
-      return `Gewinner: ${sideLabel[event.winner]}`;
+      return `Sieg: ${sideLabel[event.winner]}`;
   }
 }
 
 function formatEventDetails(event: BattleEvent) {
   switch (event.type) {
     case "battle_started":
-      return `${event.attacker.emoji} ${event.attacker.name} fordert ${event.defender.emoji} ${event.defender.name} heraus.`;
+      return `${event.attacker.emoji} vs ${event.defender.emoji}`;
     case "attack":
-      return `${event.damage} Schaden${event.critical ? " als kritischer Treffer" : ""}. Ziel-HP: ${event.targetHpAfter}.`;
+      return `${event.damage} Schaden${event.critical ? " · Krit" : ""}`;
     case "card_effect":
       if (event.actorHpAfter !== undefined) {
-        return `${sideLabel[event.actor]} heilt sich um ${event.value}. HP: ${event.actorHpAfter}.`;
+        return `+${event.value} Heilung`;
       }
 
-      return `${sideLabel[event.actor]} nutzt einen Karteneffekt fuer ${event.value} Schaden. Ziel-HP: ${event.targetHpAfter}.`;
+      return `${event.value} Schaden`;
     case "fighter_defeated":
-      return `${sideLabel[event.winner]} entscheidet den Kampf.`;
+      return `${sideLabel[event.winner]} gewinnt`;
     case "battle_finished":
-      return `Endstand: Angreifer ${event.attackerHp} HP, Verteidiger ${event.defenderHp} HP.`;
+      return `${event.attackerHp} / ${event.defenderHp} HP`;
   }
 }
