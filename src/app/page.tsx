@@ -1,7 +1,9 @@
 import Link from "next/link";
 import type { Route } from "next";
+import { redirect } from "next/navigation";
 
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
+import { getVerifiedUser } from "@/lib/auth/session";
 import { GameCard } from "@/components/cards/GameCard";
 import { landingDemoBattle } from "@/constants/landing-demo";
 import { starterCards } from "@/lib/game/cards";
@@ -28,7 +30,15 @@ const playSteps = [
   },
 ] as const;
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const { user } = await getVerifiedUser();
+
+  if (user) {
+    redirect("/dashboard" as Route);
+  }
+
   const winner =
     demoBattle.winnerSide === "attacker"
       ? demoBattle.attackerSnapshot
