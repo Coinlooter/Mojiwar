@@ -11,6 +11,9 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
       "Inventar — bis zu 10 Deck-Slots, davon 3 von Anfang an freigeschaltet",
       "Inventar — gesperrte Slots zeigen nur „Noch nicht freigeschaltet“",
       "Inventar — Kartenwechsel bleibt kostenlos",
+      "Header — Logout erst nach Charaktererstellung, Gäste sehen „Spielen“",
+      "Dashboard — Fortschritt sichern statt Login, E-Mail-Bestätigung repariert",
+      "Login — E-Mail-Login erstellt keine doppelten Accounts mehr",
     ],
   },
   {
