@@ -11,6 +11,7 @@ describe("loadout mapper", () => {
       name: "Foxy",
       level: 2,
       xp: 40,
+      gold: 25,
       base_hp: 100,
       base_attack: 14,
       base_defense: 6,
@@ -40,5 +41,6 @@ describe("loadout mapper", () => {
     expect(mapCharacterRowToBaseStats(character).attack).toBe(14);
     expect(loadout.deck).toHaveLength(1);
     expect(loadout.deck[0]?.id).toBe("ember-punch");
+    expect(loadout.gold).toBe(25);
   });
 });

@@ -13,6 +13,7 @@ export type BattlePageData = {
   isAttacker: boolean;
   won: boolean;
   xpGained: number;
+  goldGained: number;
   loot?: BattleLootCard;
 };
 
@@ -45,6 +46,11 @@ export async function fetchBattleForParticipant(
   const xpGained = isAttacker
     ? battle.attacker_xp_gained
     : battle.defender_xp_gained;
+  const goldGained = won
+    ? isAttacker
+      ? (result.gold?.attacker ?? 0)
+      : (result.gold?.defender ?? 0)
+    : 0;
 
   let loot: BattleLootCard | undefined;
 
@@ -79,6 +85,7 @@ export async function fetchBattleForParticipant(
     isAttacker,
     won,
     xpGained,
+    goldGained,
     loot,
   };
 }

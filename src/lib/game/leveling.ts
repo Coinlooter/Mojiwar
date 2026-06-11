@@ -43,3 +43,16 @@ export function calculateBattleXp({
     loserXp: 10,
   };
 }
+
+export function calculateBattleGold({
+  winner,
+  loser,
+}: {
+  winner: CharacterLoadout;
+  loser: CharacterLoadout;
+}) {
+  const levelGap = loser.level - winner.level;
+  const challengeBonus = Math.max(0, levelGap) * 2;
+
+  return 10 + challengeBonus;
+}

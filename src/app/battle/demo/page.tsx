@@ -50,6 +50,7 @@ export default function DemoBattlePage() {
         opponentName: result.defenderSnapshot.name,
         rounds: result.rounds,
         xpGained: result.xp.attacker,
+        goldGained: won ? 10 : 0,
         loot: won
           ? {
               emoji: starterCards[4].emoji,

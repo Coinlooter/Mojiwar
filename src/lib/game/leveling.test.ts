@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  calculateBattleGold,
   calculateBattleXp,
   levelForXp,
   totalXpForLevel,
@@ -15,6 +16,7 @@ const loadout = (level: number, xp = 0): CharacterLoadout => ({
   name: "Foxy",
   level,
   xp,
+  gold: 0,
   baseStats: {
     hp: 100,
     attack: 14,
@@ -42,5 +44,17 @@ describe("leveling", () => {
 
     expect(challengeMatch.winnerXp).toBeGreaterThan(evenMatch.winnerXp);
     expect(evenMatch.loserXp).toBe(10);
+  });
+
+  it("vergibt Gold nur an den Sieger und skaliert mit Gegner-Level", () => {
+    const winner = loadout(2);
+    const weakerLoser = loadout(2);
+    const strongerLoser = loadout(5);
+
+    const evenGold = calculateBattleGold({ winner, loser: weakerLoser });
+    const challengeGold = calculateBattleGold({ winner, loser: strongerLoser });
+
+    expect(evenGold).toBe(10);
+    expect(challengeGold).toBeGreaterThan(evenGold);
   });
 });

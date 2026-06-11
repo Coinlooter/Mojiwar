@@ -17,11 +17,13 @@ export type BattleSummary = {
   opponentName: string;
   rounds: number;
   xpGained: number;
+  goldGained: number;
   loot?: BattleLootCard;
 };
 
 export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
-  const { won, opponentEmoji, opponentName, rounds, xpGained, loot } = summary;
+  const { won, opponentEmoji, opponentName, rounds, xpGained, goldGained, loot } =
+    summary;
 
   return (
     <section
@@ -58,6 +60,12 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
               +{xpGained} XP
             </strong>
           </div>
+          {won ? (
+            <div className="battle-result-stat">
+              <span className="battle-result-stat-label">Gold</span>
+              <strong className="battle-result-gold-win">+{goldGained} 🪙</strong>
+            </div>
+          ) : null}
         </div>
 
         {won && loot ? (

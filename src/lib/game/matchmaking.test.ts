@@ -11,6 +11,7 @@ const player: CharacterLoadout = {
   name: "Foxy",
   level: 3,
   xp: 180,
+  gold: 0,
   baseStats: {
     hp: 108,
     attack: 17,
