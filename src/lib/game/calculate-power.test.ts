@@ -10,6 +10,7 @@ const baseLoadout: CharacterLoadout = {
   name: "Foxy",
   level: 3,
   xp: 120,
+  gold: 0,
   baseStats: {
     hp: 100,
     attack: 14,

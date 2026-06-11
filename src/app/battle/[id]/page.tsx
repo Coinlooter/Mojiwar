@@ -30,7 +30,7 @@ export default async function BattlePage({
     redirect("/dashboard" as Route);
   }
 
-  const { result, won, xpGained, loot } = battleData;
+  const { result, won, xpGained, goldGained, loot } = battleData;
   const opponentSnapshot = battleData.isAttacker
     ? result.defenderSnapshot
     : result.attackerSnapshot;
@@ -45,6 +45,7 @@ export default async function BattlePage({
         opponentName: opponentSnapshot.name,
         rounds: battleData.battle.rounds,
         xpGained,
+        goldGained,
         loot,
       }}
     />

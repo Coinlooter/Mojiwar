@@ -11,6 +11,7 @@ const attacker: CharacterLoadout = {
   name: "Foxy",
   level: 4,
   xp: 280,
+  gold: 0,
   baseStats: {
     hp: 110,
     attack: 19,
@@ -28,6 +29,7 @@ const defender: CharacterLoadout = {
   name: "Hopser",
   level: 3,
   xp: 190,
+  gold: 0,
   baseStats: {
     hp: 126,
     attack: 16,

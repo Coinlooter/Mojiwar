@@ -25,9 +25,13 @@ export async function persistBattleResult(
     p_attacker_xp_after: input.attackerXpAfter,
     p_attacker_level_after: input.attackerLevelAfter,
     p_attacker_power_after: input.attackerPowerAfter,
+    p_attacker_gold_gained: input.attackerGoldGained,
+    p_attacker_gold_after: input.attackerGoldAfter,
     p_defender_xp_after: input.defenderXpAfter,
     p_defender_level_after: input.defenderLevelAfter,
     p_defender_power_after: input.defenderPowerAfter,
+    p_defender_gold_gained: input.defenderGoldGained,
+    p_defender_gold_after: input.defenderGoldAfter,
   });
 
   if (error || !data) {

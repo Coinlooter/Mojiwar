@@ -50,6 +50,7 @@ export type Database = {
           base_speed: number;
           base_crit_chance: number;
           power: number;
+          gold: number;
           wins: number;
           losses: number;
           is_bot: boolean;
@@ -69,6 +70,7 @@ export type Database = {
           base_speed?: number;
           base_crit_chance?: number;
           power?: number;
+          gold?: number;
           wins?: number;
           losses?: number;
           is_bot?: boolean;
@@ -88,6 +90,7 @@ export type Database = {
           base_speed?: number;
           base_crit_chance?: number;
           power?: number;
+          gold?: number;
           wins?: number;
           losses?: number;
           is_bot?: boolean;
@@ -315,9 +318,13 @@ export type Database = {
           p_attacker_xp_after: number;
           p_attacker_level_after: number;
           p_attacker_power_after: number;
+          p_attacker_gold_gained: number;
+          p_attacker_gold_after: number;
           p_defender_xp_after: number;
           p_defender_level_after: number;
           p_defender_power_after: number;
+          p_defender_gold_gained: number;
+          p_defender_gold_after: number;
         };
         Returns: string;
       };

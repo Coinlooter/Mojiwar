@@ -64,8 +64,8 @@ export default async function DashboardPage({
             <p className="eyebrow">Dashboard</p>
             <h1>{character.name}</h1>
             <p className="muted dashboard-hero-meta">
-              Level {character.level} · {character.xp} XP · Staerke{" "}
-              {character.power}
+              Level {character.level} · {character.xp} XP · {character.gold} 🪙
+              Gold · Staerke {character.power}
             </p>
           </div>
         </div>
@@ -85,8 +85,13 @@ export default async function DashboardPage({
 
       <section aria-label="Spielstatistiken" className="dashboard-stats">
         {inboxStats.map((stat) => (
-          <article className="dashboard-stat" key={stat.label}>
-            <div className="dashboard-stat-value">{formatValue(stat.value)}</div>
+          <article
+            className={`dashboard-stat${stat.label === "Gold" ? " dashboard-stat-gold" : ""}`}
+            key={stat.label}
+          >
+            <div className="dashboard-stat-value">
+              {stat.label === "Gold" ? `${formatValue(stat.value)} 🪙` : formatValue(stat.value)}
+            </div>
             <p className="muted">{stat.label}</p>
           </article>
         ))}

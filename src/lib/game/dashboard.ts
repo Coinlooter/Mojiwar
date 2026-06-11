@@ -114,6 +114,7 @@ export async function fetchDashboardData(
   return {
     character,
     inboxStats: [
+      { label: "Gold", value: character.gold },
       { label: "Erhalten", value: receivedChallenges },
       { label: "Siege", value: character.wins },
       { label: "Niederlagen", value: character.losses },

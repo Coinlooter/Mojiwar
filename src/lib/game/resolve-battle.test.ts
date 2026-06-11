@@ -20,6 +20,7 @@ describe("resolveBattleBetween", () => {
       name: "Foxy",
       level: 1,
       xp: 0,
+      gold: 12,
       baseStats,
       deck: [starterCards[0], starterCards[1], starterCards[2]],
     };
@@ -30,6 +31,7 @@ describe("resolveBattleBetween", () => {
       name: "Hopser",
       level: 1,
       xp: 0,
+      gold: 4,
       baseStats,
       deck: [starterCards[3], starterCards[4], starterCards[5]],
     };
@@ -46,5 +48,16 @@ describe("resolveBattleBetween", () => {
     expect(result.rewardCardId).toBeTruthy();
     expect(result.attackerXpAfter).toBeGreaterThanOrEqual(0);
     expect(result.defenderXpAfter).toBeGreaterThanOrEqual(0);
+    expect(result.battleLog.gold).toBeDefined();
+
+    const winnerGoldGained =
+      result.battleLog.winnerSide === "attacker"
+        ? result.attackerGoldGained
+        : result.defenderGoldGained;
+
+    expect(winnerGoldGained).toBeGreaterThan(0);
+    expect(result.attackerGoldGained === 0 || result.defenderGoldGained === 0).toBe(
+      true,
+    );
   });
 });

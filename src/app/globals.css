@@ -1257,8 +1257,12 @@ h3 {
 
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
   gap: 10px;
+}
+
+.dashboard-stat-gold .dashboard-stat-value {
+  color: #fbbf24;
 }
 
 .dashboard-stat {
@@ -2515,6 +2519,10 @@ h3 {
 
 .battle-result-xp-win {
   color: var(--success);
+}
+
+.battle-result-gold-win {
+  color: #fbbf24;
 }
 
 .battle-result-loot {

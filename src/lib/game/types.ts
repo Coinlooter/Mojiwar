@@ -34,6 +34,7 @@ export type CharacterLoadout = {
   name: string;
   level: number;
   xp: number;
+  gold: number;
   baseStats: CombatStats;
   deck: CardDefinition[];
 };
@@ -105,6 +106,10 @@ export type BattleResult = {
   defenderSnapshot: BattleParticipantSnapshot;
   events: BattleEvent[];
   xp: {
+    attacker: number;
+    defender: number;
+  };
+  gold?: {
     attacker: number;
     defender: number;
   };

@@ -99,6 +99,12 @@ export const battleResultSchema = z.object({
     attacker: z.number(),
     defender: z.number(),
   }),
+  gold: z
+    .object({
+      attacker: z.number(),
+      defender: z.number(),
+    })
+    .optional(),
 });
 
 export function parseBattleResult(value: unknown): BattleResult {

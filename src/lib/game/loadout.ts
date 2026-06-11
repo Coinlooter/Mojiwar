@@ -39,6 +39,7 @@ export function buildCharacterLoadout(
     name: character.name,
     level: character.level,
     xp: character.xp,
+    gold: character.gold,
     baseStats: mapCharacterRowToBaseStats(character),
     deck,
   };
