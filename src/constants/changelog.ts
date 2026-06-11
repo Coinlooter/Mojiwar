@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.7.4",
+    changes: [
+      "Header — Logout erst nach Charaktererstellung, nicht mehr während der Auswahl",
+    ],
+  },
+  {
     version: "1.7.3",
     changes: [
       "Login — Spieler bleiben auf dem Gerät eingeloggt, Session wird in Cookies gespeichert",

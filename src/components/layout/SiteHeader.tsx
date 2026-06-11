@@ -2,17 +2,22 @@ import type { Route } from "next";
 import Link from "next/link";
 
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { getPrimaryCharacter } from "@/lib/auth/character";
 import { getVerifiedUser } from "@/lib/auth/session";
 
 export async function SiteHeader() {
-  const { user } = await getVerifiedUser();
+  const { supabase, user } = await getVerifiedUser();
+  const character = user
+    ? await getPrimaryCharacter(supabase, user.id)
+    : null;
+  const isLoggedIn = Boolean(character);
 
   return (
     <header className="site-header glass-chrome">
       <div className="site-chrome-inner">
         <Link
           className="brand"
-          href={(user ? "/dashboard" : "/") as Route}
+          href={(isLoggedIn ? "/dashboard" : "/") as Route}
         >
           <span className="brand-mark" aria-hidden>
             ⚔️
@@ -24,7 +29,7 @@ export async function SiteHeader() {
         </Link>
 
         <nav className="site-nav" aria-label="Hauptnavigation">
-          {user ? (
+          {isLoggedIn ? (
             <LogoutButton compact />
           ) : (
             <Link className="button button-compact primary" href={"/login" as Route}>
