@@ -40,7 +40,7 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
         <p className="lead battle-result-lead">
           {won
             ? `Du hast ${opponentEmoji} ${opponentName} besiegt.`
-            : `${opponentEmoji} ${opponentName} war diesmal staerker.`}
+            : `${opponentEmoji} ${opponentName} war diesmal stärker.`}
         </p>
 
         <div className="battle-result-stats">

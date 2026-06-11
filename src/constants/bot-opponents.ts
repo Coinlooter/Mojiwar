@@ -22,7 +22,7 @@ export const BOT_OPPONENTS: BotOpponentDefinition[] = [
   {
     id: "b1000001-0000-4000-8000-000000000001",
     emoji: "🐣",
-    name: "Kueken",
+    name: "Küken",
     level: 1,
     xp: 0,
     power: 238,
@@ -92,7 +92,7 @@ export const BOT_OPPONENTS: BotOpponentDefinition[] = [
   {
     id: "b1000006-0000-4000-8000-000000000006",
     emoji: "🦁",
-    name: "Loewi",
+    name: "Löwi",
     level: 6,
     xp: 240,
     power: 504,

@@ -8,7 +8,7 @@ import { getVerifiedUser } from "@/lib/auth/session";
 export const dynamic = "force-dynamic";
 
 const errorMessages: Record<string, string> = {
-  invalid: "Bitte waehle ein Emoji und einen Namen mit mindestens 2 Zeichen.",
+  invalid: "Bitte wähle ein Emoji und einen Namen mit mindestens 2 Zeichen.",
   profile: "Profil konnte nicht gespeichert werden. Bitte versuche es erneut.",
   character: "Emoji-Charakter konnte nicht erstellt werden. Bitte versuche es erneut.",
 };
@@ -42,7 +42,7 @@ export default async function OnboardingPage({
     <section className="hero">
       <div>
         <p className="eyebrow">Erster Start</p>
-        <h1>Waehle dein Emoji und gib ihm einen Namen.</h1>
+        <h1>Wähle dein Emoji und gib ihm einen Namen.</h1>
         <p className="lead">
           Such dir einen Helden aus und gib ihm einen coolen Namen. Im Dashboard
           bekommst du danach deinen Login-Code.

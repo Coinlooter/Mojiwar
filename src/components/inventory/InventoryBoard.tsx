@@ -331,7 +331,7 @@ export function InventoryBoard({
             <p className="muted inventory-collection-empty">
               {dragSource?.kind === "slot"
                 ? "Hier ablegen, um die Karte aus dem Deck zu nehmen."
-                : "Alle Karten sind im Build — oder du hast noch keine gesammelt. Gewinne Kaempfe fuer neue Karten."}
+                : "Alle Karten sind im Build — oder du hast noch keine gesammelt. Gewinne Kämpfe für neue Karten."}
             </p>
           ) : (
             <div className="inventory-card-grid" aria-label="Sammlung">

@@ -15,11 +15,11 @@ import {
 const statusMessages: Record<string, string> = {
   created: "Dein Login-Code ist bereit. Schreib ihn auf oder mach ein Foto.",
   regenerated: "Dein neuer Login-Code ist aktiv. Der alte Code funktioniert nicht mehr.",
-  "email-sent": "Wir haben eine E-Mail geschickt. Bitte bestaetige den Link.",
+  "email-sent": "Wir haben eine E-Mail geschickt. Bitte bestätige den Link.",
 };
 
 const errorMessages: Record<string, string> = {
-  "invalid-email": "Bitte gib eine gueltige E-Mail-Adresse ein.",
+  "invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
   "email-failed": "Die E-Mail konnte nicht gesendet werden.",
   "already-secured": "Dein Login ist bereits per E-Mail gesichert.",
 };
@@ -67,7 +67,7 @@ export async function AccountPanel({
       ) : recoveryCode ? (
         <>
           <p className="muted dashboard-account-copy">
-            Mit diesem Code kannst du dich auf anderen Geraeten einloggen.
+            Mit diesem Code kannst du dich auf anderen Geräten einloggen.
           </p>
           <RecoveryCodeDisplay parts={recoveryCode} />
           {showLoginCodeFlow ? (
@@ -79,7 +79,7 @@ export async function AccountPanel({
       ) : showLoginCodeFlow ? (
         <>
           <p className="muted dashboard-account-copy">
-            Erstelle deinen Login-Code, damit du dich spaeter wieder einloggen
+            Erstelle deinen Login-Code, damit du dich später wieder einloggen
             kannst.
           </p>
           <form action={createRecoveryCode}>

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { BOT_OPPONENTS } from "./bot-opponents";
 
 describe("bot opponents", () => {
-  it("definiert zehn Übungsgegner mit steigender Staerke", () => {
+  it("definiert zehn Übungsgegner mit steigender Stärke", () => {
     expect(BOT_OPPONENTS).toHaveLength(10);
 
     const powers = BOT_OPPONENTS.map((bot) => bot.power);

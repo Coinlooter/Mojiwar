@@ -28,13 +28,13 @@ const loadout = (level: number, xp = 0): CharacterLoadout => ({
 });
 
 describe("leveling", () => {
-  it("berechnet XP-Schwellen fuer Level", () => {
+  it("berechnet XP-Schwellen für Level", () => {
     expect(xpForLevel(1)).toBe(0);
     expect(totalXpForLevel(2)).toBeGreaterThan(0);
     expect(levelForXp(0)).toBe(1);
   });
 
-  it("vergibt mehr XP fuer einen staerkeren Gegner", () => {
+  it("vergibt mehr XP für einen stärkeren Gegner", () => {
     const winner = loadout(2);
     const weakerLoser = loadout(2);
     const strongerLoser = loadout(5);

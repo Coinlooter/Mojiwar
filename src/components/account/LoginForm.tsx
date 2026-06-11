@@ -10,7 +10,7 @@ export function LoginForm() {
       </label>
       <select className="text-input" defaultValue="" id="colorSlug" name="colorSlug">
         <option disabled value="">
-          Farbe waehlen
+          Farbe wählen
         </option>
         {RECOVERY_COLORS.map((color) => (
           <option key={color.slug} value={color.slug}>
@@ -24,7 +24,7 @@ export function LoginForm() {
       </label>
       <select className="text-input" defaultValue="" id="animalSlug" name="animalSlug">
         <option disabled value="">
-          Tier waehlen
+          Tier wählen
         </option>
         {RECOVERY_ANIMALS.map((animal) => (
           <option key={animal.slug} value={animal.slug}>

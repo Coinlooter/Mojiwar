@@ -1,6 +1,6 @@
 export const DECK_ERROR_MESSAGES = {
   invalid: "Diese Karte konnte nicht platziert werden.",
-  card: "Diese Karte gehoert dir nicht.",
+  card: "Diese Karte gehört dir nicht.",
   slot: "Das Inventar konnte gerade nicht aktualisiert werden.",
 } as const;
 
@@ -12,7 +12,7 @@ export const OPPONENT_ERROR_MESSAGES: Record<string, string> = {
 };
 
 export const ONBOARDING_ERROR_MESSAGES: Record<string, string> = {
-  invalid: "Bitte waehle ein Emoji und gib einen gueltigen Namen ein.",
+  invalid: "Bitte wähle ein Emoji und gib einen gültigen Namen ein.",
   profile: "Dein Profil konnte nicht gespeichert werden.",
   character: "Dein Held konnte nicht erstellt werden.",
   deck: "Das Starter-Deck konnte nicht vergeben werden.",

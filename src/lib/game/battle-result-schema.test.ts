@@ -49,7 +49,7 @@ describe("battleResultSchema", () => {
     expect(parsed.success).toBe(true);
   });
 
-  it("parseBattleResult wirft bei ungueltigem Input", () => {
+  it("parseBattleResult wirft bei ungültigem Input", () => {
     expect(() => parseBattleResult({ invalid: true })).toThrow();
   });
 });

@@ -15,18 +15,18 @@ const heroEmojis = ["🦊", "🐸", "👻", "🤖", "🐉", "🦄"] as const;
 const playSteps = [
   {
     emoji: "🎨",
-    title: "Waehle dein Emoji",
+    title: "Wähle dein Emoji",
     description: "Gib ihm einen coolen Namen. Das ist dein Held im Spiel.",
   },
   {
     emoji: "⚔️",
     title: "Fordere Gegner heraus",
-    description: "Dein Emoji kaempft automatisch. Du musst nicht die ganze Zeit online sein.",
+    description: "Dein Emoji kämpft automatisch. Du musst nicht die ganze Zeit online sein.",
   },
   {
     emoji: "🃏",
     title: "Sammle Karten",
-    description: "Wenn du gewinnst, bekommst du neue Karten fuer dein Deck.",
+    description: "Wenn du gewinnst, bekommst du neue Karten für dein Deck.",
   },
 ] as const;
 
@@ -57,11 +57,11 @@ export default async function Home() {
           </div>
 
           <p className="eyebrow">Dein Emoji-Kampfspiel</p>
-          <h1>Baue deinen Helden. Kaempfe. Gewinne Karten.</h1>
+          <h1>Baue deinen Helden. Kämpfe. Gewinne Karten.</h1>
           <p className="lead">
             In Emojitsu erstellst du dein eigenes Emoji und schickst es in
-            spannende Kaempfe. Gegner muessen nicht gleichzeitig online sein —
-            dein Held kaempft auch, wenn du gerade etwas anderes machst.
+            spannende Kämpfe. Gegner müssen nicht gleichzeitig online sein —
+            dein Held kämpft auch, wenn du gerade etwas anderes machst.
           </p>
           <div className="actions">
             <Link className="button primary" href={"/login" as Route}>
@@ -123,9 +123,9 @@ export default async function Home() {
 
       <section className="section landing-cards" aria-label="Karten sammeln">
         <p className="eyebrow">Karten sammeln</p>
-        <h2>Staerkere Emojis brauchen starke Karten.</h2>
+        <h2>Stärkere Emojis brauchen starke Karten.</h2>
         <p className="lead landing-cards-lead">
-          Jede Karte gibt deinem Emoji neue Kraefte. Baue dein Lieblingsdeck
+          Jede Karte gibt deinem Emoji neue Kräfte. Baue dein Lieblingsdeck
           und werde zum Champion.
         </p>
         <div className="landing-card-showcase">
