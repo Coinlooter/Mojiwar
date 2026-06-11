@@ -26,6 +26,26 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
+  const code = request.nextUrl.searchParams.get("code");
+
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      const next = request.nextUrl.searchParams.get("next") ?? "/dashboard";
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = next.startsWith("/") ? next : `/${next}`;
+      redirectUrl.search = "";
+      const redirectResponse = NextResponse.redirect(redirectUrl);
+
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie);
+      });
+
+      return redirectResponse;
+    }
+  }
+
   await supabase.auth.getClaims();
 
   return supabaseResponse;

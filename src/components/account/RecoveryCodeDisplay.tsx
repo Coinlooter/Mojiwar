@@ -5,8 +5,8 @@ export function RecoveryCodeDisplay({ parts }: { parts: RecoveryCodeParts }) {
 
   return (
     <div className="recovery-code-display" role="status">
-      <p className="recovery-code-label">Dein Login-Code</p>
-      <p className="recovery-code-value" aria-label={`Login-Code ${display.combined}`}>
+      <p className="recovery-code-label">Dein Code</p>
+      <p className="recovery-code-value" aria-label={`Weiterspielen-Code ${display.combined}`}>
         <span>{display.colorLabel}</span>
         <span aria-hidden>·</span>
         <span>{display.animalLabel}</span>
@@ -14,8 +14,8 @@ export function RecoveryCodeDisplay({ parts }: { parts: RecoveryCodeParts }) {
         <span>{display.numberSuffix}</span>
       </p>
       <p className="muted recovery-code-hint">
-        Schreib ihn auf oder mach ein Foto. Damit loggst du dich auf anderen Geräten
-        ein.
+        Schreib ihn auf oder mach ein Foto. Damit spielst du auf anderen Geräten
+        weiter.
       </p>
       <p className="muted recovery-code-compact">
         Kurzform: <code>{display.combined}</code>

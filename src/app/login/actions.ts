@@ -13,16 +13,8 @@ import {
 } from "@/lib/auth/progress-recovery";
 import { establishSessionForUser } from "@/lib/auth/recovery-session";
 import { getPrimaryCharacter } from "@/lib/auth/character";
+import { getAuthConfirmUrl } from "@/lib/auth/site-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-
-function getSiteUrl() {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000")
-  );
-}
 
 async function getClientIpAddress() {
   const headerStore = await headers();
@@ -63,7 +55,7 @@ export async function loginWithCredential(formData: FormData) {
     const { error } = await supabase.auth.signInWithOtp({
       email: parsed.email,
       options: {
-        emailRedirectTo: `${getSiteUrl()}/auth/confirm?next=/dashboard`,
+        emailRedirectTo: getAuthConfirmUrl("/dashboard"),
       },
     });
 

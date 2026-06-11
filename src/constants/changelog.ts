@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.7.4",
+    changes: [
+      "Dashboard — Bereich heißt jetzt „Auf anderem Gerät weiterspielen“ statt Login",
+      "Dashboard — Texte fokussieren Fortschritt sichern, nicht erneutes Einloggen",
+      "E-Mail — Bestätigungslinks funktionieren mit code-Parameter und korrekter Produktions-URL",
+    ],
+  },
+  {
     version: "1.7.3",
     changes: [
       "Login — Spieler bleiben auf dem Gerät eingeloggt, Session wird in Cookies gespeichert",

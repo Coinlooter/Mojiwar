@@ -8,6 +8,7 @@ import { z } from "zod";
 import { hasSecuredEmailAccount } from "@/lib/auth/account-email";
 import { requireUser } from "@/lib/auth/require-character";
 import { assignRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
+import { getAuthConfirmUrl } from "@/lib/auth/site-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const emailSchema = z.email();
@@ -46,19 +47,13 @@ export async function linkParentEmail(formData: FormData) {
     redirect("/dashboard?login-error=invalid-email" as Route);
   }
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
-
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.updateUser(
     {
       email: parsed.data,
     },
     {
-      emailRedirectTo: `${siteUrl}/auth/confirm?next=/dashboard`,
+      emailRedirectTo: getAuthConfirmUrl("/dashboard"),
     },
   );
 
