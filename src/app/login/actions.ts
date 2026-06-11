@@ -5,11 +5,7 @@ import type { Route } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import {
-  parseRecoveryCodeInput,
-  validateRecoveryCodeParts,
-  type RecoveryCodeParts,
-} from "@/lib/auth/recovery-code";
+import { parseLoginInput } from "@/lib/auth/login-input";
 import {
   isRecoveryRateLimited,
   lookupUserIdByRecoveryCode,
@@ -19,35 +15,13 @@ import { establishSessionForUser } from "@/lib/auth/recovery-session";
 import { getPrimaryCharacter } from "@/lib/auth/character";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-function getRecoveryPartsFromForm(formData: FormData): RecoveryCodeParts | null {
-  const combined = formData.get("combined");
-
-  if (typeof combined === "string" && combined.trim()) {
-    const parsed = parseRecoveryCodeInput(combined);
-    if (parsed) {
-      return parsed;
-    }
-  }
-
-  const colorSlug = formData.get("colorSlug");
-  const animalSlug = formData.get("animalSlug");
-  const numberSuffix = formData.get("numberSuffix");
-
-  if (
-    typeof colorSlug !== "string" ||
-    typeof animalSlug !== "string" ||
-    typeof numberSuffix !== "string"
-  ) {
-    return null;
-  }
-
-  const parts = {
-    colorSlug: colorSlug.trim().toLowerCase(),
-    animalSlug: animalSlug.trim().toLowerCase(),
-    numberSuffix: numberSuffix.trim(),
-  };
-
-  return validateRecoveryCodeParts(parts) ? parts : null;
+function getSiteUrl() {
+  return (
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000")
+  );
 }
 
 async function getClientIpAddress() {
@@ -61,22 +35,48 @@ async function getClientIpAddress() {
   return headerStore.get("x-real-ip") ?? "unknown";
 }
 
-export async function loginWithRecoveryCode(formData: FormData) {
+export async function loginWithCredential(formData: FormData) {
   const ipAddress = await getClientIpAddress();
 
   if (await isRecoveryRateLimited(ipAddress)) {
     redirect("/login?error=rate-limit" as Route);
   }
 
-  await recordRecoveryAttempt(ipAddress);
+  const credential = formData.get("credential");
 
-  const parts = getRecoveryPartsFromForm(formData);
-
-  if (!parts) {
-    redirect("/login?error=invalid-code" as Route);
+  if (typeof credential !== "string") {
+    redirect("/login?error=invalid-input" as Route);
   }
 
-  const userId = await lookupUserIdByRecoveryCode(parts);
+  const parsed = parseLoginInput(credential);
+
+  if (!parsed) {
+    redirect(
+      (credential.includes("@")
+        ? "/login?error=invalid-email"
+        : "/login?error=invalid-code") as Route,
+    );
+  }
+
+  if (parsed.kind === "email") {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.signInWithOtp({
+      email: parsed.email,
+      options: {
+        emailRedirectTo: `${getSiteUrl()}/auth/confirm?next=/dashboard`,
+      },
+    });
+
+    if (error) {
+      redirect("/login?error=email-failed" as Route);
+    }
+
+    redirect("/login?login=email-sent" as Route);
+  }
+
+  await recordRecoveryAttempt(ipAddress);
+
+  const userId = await lookupUserIdByRecoveryCode(parsed.parts);
 
   if (!userId) {
     redirect("/login?error=not-found" as Route);
@@ -99,4 +99,9 @@ export async function loginWithRecoveryCode(formData: FormData) {
   }
 
   redirect("/onboarding" as Route);
+}
+
+/** @deprecated Verwende loginWithCredential */
+export async function loginWithRecoveryCode(formData: FormData) {
+  return loginWithCredential(formData);
 }

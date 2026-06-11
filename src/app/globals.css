@@ -3028,14 +3028,53 @@ h3 {
 }
 
 .login-page {
-  max-width: 560px;
+  max-width: 420px;
   margin: 0 auto;
 }
 
-.login-new-player {
+.login-card {
   display: grid;
-  gap: 12px;
-  padding: 18px 20px;
+  gap: 14px;
+  padding: 20px;
+}
+
+.login-card-header h1 {
+  margin: 4px 0 0;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+}
+
+.login-form {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.login-form-hint {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.login-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.login-alt {
+  display: grid;
+  gap: 10px;
+}
+
+.login-alt-copy {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.login-footer-actions {
+  justify-content: center;
 }
 
 .account-status-inline,
