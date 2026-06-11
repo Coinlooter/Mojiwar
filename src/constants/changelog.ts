@@ -10,6 +10,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     changes: [
       "Login — Spieler bleiben auf dem Gerät eingeloggt, Session wird in Cookies gespeichert",
       "Login — kompakter Bildschirm mit einem Feld für Code oder E-Mail",
+      "Navigation — Rangliste nur noch im Dashboard, nicht mehr im Header für Gäste",
     ],
   },
   {
