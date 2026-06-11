@@ -34,7 +34,7 @@ export function StartPlayingButton({
 
         if (error) {
           setErrorMessage(
-            "Sofort spielen ist noch nicht aktiv. Bitte Anonymous Sign-ins in Supabase Auth aktivieren.",
+            "Das hat gerade nicht geklappt. Bitte versuche es gleich noch einmal.",
           );
           setIsStarting(false);
           return;

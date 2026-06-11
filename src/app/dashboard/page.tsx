@@ -26,14 +26,17 @@ export default async function DashboardPage({
     return (
       <section className="hero">
         <div>
-          <p className="eyebrow">Noch kein Spieler</p>
-          <h1>Starte zuerst deinen Emoji-Account.</h1>
+          <p className="eyebrow">Willkommen</p>
+          <h1>Hier startet dein Abenteuer.</h1>
           <p className="lead">
-            Auf diesem Geraet wird eine sichere Supabase-Session gespeichert,
-            damit du beim naechsten Besuch weiterspielen kannst.
+            Erstelle dein Emoji und kaempfe gegen andere. Dein Fortschritt bleibt
+            auf diesem Geraet gespeichert.
           </p>
           <div className="actions">
-            <StartPlayingButton>Neu spielen</StartPlayingButton>
+            <StartPlayingButton>Jetzt spielen</StartPlayingButton>
+            <Link className="button" href={"/login" as Route}>
+              Schon einen Code?
+            </Link>
           </div>
         </div>
       </section>
