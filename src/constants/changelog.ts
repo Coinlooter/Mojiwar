@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.8.2",
+    changes: [
+      "Karten — Pergament-Hintergrund statt dunklem Muster",
+    ],
+  },
+  {
     version: "1.8.1",
     changes: [
       "Startseite — kompakteres Layout ohne eigene Buttons, Spielen nur noch im Header",

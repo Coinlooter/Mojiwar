@@ -43,7 +43,6 @@ export function GameCard({
     >
       <div className="game-card-frame">
         <div className="game-card-inner">
-          <div aria-hidden className="game-card-pattern" />
           <span className="game-card-rarity">{CARD_RARITY_LABEL[rarity]}</span>
           <div aria-hidden className="game-card-art">
             {emoji}
