@@ -159,6 +159,90 @@ export type Database = {
         };
         Relationships: [];
       };
+      talismans: {
+        Row: {
+          id: string;
+          name: string;
+          emoji: string;
+          rarity: "common" | "rare" | "epic";
+          effect_type: string;
+          effect_value: number;
+          description: string;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          emoji: string;
+          rarity: "common" | "rare" | "epic";
+          effect_type: string;
+          effect_value: number;
+          description: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          emoji?: string;
+          rarity?: "common" | "rare" | "epic";
+          effect_type?: string;
+          effect_value?: number;
+          description?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      player_talismans: {
+        Row: {
+          id: string;
+          user_id: string;
+          talisman_id: string;
+          acquired_from_battle_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          talisman_id: string;
+          acquired_from_battle_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          talisman_id?: string;
+          acquired_from_battle_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      talisman_slots: {
+        Row: {
+          id: string;
+          character_id: string;
+          player_talisman_id: string;
+          slot_index: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          character_id: string;
+          player_talisman_id: string;
+          slot_index: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          character_id?: string;
+          player_talisman_id?: string;
+          slot_index?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       deck_slots: {
         Row: {
           id: string;
@@ -201,6 +285,7 @@ export type Database = {
           attacker_xp_gained: number;
           defender_xp_gained: number;
           reward_player_card_id: string | null;
+          reward_player_talisman_id: string | null;
           battle_log: Json;
           viewed_by_attacker_at: string | null;
           viewed_by_defender_at: string | null;
@@ -318,6 +403,7 @@ export type Database = {
           p_defender_xp_gained: number;
           p_battle_log: Json;
           p_reward_card_id: string | null;
+          p_reward_talisman_id: string | null;
           p_attacker_xp_after: number;
           p_attacker_level_after: number;
           p_attacker_power_after: number;

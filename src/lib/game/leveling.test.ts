@@ -25,6 +25,7 @@ const loadout = (level: number, xp = 0): CharacterLoadout => ({
     critChance: 0.05,
   },
   deck: [],
+  talisman: null,
 });
 
 describe("leveling", () => {

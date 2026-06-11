@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { BattleLootCard } from "@/components/battle/BattleResultScreen";
+import type { BattleLootItem } from "@/components/battle/BattleResultScreen";
 import type { Database } from "@/lib/supabase/database.types";
 import { parseBattleResult } from "./schemas";
 import type { BattleResult } from "./types";
@@ -14,7 +14,7 @@ export type BattlePageData = {
   won: boolean;
   xpGained: number;
   goldGained: number;
-  loot?: BattleLootCard;
+  loot?: BattleLootItem;
 };
 
 export async function fetchBattleForParticipant(
@@ -52,7 +52,7 @@ export async function fetchBattleForParticipant(
       : (result.gold?.defender ?? 0)
     : 0;
 
-  let loot: BattleLootCard | undefined;
+  let loot: BattleLootItem | undefined;
 
   if (won && battle.reward_player_card_id) {
     const { data: rewardRow } = await supabase
@@ -70,10 +70,37 @@ export async function fetchBattleForParticipant(
 
       if (card) {
         loot = {
+          kind: "card",
           emoji: card.emoji,
           name: card.name,
           rarity: card.rarity,
           description: card.description,
+        };
+      }
+    }
+  }
+
+  if (won && battle.reward_player_talisman_id) {
+    const { data: rewardRow } = await supabase
+      .from("player_talismans")
+      .select("talisman_id")
+      .eq("id", battle.reward_player_talisman_id)
+      .maybeSingle();
+
+    if (rewardRow?.talisman_id) {
+      const { data: talisman } = await supabase
+        .from("talismans")
+        .select("name, emoji, rarity, description")
+        .eq("id", rewardRow.talisman_id)
+        .maybeSingle();
+
+      if (talisman) {
+        loot = {
+          kind: "talisman",
+          emoji: talisman.emoji,
+          name: talisman.name,
+          rarity: talisman.rarity,
+          description: talisman.description,
         };
       }
     }

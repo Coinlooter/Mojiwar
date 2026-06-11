@@ -13,3 +13,16 @@ export type InventorySlotData = {
   unlocked: boolean;
   card: InventoryCardData | null;
 };
+
+export type InventoryTalismanData = {
+  playerTalismanId: string;
+  emoji: string;
+  name: string;
+  rarity: CardRarity;
+  description: string;
+};
+
+export type InventoryTalismanSlotData = {
+  slotIndex: number;
+  talisman: InventoryTalismanData | null;
+};

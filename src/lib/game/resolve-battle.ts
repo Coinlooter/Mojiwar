@@ -4,7 +4,7 @@ import { BATTLE_RULES_VERSION, simulateBattle } from "./battle-engine";
 import { calculatePower } from "./calculate-power";
 import { calculateBattleGold, levelForXp } from "./leveling";
 import { createSeededRandom } from "./random";
-import { rollRewardCard } from "./rewards";
+import { rollBattleReward } from "./rewards";
 import type { BattleResult, CharacterLoadout } from "./types";
 
 export type BattlePersistenceInput = {
@@ -21,6 +21,7 @@ export type BattlePersistenceInput = {
   defenderXpGained: number;
   battleLog: BattleResult;
   rewardCardId: string | null;
+  rewardTalismanId: string | null;
   attackerXpAfter: number;
   attackerLevelAfter: number;
   attackerPowerAfter: number;
@@ -68,7 +69,7 @@ export function resolveBattleBetween({
     simulatedBattle.winnerSide === "attacker" ? attacker : defender;
   const loserLoadout =
     simulatedBattle.winnerSide === "attacker" ? defender : attacker;
-  const rewardCard = rollRewardCard(createSeededRandom(`${seed}:reward`));
+  const battleReward = rollBattleReward(createSeededRandom(`${seed}:reward`));
   const winnerGold = calculateBattleGold({
     winner: winnerLoadout,
     loser: loserLoadout,
@@ -101,7 +102,9 @@ export function resolveBattleBetween({
     attackerXpGained: simulatedBattle.xp.attacker,
     defenderXpGained: simulatedBattle.xp.defender,
     battleLog,
-    rewardCardId: rewardCard.id,
+    rewardCardId: battleReward.kind === "card" ? battleReward.item.id : null,
+    rewardTalismanId:
+      battleReward.kind === "talisman" ? battleReward.item.id : null,
     attackerXpAfter: attackerProgress.xpAfter,
     attackerLevelAfter: attackerProgress.levelAfter,
     attackerPowerAfter: attackerProgress.powerAfter,

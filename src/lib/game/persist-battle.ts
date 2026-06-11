@@ -22,6 +22,7 @@ export async function persistBattleResult(
     p_defender_xp_gained: input.defenderXpGained,
     p_battle_log: input.battleLog,
     p_reward_card_id: input.rewardCardId,
+    p_reward_talisman_id: input.rewardTalismanId,
     p_attacker_xp_after: input.attackerXpAfter,
     p_attacker_level_after: input.attackerLevelAfter,
     p_attacker_power_after: input.attackerPowerAfter,

@@ -1,4 +1,4 @@
-import { applyCardBonuses, calculatePower } from "./calculate-power";
+import { applyLoadoutBonuses, calculatePower } from "./calculate-power";
 import { calculateBattleXp } from "./leveling";
 import { createSeededRandom } from "./random";
 import type {
@@ -146,7 +146,11 @@ function createRuntimeFighter(
   side: FighterSide,
   loadout: CharacterLoadout,
 ): RuntimeFighter {
-  const finalStats = applyCardBonuses(loadout.baseStats, loadout.deck);
+  const finalStats = applyLoadoutBonuses(
+    loadout.baseStats,
+    loadout.deck,
+    loadout.talisman,
+  );
   const snapshot: BattleParticipantSnapshot = {
     characterId: loadout.id,
     ownerUserId: loadout.ownerUserId,
