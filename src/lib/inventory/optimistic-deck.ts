@@ -45,7 +45,7 @@ export function equipCardOptimistically(
 
   const targetSlot = state.slots.find((slot) => slot.slotIndex === targetSlotIndex);
 
-  if (!targetSlot) {
+  if (!targetSlot || !targetSlot.unlocked) {
     return null;
   }
 
@@ -76,7 +76,7 @@ export function unequipCardOptimistically(
 ): InventoryDeckState | null {
   const slot = state.slots.find((entry) => entry.slotIndex === slotIndex);
 
-  if (!slot?.card) {
+  if (!slot?.card || !slot.unlocked) {
     return null;
   }
 

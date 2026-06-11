@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.8.0",
+    changes: [
+      "Inventar — bis zu 10 Deck-Slots, davon 3 von Anfang an freigeschaltet",
+      "Inventar — gesperrte Slots zeigen nur „Noch nicht freigeschaltet“",
+      "Inventar — Kartenwechsel bleibt kostenlos",
+    ],
+  },
+  {
     version: "1.7.3",
     changes: [
       "Login — Spieler bleiben auf dem Gerät eingeloggt, Session wird in Cookies gespeichert",

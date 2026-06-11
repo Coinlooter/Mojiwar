@@ -1,6 +1,9 @@
 import type { CardDefinition } from "./types";
 
-export const MAX_STARTER_DECK_SIZE = 3;
+export const MAX_DECK_SLOTS = 10;
+export const DEFAULT_UNLOCKED_DECK_SLOTS = 3;
+/** @deprecated Verwende MAX_DECK_SLOTS oder DEFAULT_UNLOCKED_DECK_SLOTS */
+export const MAX_STARTER_DECK_SIZE = DEFAULT_UNLOCKED_DECK_SLOTS;
 
 export const starterCards: CardDefinition[] = [
   {

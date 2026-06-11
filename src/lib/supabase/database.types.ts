@@ -54,6 +54,7 @@ export type Database = {
           wins: number;
           losses: number;
           is_bot: boolean;
+          unlocked_slot_count: number;
           created_at: string;
           updated_at: string;
         };
@@ -74,6 +75,7 @@ export type Database = {
           wins?: number;
           losses?: number;
           is_bot?: boolean;
+          unlocked_slot_count?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -94,6 +96,7 @@ export type Database = {
           wins?: number;
           losses?: number;
           is_bot?: boolean;
+          unlocked_slot_count?: number;
           created_at?: string;
           updated_at?: string;
         };

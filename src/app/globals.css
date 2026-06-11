@@ -1711,10 +1711,10 @@ h3 {
 
 .inventory-slots-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   justify-items: center;
-  width: min(100%, 382px);
+  width: min(100%, 640px);
 }
 
 .inventory-slot {
@@ -1729,6 +1729,27 @@ h3 {
   display: grid;
   justify-items: center;
   width: 100%;
+}
+
+.inventory-slot-drop-locked {
+  pointer-events: none;
+}
+
+.inventory-slot-locked-label {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 118px;
+  aspect-ratio: 5 / 7;
+  border: 1.5px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  padding: 8px;
 }
 
 .inventory-slot-card,

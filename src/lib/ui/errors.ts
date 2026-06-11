@@ -2,6 +2,7 @@ export const DECK_ERROR_MESSAGES = {
   invalid: "Diese Karte konnte nicht platziert werden.",
   card: "Diese Karte gehört dir nicht.",
   slot: "Das Inventar konnte gerade nicht aktualisiert werden.",
+  locked: "Dieser Slot ist noch nicht freigeschaltet.",
 } as const;
 
 export const OPPONENT_ERROR_MESSAGES: Record<string, string> = {

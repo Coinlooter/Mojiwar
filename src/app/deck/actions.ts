@@ -8,21 +8,21 @@ import { z } from "zod";
 
 import { requireCharacter } from "@/lib/auth/require-character";
 import { calculatePower } from "@/lib/game/calculate-power";
+import { MAX_DECK_SLOTS } from "@/lib/game/cards";
 import { fetchCharacterLoadout } from "@/lib/game/loadout";
-import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import type { Database } from "@/lib/supabase/database.types";
 
 const equipSchema = z.object({
   playerCardId: z.string().uuid(),
-  slotIndex: z.coerce.number().int().min(0).max(MAX_STARTER_DECK_SIZE - 1),
+  slotIndex: z.coerce.number().int().min(0).max(MAX_DECK_SLOTS - 1),
 });
 
 const unequipSchema = z.object({
-  slotIndex: z.coerce.number().int().min(0).max(MAX_STARTER_DECK_SIZE - 1),
+  slotIndex: z.coerce.number().int().min(0).max(MAX_DECK_SLOTS - 1),
 });
 
-export type DeckActionError = "invalid" | "card" | "slot";
+export type DeckActionError = "invalid" | "card" | "slot" | "locked";
 
 async function refreshCharacterPower(
   supabase: SupabaseClient<Database>,
@@ -58,6 +58,10 @@ export async function equipDeckSlotById(
   }
 
   const { supabase, user, character } = await requireCharacter();
+
+  if (parsed.data.slotIndex >= character.unlocked_slot_count) {
+    return { ok: false, error: "locked" };
+  }
 
   const { data: ownedCard } = await supabase
     .from("player_cards")
@@ -108,6 +112,10 @@ export async function unequipDeckSlotByIndex(
   }
 
   const { supabase, character } = await requireCharacter();
+
+  if (parsed.data.slotIndex >= character.unlocked_slot_count) {
+    return { ok: false, error: "locked" };
+  }
 
   const { error } = await supabase
     .from("deck_slots")

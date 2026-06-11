@@ -33,9 +33,9 @@ const cardC = {
 function createState(): InventoryDeckState {
   return {
     slots: [
-      { slotIndex: 0, card: cardA },
-      { slotIndex: 1, card: null },
-      { slotIndex: 2, card: cardB },
+      { slotIndex: 0, unlocked: true, card: cardA },
+      { slotIndex: 1, unlocked: true, card: null },
+      { slotIndex: 2, unlocked: true, card: cardB },
     ],
     collection: [cardC],
   };
@@ -67,6 +67,18 @@ describe("equipCardOptimistically", () => {
       cardC.playerCardId,
       cardB.playerCardId,
     ]);
+  });
+
+  it("rejects equipping into a locked slot", () => {
+    const state: InventoryDeckState = {
+      slots: [
+        { slotIndex: 0, unlocked: true, card: null },
+        { slotIndex: 1, unlocked: false, card: null },
+      ],
+      collection: [cardC],
+    };
+
+    expect(equipCardOptimistically(state, cardC.playerCardId, 1)).toBeNull();
   });
 });
 

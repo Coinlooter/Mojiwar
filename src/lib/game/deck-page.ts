@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { MAX_STARTER_DECK_SIZE } from "@/lib/game/cards";
+import { MAX_DECK_SLOTS } from "@/lib/game/cards";
 import { mapCardRow } from "@/lib/game/loadout";
 import type { InventoryCardData, InventorySlotData } from "@/lib/inventory/types";
 import type { Database } from "@/lib/supabase/database.types";
@@ -8,6 +8,7 @@ import type { Database } from "@/lib/supabase/database.types";
 export type DeckPageData = {
   slots: InventorySlotData[];
   collection: InventoryCardData[];
+  unlockedSlotCount: number;
 };
 
 export async function fetchDeckPageData(
@@ -15,18 +16,26 @@ export async function fetchDeckPageData(
   userId: string,
   characterId: string,
 ): Promise<DeckPageData> {
-  const [{ data: ownedCards }, { data: deckSlots }] = await Promise.all([
-    supabase
-      .from("player_cards")
-      .select("id, card_id")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: true }),
-    supabase
-      .from("deck_slots")
-      .select("slot_index, player_card_id")
-      .eq("character_id", characterId)
-      .order("slot_index", { ascending: true }),
-  ]);
+  const [{ data: character }, { data: ownedCards }, { data: deckSlots }] =
+    await Promise.all([
+      supabase
+        .from("characters")
+        .select("unlocked_slot_count")
+        .eq("id", characterId)
+        .maybeSingle(),
+      supabase
+        .from("player_cards")
+        .select("id, card_id")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: true }),
+      supabase
+        .from("deck_slots")
+        .select("slot_index, player_card_id")
+        .eq("character_id", characterId)
+        .order("slot_index", { ascending: true }),
+    ]);
+
+  const unlockedSlotCount = character?.unlocked_slot_count ?? 3;
 
   const cardIds = [...new Set((ownedCards ?? []).map((ownedCard) => ownedCard.card_id))];
   const { data: cardRows } = cardIds.length
@@ -55,21 +64,20 @@ export async function fetchDeckPageData(
     };
   }
 
-  const slots: InventorySlotData[] = Array.from(
-    { length: MAX_STARTER_DECK_SIZE },
-    (_, slotIndex) => {
-      const playerCardId = activeBySlot.get(slotIndex);
-      const ownedCard = (ownedCards ?? []).find((entry) => entry.id === playerCardId);
+  const slots: InventorySlotData[] = Array.from({ length: MAX_DECK_SLOTS }, (_, slotIndex) => {
+    const playerCardId = activeBySlot.get(slotIndex);
+    const ownedCard = (ownedCards ?? []).find((entry) => entry.id === playerCardId);
+    const unlocked = slotIndex < unlockedSlotCount;
 
-      return {
-        slotIndex,
-        card:
-          playerCardId && ownedCard
-            ? toInventoryCard(playerCardId, ownedCard.card_id)
-            : null,
-      };
-    },
-  );
+    return {
+      slotIndex,
+      unlocked,
+      card:
+        unlocked && playerCardId && ownedCard
+          ? toInventoryCard(playerCardId, ownedCard.card_id)
+          : null,
+    };
+  });
 
   const collection: InventoryCardData[] = (ownedCards ?? []).flatMap((ownedCard) => {
     if (activeCardIds.has(ownedCard.id)) {
@@ -81,5 +89,5 @@ export async function fetchDeckPageData(
     return card ? [card] : [];
   });
 
-  return { slots, collection };
+  return { slots, collection, unlockedSlotCount };
 }

@@ -5,7 +5,7 @@ import type { DeckActionError } from "@/app/deck/actions";
 
 export const dynamic = "force-dynamic";
 
-const errorCodes = new Set<DeckActionError>(["invalid", "card", "slot"]);
+const errorCodes = new Set<DeckActionError>(["invalid", "card", "slot", "locked"]);
 
 function isDeckActionError(value: string | undefined): value is DeckActionError {
   return value !== undefined && errorCodes.has(value as DeckActionError);

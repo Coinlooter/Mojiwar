@@ -10,5 +10,6 @@ export type InventoryCardData = {
 
 export type InventorySlotData = {
   slotIndex: number;
+  unlocked: boolean;
   card: InventoryCardData | null;
 };

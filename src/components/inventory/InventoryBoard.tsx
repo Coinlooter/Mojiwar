@@ -49,7 +49,8 @@ export function InventoryBoard({
   );
   const rollbackRef = useRef<InventoryDeckState | null>(null);
 
-  const filledSlots = deckState.slots.filter((slot) => slot.card).length;
+  const unlockedSlots = deckState.slots.filter((slot) => slot.unlocked);
+  const filledSlots = unlockedSlots.filter((slot) => slot.card).length;
   const isSaving = savingKeys.length > 0;
 
   function beginSaving(key: string) {
@@ -103,7 +104,7 @@ export function InventoryBoard({
   }
 
   function handleDragStartSlot(slot: InventorySlotData, event: React.DragEvent) {
-    if (!slot.card) {
+    if (!slot.unlocked || !slot.card) {
       return;
     }
 
@@ -128,6 +129,12 @@ export function InventoryBoard({
   function handleDropOnSlot(slotIndex: number, event: React.DragEvent) {
     event.preventDefault();
     setHoverSlot(null);
+
+    const targetSlot = deckState.slots.find((slot) => slot.slotIndex === slotIndex);
+
+    if (!targetSlot?.unlocked) {
+      return;
+    }
 
     const playerCardId = readDraggedCardId(event);
 
@@ -177,7 +184,7 @@ export function InventoryBoard({
         <div className="inventory-section-title-row">
           <p className="eyebrow">Inventar</p>
           <span className="inventory-slot-count">
-            {filledSlots}/{deckState.slots.length} im Build
+            {filledSlots}/{unlockedSlots.length} im Build
             {isSaving ? " · speichert..." : ""}
           </span>
         </div>
@@ -200,7 +207,8 @@ export function InventoryBoard({
         <div className="inventory-deck-panel">
           <div className="inventory-slots-row">
             {deckState.slots.map((slot) => {
-              const isHover = hoverSlot === slot.slotIndex;
+              const isLocked = !slot.unlocked;
+              const isHover = !isLocked && hoverSlot === slot.slotIndex;
               const isDraggingFromHere =
                 dragSource?.kind === "slot" && dragSource.slotIndex === slot.slotIndex;
               const slotSaving = savingKeys.some((key) => {
@@ -219,28 +227,44 @@ export function InventoryBoard({
 
               return (
                 <div
-                  className={`inventory-slot${slotSaving ? " inventory-slot-saving" : ""}`}
+                  className={`inventory-slot${isLocked ? " inventory-slot-locked" : ""}${slotSaving ? " inventory-slot-saving" : ""}`}
                   key={slot.slotIndex}
                 >
                   <div
-                    className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}`}
-                    onDragEnd={clearDragState}
-                    onDragLeave={() => {
-                      setHoverSlot((current) =>
-                        current === slot.slotIndex ? null : current,
-                      );
-                    }}
-                    onDragOver={(event) => {
-                      event.preventDefault();
-                      event.dataTransfer.dropEffect = "move";
-                      setHoverSlot(slot.slotIndex);
-                    }}
-                    onDrop={(event) => {
-                      handleDropOnSlot(slot.slotIndex, event);
-                      clearDragState();
-                    }}
+                    className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}${isLocked ? " inventory-slot-drop-locked" : ""}`}
+                    onDragEnd={isLocked ? undefined : clearDragState}
+                    onDragLeave={
+                      isLocked
+                        ? undefined
+                        : () => {
+                            setHoverSlot((current) =>
+                              current === slot.slotIndex ? null : current,
+                            );
+                          }
+                    }
+                    onDragOver={
+                      isLocked
+                        ? undefined
+                        : (event) => {
+                            event.preventDefault();
+                            event.dataTransfer.dropEffect = "move";
+                            setHoverSlot(slot.slotIndex);
+                          }
+                    }
+                    onDrop={
+                      isLocked
+                        ? undefined
+                        : (event) => {
+                            handleDropOnSlot(slot.slotIndex, event);
+                            clearDragState();
+                          }
+                    }
                   >
-                    {slot.card ? (
+                    {isLocked ? (
+                      <div className="inventory-slot-locked-label">
+                        Noch nicht freigeschaltet
+                      </div>
+                    ) : slot.card ? (
                       <div
                         className={`inventory-draggable inventory-slot-card${isDraggingFromHere ? " is-dragging" : ""}`}
                         draggable={!slotSaving}
@@ -264,7 +288,7 @@ export function InventoryBoard({
                       </div>
                     )}
                   </div>
-                  {slot.card ? (
+                  {slot.card && !isLocked ? (
                     <button
                       className="button button-compact inventory-slot-remove"
                       disabled={slotSaving}
