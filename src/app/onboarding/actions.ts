@@ -39,6 +39,7 @@ export async function createCharacter(formData: FormData) {
     name: parsed.data.name,
     level: 1,
     xp: 0,
+    gold: 0,
     baseStats,
     deck: [],
   });
