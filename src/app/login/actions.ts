@@ -5,6 +5,7 @@ import type { Route } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { mapEmailSecureError } from "@/lib/auth/email-secure";
 import { parseLoginInput } from "@/lib/auth/login-input";
 import {
   isRecoveryRateLimited,
@@ -13,16 +14,8 @@ import {
 } from "@/lib/auth/progress-recovery";
 import { establishSessionForUser } from "@/lib/auth/recovery-session";
 import { getPrimaryCharacter } from "@/lib/auth/character";
+import { getAuthConfirmUrl } from "@/lib/auth/site-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-
-function getSiteUrl() {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000")
-  );
-}
 
 async function getClientIpAddress() {
   const headerStore = await headers();
@@ -63,12 +56,13 @@ export async function loginWithCredential(formData: FormData) {
     const { error } = await supabase.auth.signInWithOtp({
       email: parsed.email,
       options: {
-        emailRedirectTo: `${getSiteUrl()}/auth/confirm?next=/dashboard`,
+        shouldCreateUser: false,
+        emailRedirectTo: getAuthConfirmUrl("/dashboard"),
       },
     });
 
     if (error) {
-      redirect("/login?error=email-failed" as Route);
+      redirect(`/login?error=${mapEmailSecureError(error)}` as Route);
     }
 
     redirect("/login?login=email-sent" as Route);

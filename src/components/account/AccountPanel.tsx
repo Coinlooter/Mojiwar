@@ -13,15 +13,20 @@ import {
 } from "@/app/account/secure/actions";
 
 const statusMessages: Record<string, string> = {
-  created: "Dein Login-Code ist bereit. Schreib ihn auf oder mach ein Foto.",
-  regenerated: "Dein neuer Login-Code ist aktiv. Der alte Code funktioniert nicht mehr.",
-  "email-sent": "Wir haben eine E-Mail geschickt. Bitte bestätige den Link.",
+  created: "Dein Code ist bereit. Schreib ihn auf oder mach ein Foto.",
+  regenerated: "Dein neuer Code ist aktiv. Der alte Code funktioniert nicht mehr.",
+  "email-sent":
+    "Wir haben eine E-Mail geschickt. Bitte bestätige den Link, um deinen Fortschritt zu sichern.",
 };
 
 const errorMessages: Record<string, string> = {
   "invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
-  "email-failed": "Die E-Mail konnte nicht gesendet werden.",
-  "already-secured": "Dein Login ist bereits per E-Mail gesichert.",
+  "email-failed": "Die E-Mail konnte nicht gesendet werden. Versuche es gleich noch einmal.",
+  "email-in-use":
+    "Diese E-Mail wird schon für einen anderen Spielfortschritt verwendet. Nutze eine andere Adresse oder logge dich damit ein.",
+  "email-rate-limit":
+    "Gerade wurden zu viele E-Mails verschickt. Bitte warte ein paar Minuten und versuche es dann erneut.",
+  "already-secured": "Dein Fortschritt ist bereits per E-Mail gesichert.",
 };
 
 export async function AccountPanel({
@@ -46,7 +51,7 @@ export async function AccountPanel({
 
   return (
     <article className="panel battle-card dashboard-account">
-      <p className="eyebrow">Login</p>
+      <p className="eyebrow">Auf anderem Gerät weiterspielen</p>
 
       {statusMessage ? (
         <p className="account-status account-status-inline" role="status">
@@ -62,12 +67,13 @@ export async function AccountPanel({
 
       {securedWithEmail && displayEmail ? (
         <p className="muted dashboard-account-copy">
-          Eingeloggt als {displayEmail}.
+          Fortschritt gesichert mit {displayEmail}. Du kannst auf jedem Gerät mit
+          dieser E-Mail weiterspielen.
         </p>
       ) : recoveryCode ? (
         <>
           <p className="muted dashboard-account-copy">
-            Mit diesem Code kannst du dich auf anderen Geräten einloggen.
+            Mit diesem Code kannst du auf einem anderen Gerät weiterspielen.
           </p>
           <RecoveryCodeDisplay parts={recoveryCode} />
           {showLoginCodeFlow ? (
@@ -79,12 +85,12 @@ export async function AccountPanel({
       ) : showLoginCodeFlow ? (
         <>
           <p className="muted dashboard-account-copy">
-            Erstelle deinen Login-Code, damit du dich später wieder einloggen
-            kannst.
+            Erstelle einen Code, um deinen Fortschritt auf einem anderen Gerät
+            fortzusetzen.
           </p>
           <form action={createRecoveryCode}>
             <SubmitButton pendingLabel="Code wird erstellt..." variant="primary">
-              Login-Code erstellen
+              Code erstellen
             </SubmitButton>
           </form>
         </>
@@ -92,7 +98,7 @@ export async function AccountPanel({
 
       {showLoginCodeFlow ? (
         <details className="account-details dashboard-account-details">
-          <summary>Oder mit E-Mail einloggen</summary>
+          <summary>Oder per E-Mail sichern</summary>
           <form action={linkParentEmail} className="account-email-form">
             <label className="field-label" htmlFor="account-email">
               E-Mail-Adresse
@@ -107,7 +113,7 @@ export async function AccountPanel({
               type="email"
             />
             <SubmitButton pendingLabel="E-Mail wird gesendet..." variant="primary">
-              E-Mail senden
+              Bestätigungs-E-Mail senden
             </SubmitButton>
           </form>
         </details>

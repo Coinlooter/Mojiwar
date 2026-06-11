@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { resolvePostAuthPath } from "@/lib/auth/post-auth-redirect";
+
 import { getSupabaseBrowserEnv } from "./env";
 import type { Database } from "./database.types";
 
@@ -25,6 +27,31 @@ export async function updateSession(request: NextRequest) {
       },
     },
   });
+
+  const code = request.nextUrl.searchParams.get("code");
+
+  if (code) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error && data.user) {
+      const requestedNext = request.nextUrl.searchParams.get("next");
+      const next = await resolvePostAuthPath(
+        supabase,
+        data.user.id,
+        requestedNext,
+      );
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = next.startsWith("/") ? next : `/${next}`;
+      redirectUrl.search = "";
+      const redirectResponse = NextResponse.redirect(redirectUrl);
+
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie);
+      });
+
+      return redirectResponse;
+    }
+  }
 
   await supabase.auth.getClaims();
 

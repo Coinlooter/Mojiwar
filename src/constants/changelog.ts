@@ -13,7 +13,9 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
       "Inventar — Kartenwechsel bleibt kostenlos",
       "Header — Logout erst nach Charaktererstellung, Gäste sehen „Spielen“",
       "Dashboard — Fortschritt sichern statt Login, E-Mail-Bestätigung repariert",
+      "E-Mail — verständliche Meldungen bei Rate-Limit oder bereits vergebener Adresse",
       "Login — E-Mail-Login erstellt keine doppelten Accounts mehr",
+      "E-Mail — nach Bestätigung direkt zum Dashboard, wenn bereits ein Charakter existiert",
     ],
   },
   {
