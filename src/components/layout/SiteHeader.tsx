@@ -4,11 +4,6 @@ import Link from "next/link";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { getVerifiedUser } from "@/lib/auth/session";
 
-const guestNavItems = [
-  { href: "/login", label: "Login" },
-  { href: "/leaderboard", label: "Rangliste" },
-] as const;
-
 export async function SiteHeader() {
   const { user } = await getVerifiedUser();
 
@@ -32,17 +27,9 @@ export async function SiteHeader() {
           {user ? (
             <LogoutButton compact />
           ) : (
-            <div className="nav-links">
-              {guestNavItems.map((item) => (
-                <Link
-                  className={`button button-compact${item.href === "/login" ? " primary" : ""}`}
-                  href={item.href as Route}
-                  key={item.href}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+            <Link className="button button-compact primary" href={"/login" as Route}>
+              Login
+            </Link>
           )}
         </nav>
       </div>

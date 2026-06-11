@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.7.4",
+    changes: [
+      "Navigation — Rangliste nur noch im Dashboard, nicht mehr im Header für Gäste",
+    ],
+  },
+  {
     version: "1.7.2",
     changes: [
       "Texte — durchgängig korrekte Umlaute (ä, ö, ü) statt ae, oe, ue",
