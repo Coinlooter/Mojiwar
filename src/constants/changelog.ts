@@ -11,6 +11,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
       "Dashboard — Bereich heißt jetzt „Auf anderem Gerät weiterspielen“ statt Login",
       "Dashboard — Texte fokussieren Fortschritt sichern, nicht erneutes Einloggen",
       "E-Mail — Bestätigungslinks funktionieren mit code-Parameter und korrekter Produktions-URL",
+      "E-Mail — verständliche Meldungen bei Rate-Limit oder bereits vergebener Adresse",
     ],
   },
   {

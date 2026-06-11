@@ -21,7 +21,11 @@ const statusMessages: Record<string, string> = {
 
 const errorMessages: Record<string, string> = {
   "invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
-  "email-failed": "Die E-Mail konnte nicht gesendet werden.",
+  "email-failed": "Die E-Mail konnte nicht gesendet werden. Versuche es gleich noch einmal.",
+  "email-in-use":
+    "Diese E-Mail wird schon für einen anderen Spielfortschritt verwendet. Nutze eine andere Adresse oder logge dich damit ein.",
+  "email-rate-limit":
+    "Gerade wurden zu viele E-Mails verschickt. Bitte warte ein paar Minuten und versuche es dann erneut.",
   "already-secured": "Dein Fortschritt ist bereits per E-Mail gesichert.",
 };
 

@@ -15,7 +15,11 @@ const errorMessages: Record<string, string> = {
   "not-found": "Dieser Login-Code wurde nicht gefunden.",
   "rate-limit": "Zu viele Versuche. Bitte warte eine Minute.",
   session: "Login hat gerade nicht geklappt. Versuche es erneut.",
-  "email-failed": "Die E-Mail konnte nicht gesendet werden.",
+  "email-failed": "Die E-Mail konnte nicht gesendet werden. Versuche es gleich noch einmal.",
+  "email-in-use":
+    "Diese E-Mail wird schon für einen anderen Spielfortschritt verwendet.",
+  "email-rate-limit":
+    "Gerade wurden zu viele E-Mails verschickt. Bitte warte ein paar Minuten.",
 };
 
 const successMessages: Record<string, string> = {

@@ -5,6 +5,7 @@ import type { Route } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { mapEmailSecureError } from "@/lib/auth/email-secure";
 import { parseLoginInput } from "@/lib/auth/login-input";
 import {
   isRecoveryRateLimited,
@@ -60,7 +61,7 @@ export async function loginWithCredential(formData: FormData) {
     });
 
     if (error) {
-      redirect("/login?error=email-failed" as Route);
+      redirect(`/login?error=${mapEmailSecureError(error)}` as Route);
     }
 
     redirect("/login?login=email-sent" as Route);
