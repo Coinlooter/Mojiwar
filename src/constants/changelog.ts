@@ -9,6 +9,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     version: "1.7.3",
     changes: [
       "Login — Spieler bleiben auf dem Gerät eingeloggt, Session wird in Cookies gespeichert",
+      "Login — kompakter Bildschirm mit einem Feld für Code oder E-Mail",
     ],
   },
   {
