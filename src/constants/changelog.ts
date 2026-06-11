@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.7.1",
+    changes: [
+      "Dashboard — einfachere Texte fuer neue Spieler ohne technische Begriffe",
+    ],
+  },
+  {
     version: "1.7.0",
     changes: [
       "Gold — Sieger erhalten Gold aus Kämpfen, Anzeige im Dashboard und Kampfergebnis",
