@@ -9,6 +9,7 @@ import { z } from "zod";
 import { requireCharacter } from "@/lib/auth/require-character";
 import { calculatePower } from "@/lib/game/calculate-power";
 import { MAX_DECK_SLOTS } from "@/lib/game/cards";
+import { MAX_TALISMAN_SLOTS } from "@/lib/game/talismans";
 import { fetchCharacterLoadout } from "@/lib/game/loadout";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import type { Database } from "@/lib/supabase/database.types";
@@ -22,7 +23,16 @@ const unequipSchema = z.object({
   slotIndex: z.coerce.number().int().min(0).max(MAX_DECK_SLOTS - 1),
 });
 
-export type DeckActionError = "invalid" | "card" | "slot" | "locked";
+const equipTalismanSchema = z.object({
+  playerTalismanId: z.string().uuid(),
+  slotIndex: z.coerce.number().int().min(0).max(MAX_TALISMAN_SLOTS - 1),
+});
+
+const unequipTalismanSchema = z.object({
+  slotIndex: z.coerce.number().int().min(0).max(MAX_TALISMAN_SLOTS - 1),
+});
+
+export type DeckActionError = "invalid" | "card" | "talisman" | "slot" | "locked";
 
 async function refreshCharacterPower(
   supabase: SupabaseClient<Database>,
@@ -153,6 +163,84 @@ export async function equipDeckSlot(formData: FormData) {
   }
 
   redirect("/deck" as Route);
+}
+
+export async function equipTalismanSlotById(
+  playerTalismanId: string,
+  slotIndex: number,
+): Promise<{ ok: true } | { ok: false; error: DeckActionError }> {
+  const parsed = equipTalismanSchema.safeParse({ playerTalismanId, slotIndex });
+
+  if (!parsed.success) {
+    return { ok: false, error: "invalid" };
+  }
+
+  const { supabase, user, character } = await requireCharacter();
+
+  const { data: ownedTalisman } = await supabase
+    .from("player_talismans")
+    .select("id")
+    .eq("id", parsed.data.playerTalismanId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!ownedTalisman) {
+    return { ok: false, error: "talisman" };
+  }
+
+  await Promise.all([
+    supabase
+      .from("talisman_slots")
+      .delete()
+      .eq("character_id", character.id)
+      .eq("slot_index", parsed.data.slotIndex),
+    supabase
+      .from("talisman_slots")
+      .delete()
+      .eq("player_talisman_id", parsed.data.playerTalismanId),
+  ]);
+
+  const { error } = await supabase.from("talisman_slots").insert({
+    character_id: character.id,
+    player_talisman_id: parsed.data.playerTalismanId,
+    slot_index: parsed.data.slotIndex,
+  });
+
+  if (error) {
+    return { ok: false, error: "slot" };
+  }
+
+  await refreshCharacterPower(supabase, character.id);
+  revalidateDeckPaths();
+
+  return { ok: true };
+}
+
+export async function unequipTalismanSlotByIndex(
+  slotIndex: number,
+): Promise<{ ok: true } | { ok: false; error: DeckActionError }> {
+  const parsed = unequipTalismanSchema.safeParse({ slotIndex });
+
+  if (!parsed.success) {
+    return { ok: false, error: "invalid" };
+  }
+
+  const { supabase, character } = await requireCharacter();
+
+  const { error } = await supabase
+    .from("talisman_slots")
+    .delete()
+    .eq("character_id", character.id)
+    .eq("slot_index", parsed.data.slotIndex);
+
+  if (error) {
+    return { ok: false, error: "slot" };
+  }
+
+  await refreshCharacterPower(supabase, character.id);
+  revalidateDeckPaths();
+
+  return { ok: true };
 }
 
 export async function unequipDeckSlot(formData: FormData) {

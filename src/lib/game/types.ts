@@ -19,6 +19,20 @@ export type CardDefinition = {
   description: string;
 };
 
+export type TalismanDefinition = {
+  id: string;
+  name: string;
+  emoji: string;
+  rarity: CardRarity;
+  effectType: CardEffectType;
+  effectValue: number;
+  description: string;
+};
+
+export type BattleReward =
+  | { kind: "card"; item: CardDefinition }
+  | { kind: "talisman"; item: TalismanDefinition };
+
 export type CombatStats = {
   hp: number;
   attack: number;
@@ -37,6 +51,7 @@ export type CharacterLoadout = {
   gold: number;
   baseStats: CombatStats;
   deck: CardDefinition[];
+  talisman: TalismanDefinition | null;
 };
 
 export type FighterSide = "attacker" | "defender";

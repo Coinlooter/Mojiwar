@@ -4,12 +4,16 @@ import Link from "next/link";
 import { GameCard } from "@/components/cards/GameCard";
 import type { CardRarity } from "@/lib/game/types";
 
-export type BattleLootCard = {
+export type BattleLootItem = {
+  kind: "card" | "talisman";
   emoji: string;
   name: string;
   rarity: CardRarity;
   description: string;
 };
+
+/** @deprecated Verwende BattleLootItem */
+export type BattleLootCard = BattleLootItem;
 
 export type BattleSummary = {
   won: boolean;
@@ -18,7 +22,7 @@ export type BattleSummary = {
   rounds: number;
   xpGained: number;
   goldGained: number;
-  loot?: BattleLootCard;
+  loot?: BattleLootItem;
 };
 
 export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
@@ -78,15 +82,18 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
                 name={loot.name}
                 rarity={loot.rarity}
                 size="md"
+                variant={loot.kind}
               />
             </div>
             <p className="muted battle-result-loot-hint">
-              Die Karte liegt jetzt in deinem Inventar. Ziehe sie in einen Slot.
+              {loot.kind === "talisman"
+                ? "Der Talisman liegt jetzt in deinem Inventar. Ziehe ihn in den Talisman-Slot."
+                : "Die Karte liegt jetzt in deinem Inventar. Ziehe sie in einen Slot."}
             </p>
           </div>
         ) : won ? (
           <p className="muted battle-result-no-loot">
-            Keine neue Karte diesmal — trotzdem hast du Erfahrung gesammelt.
+            Keine neue Beute diesmal — trotzdem hast du Erfahrung gesammelt.
           </p>
         ) : (
           <p className="muted battle-result-no-loot">

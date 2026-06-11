@@ -20,6 +20,7 @@ const player: CharacterLoadout = {
     critChance: 0.05,
   },
   deck: [starterCards[0], starterCards[2]],
+  talisman: null,
 };
 
 describe("matchmaking", () => {

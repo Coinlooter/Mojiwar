@@ -23,6 +23,7 @@ describe("resolveBattleBetween", () => {
       gold: 12,
       baseStats,
       deck: [starterCards[0], starterCards[1], starterCards[2]],
+      talisman: null,
     };
     const defender = {
       id: "defender-id",
@@ -34,6 +35,7 @@ describe("resolveBattleBetween", () => {
       gold: 4,
       baseStats,
       deck: [starterCards[3], starterCards[4], starterCards[5]],
+      talisman: null,
     };
 
     const result = resolveBattleBetween({
@@ -45,7 +47,10 @@ describe("resolveBattleBetween", () => {
     expect(result.attackerCharacterId).toBe("attacker-id");
     expect(result.defenderCharacterId).toBe("defender-id");
     expect(result.battleLog.seed).toBe("test-seed");
-    expect(result.rewardCardId).toBeTruthy();
+    expect(result.rewardCardId || result.rewardTalismanId).toBeTruthy();
+    expect(Boolean(result.rewardCardId) !== Boolean(result.rewardTalismanId)).toBe(
+      true,
+    );
     expect(result.attackerXpAfter).toBeGreaterThanOrEqual(0);
     expect(result.defenderXpAfter).toBeGreaterThanOrEqual(0);
     expect(result.battleLog.gold).toBeDefined();

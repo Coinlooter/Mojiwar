@@ -20,6 +20,7 @@ const result = simulateBattle({
       critChance: 0.08,
     },
     deck: [starterCards[0], starterCards[3], starterCards[6]],
+    talisman: null,
   },
   defender: {
     id: "defender",
@@ -37,6 +38,7 @@ const result = simulateBattle({
       critChance: 0.05,
     },
     deck: [starterCards[1], starterCards[2], starterCards[4]],
+    talisman: null,
   },
 });
 
@@ -55,6 +57,7 @@ export default function DemoBattlePage() {
         goldGained: won ? 10 : 0,
         loot: won
           ? {
+              kind: "card",
               emoji: starterCards[4].emoji,
               name: starterCards[4].name,
               rarity: starterCards[4].rarity,

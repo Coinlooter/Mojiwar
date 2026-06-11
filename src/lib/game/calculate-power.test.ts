@@ -19,6 +19,7 @@ const baseLoadout: CharacterLoadout = {
     critChance: 0.05,
   },
   deck: [],
+  talisman: null,
 };
 
 describe("calculatePower", () => {
@@ -37,6 +38,7 @@ describe("calculatePower", () => {
           description: "Mehr Angriff",
         },
       ],
+  talisman: null,
     });
 
     expect(withCard).toBeGreaterThan(withoutCards);

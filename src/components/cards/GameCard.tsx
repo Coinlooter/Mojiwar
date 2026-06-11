@@ -8,6 +8,7 @@ export type GameCardProps = {
   description?: string;
   size?: "sm" | "md" | "lg";
   active?: boolean;
+  variant?: "card" | "talisman";
   className?: string;
 };
 
@@ -18,12 +19,14 @@ export function GameCard({
   description,
   size = "md",
   active = false,
+  variant = "card",
   className = "",
 }: GameCardProps) {
   const classes = [
     "game-card",
     `game-card-${rarity}`,
     `game-card-${size}`,
+    variant === "talisman" ? "game-card-talisman" : "",
     active ? "game-card-active" : "",
     description ? "game-card-has-stats" : "",
     className,
@@ -58,7 +61,11 @@ export function GameCard({
         </div>
       ) : null}
 
-      {active ? <span className="game-card-active-badge">Im Deck</span> : null}
+      {active ? (
+        <span className="game-card-active-badge">
+          {variant === "talisman" ? "Angelegt" : "Im Deck"}
+        </span>
+      ) : null}
     </article>
   );
 }

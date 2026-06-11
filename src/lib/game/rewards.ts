@@ -1,6 +1,12 @@
 import { pickWeighted } from "./random";
 import { starterCards } from "./cards";
-import type { CardDefinition, CardRarity } from "./types";
+import { starterTalismans } from "./talismans";
+import type {
+  BattleReward,
+  CardDefinition,
+  CardRarity,
+  TalismanDefinition,
+} from "./types";
 
 const rarityWeights: Record<CardRarity, number> = {
   common: 75,
@@ -8,7 +14,16 @@ const rarityWeights: Record<CardRarity, number> = {
   epic: 5,
 };
 
-export function rollRewardCard(random: () => number): CardDefinition {
+/** Karten sind häufiger als Talismane (75 % vs. 25 %). */
+const rewardKindWeights = {
+  card: 75,
+  talisman: 25,
+} as const;
+
+function rollByRarity<T extends { rarity: CardRarity }>(
+  catalog: T[],
+  random: () => number,
+): T {
   const rarity = pickWeighted<CardRarity>(
     [
       { item: "common", weight: rarityWeights.common },
@@ -18,8 +33,32 @@ export function rollRewardCard(random: () => number): CardDefinition {
     random,
   );
 
-  const candidates = starterCards.filter((card) => card.rarity === rarity);
+  const candidates = catalog.filter((entry) => entry.rarity === rarity);
   const index = Math.floor(random() * candidates.length);
 
-  return candidates[index] ?? starterCards[0];
+  return candidates[index] ?? catalog[0];
+}
+
+export function rollRewardCard(random: () => number): CardDefinition {
+  return rollByRarity(starterCards, random);
+}
+
+export function rollRewardTalisman(random: () => number): TalismanDefinition {
+  return rollByRarity(starterTalismans, random);
+}
+
+export function rollBattleReward(random: () => number): BattleReward {
+  const kind = pickWeighted<BattleReward["kind"]>(
+    [
+      { item: "card", weight: rewardKindWeights.card },
+      { item: "talisman", weight: rewardKindWeights.talisman },
+    ],
+    random,
+  );
+
+  if (kind === "talisman") {
+    return { kind: "talisman", item: rollRewardTalisman(random) };
+  }
+
+  return { kind: "card", item: rollRewardCard(random) };
 }

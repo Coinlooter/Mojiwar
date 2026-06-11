@@ -952,6 +952,19 @@ input {
   text-transform: uppercase;
 }
 
+.game-card-talisman .game-card-frame {
+  border-radius: 999px;
+}
+
+.game-card-talisman .game-card-inner {
+  border-radius: 999px;
+  aspect-ratio: 1;
+}
+
+.game-card-talisman .game-card-pattern {
+  border-radius: 999px;
+}
+
 .deck-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1768,9 +1781,29 @@ h3 {
   padding: 2px 8px;
 }
 
-.inventory-deck-section {
+.inventory-deck-section,
+.inventory-talisman-section {
   display: grid;
   gap: 0;
+}
+
+.inventory-talisman-section {
+  margin-top: 10px;
+}
+
+.inventory-talisman-slots-row {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  width: min(100%, 140px);
+}
+
+.inventory-talisman-slot-empty {
+  font-size: 0.72rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.inventory-talisman-collection-section {
+  margin-top: 8px;
 }
 
 .inventory-deck-panel {

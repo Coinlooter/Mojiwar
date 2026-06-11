@@ -5,7 +5,13 @@ import type { DeckActionError } from "@/app/deck/actions";
 
 export const dynamic = "force-dynamic";
 
-const errorCodes = new Set<DeckActionError>(["invalid", "card", "slot", "locked"]);
+const errorCodes = new Set<DeckActionError>([
+  "invalid",
+  "card",
+  "talisman",
+  "slot",
+  "locked",
+]);
 
 function isDeckActionError(value: string | undefined): value is DeckActionError {
   return value !== undefined && errorCodes.has(value as DeckActionError);
@@ -19,11 +25,8 @@ export default async function DeckPage({
   const { supabase, user, character } = await requireCharacter();
   const params = await searchParams;
   const initialError = isDeckActionError(params.error) ? params.error : null;
-  const { slots, collection } = await fetchDeckPageData(
-    supabase,
-    user.id,
-    character.id,
-  );
+  const { slots, collection, talismanSlots, talismanCollection } =
+    await fetchDeckPageData(supabase, user.id, character.id);
 
   return (
     <div className="inventory-page">
@@ -31,6 +34,8 @@ export default async function DeckPage({
         collection={collection}
         initialError={initialError}
         slots={slots}
+        talismanCollection={talismanCollection}
+        talismanSlots={talismanSlots}
       />
     </div>
   );

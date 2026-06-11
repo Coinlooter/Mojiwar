@@ -6,6 +6,15 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.9.0",
+    changes: [
+      "Inventar — freier Talisman-Slot von Anfang an sichtbar",
+      "Inventar — Talismane ausrüsten und in eigener Sammlung verwalten",
+      "Kampf — Talismane als seltenerer Beute-Drop (25 % vs. 75 % Karten)",
+      "Kampf — Talismane geben passive Boni auf Stärke",
+    ],
+  },
+  {
     version: "1.8.2",
     changes: [
       "Karten — Pergament-Hintergrund statt dunklem Muster",

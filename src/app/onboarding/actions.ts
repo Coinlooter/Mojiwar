@@ -42,6 +42,7 @@ export async function createCharacter(formData: FormData) {
     gold: 0,
     baseStats,
     deck: [],
+    talisman: null,
   });
 
   const { error: profileError } = await supabase.from("profiles").upsert(

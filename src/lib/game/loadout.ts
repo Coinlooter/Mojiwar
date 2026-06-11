@@ -1,10 +1,30 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/supabase/database.types";
-import type { CardDefinition, CardEffectType, CardRarity, CharacterLoadout, CombatStats } from "./types";
+import type {
+  CardDefinition,
+  CardEffectType,
+  CardRarity,
+  CharacterLoadout,
+  CombatStats,
+  TalismanDefinition,
+} from "./types";
 
 type CharacterRow = Database["public"]["Tables"]["characters"]["Row"];
 type CardRow = Database["public"]["Tables"]["cards"]["Row"];
+type TalismanRow = Database["public"]["Tables"]["talismans"]["Row"];
+
+export function mapTalismanRow(talisman: TalismanRow): TalismanDefinition {
+  return {
+    id: talisman.id,
+    name: talisman.name,
+    emoji: talisman.emoji,
+    rarity: talisman.rarity as CardRarity,
+    effectType: talisman.effect_type as CardEffectType,
+    effectValue: Number(talisman.effect_value),
+    description: talisman.description,
+  };
+}
 
 export function mapCardRow(card: CardRow): CardDefinition {
   return {
@@ -31,6 +51,7 @@ export function mapCharacterRowToBaseStats(character: CharacterRow): CombatStats
 export function buildCharacterLoadout(
   character: CharacterRow,
   deck: CardDefinition[],
+  talisman: TalismanDefinition | null = null,
 ): CharacterLoadout {
   return {
     id: character.id,
@@ -42,6 +63,7 @@ export function buildCharacterLoadout(
     gold: character.gold,
     baseStats: mapCharacterRowToBaseStats(character),
     deck,
+    talisman,
   };
 }
 
@@ -92,6 +114,44 @@ async function fetchDeckForCharacter(
     .filter((card): card is CardDefinition => card !== undefined);
 }
 
+async function fetchTalismanForCharacter(
+  supabase: SupabaseClient<Database>,
+  characterId: string,
+): Promise<TalismanDefinition | null> {
+  const { data: talismanSlot, error: talismanSlotError } = await supabase
+    .from("talisman_slots")
+    .select("player_talisman_id")
+    .eq("character_id", characterId)
+    .eq("slot_index", 0)
+    .maybeSingle();
+
+  if (talismanSlotError || !talismanSlot) {
+    return null;
+  }
+
+  const { data: playerTalisman, error: playerTalismanError } = await supabase
+    .from("player_talismans")
+    .select("talisman_id")
+    .eq("id", talismanSlot.player_talisman_id)
+    .maybeSingle();
+
+  if (playerTalismanError || !playerTalisman) {
+    return null;
+  }
+
+  const { data: talisman, error: talismanError } = await supabase
+    .from("talismans")
+    .select("*")
+    .eq("id", playerTalisman.talisman_id)
+    .maybeSingle();
+
+  if (talismanError || !talisman) {
+    return null;
+  }
+
+  return mapTalismanRow(talisman);
+}
+
 export async function fetchCharacterLoadout(
   supabase: SupabaseClient<Database>,
   characterId: string,
@@ -106,8 +166,12 @@ export async function fetchCharacterLoadout(
     return null;
   }
 
-  const deck = await fetchDeckForCharacter(supabase, characterId);
-  return buildCharacterLoadout(character, deck);
+  const [deck, talisman] = await Promise.all([
+    fetchDeckForCharacter(supabase, characterId),
+    fetchTalismanForCharacter(supabase, characterId),
+  ]);
+
+  return buildCharacterLoadout(character, deck, talisman);
 }
 
 export async function fetchCharacterLoadouts(

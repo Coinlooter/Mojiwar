@@ -20,6 +20,7 @@ const attacker: CharacterLoadout = {
     critChance: 0.08,
   },
   deck: [starterCards[0], starterCards[3], starterCards[6]],
+  talisman: null,
 };
 
 const defender: CharacterLoadout = {
@@ -38,6 +39,7 @@ const defender: CharacterLoadout = {
     critChance: 0.05,
   },
   deck: [starterCards[1], starterCards[2], starterCards[4]],
+  talisman: null,
 };
 
 describe("simulateBattle", () => {
