@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.7.3",
+    changes: [
+      "Login — Spieler bleiben auf dem Gerät eingeloggt, Session wird in Cookies gespeichert",
+    ],
+  },
+  {
     version: "1.7.2",
     changes: [
       "Texte — durchgängig korrekte Umlaute (ä, ö, ü) statt ae, oe, ue",
