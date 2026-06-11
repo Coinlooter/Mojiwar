@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.8.1",
+    changes: [
+      "Startseite — kompakteres Layout ohne eigene Buttons, Spielen nur noch im Header",
+    ],
+  },
+  {
     version: "1.8.0",
     changes: [
       "Inventar — bis zu 10 Deck-Slots, davon 3 von Anfang an freigeschaltet",

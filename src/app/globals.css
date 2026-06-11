@@ -504,64 +504,86 @@ input {
     inset 0 -1px 0 rgba(4, 120, 87, 0.35);
 }
 
-.hero,
-.landing-hero {
+.hero {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   gap: 32px;
   align-items: center;
 }
 
-.landing-battle-card {
-  min-height: 100%;
-}
-
 .battle-result {
   margin: 22px 0 0;
 }
 
-.landing-page h1 {
-  font-size: clamp(2.4rem, 7vw, 5.2rem);
+.landing-page {
+  max-width: 920px;
+  margin: 0 auto;
 }
 
-.landing-emoji-strip {
+.landing-shell {
+  display: grid;
+  gap: 18px;
+  padding: 18px 20px 20px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(159, 122, 234, 0.16), transparent 42%),
+    radial-gradient(circle at 100% 100%, rgba(52, 211, 153, 0.1), transparent 38%),
+    var(--panel);
+}
+
+.landing-hero-compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  gap: 18px;
+  align-items: center;
+}
+
+.landing-intro {
+  display: grid;
+  gap: 14px;
+}
+
+.landing-page h1 {
+  font-size: clamp(1.85rem, 4.2vw, 2.85rem);
+  line-height: 1.05;
+  margin: 0 0 8px;
+}
+
+.landing-tagline {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  max-width: 40ch;
+}
+
+.landing-emoji-orbit {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 22px;
+  gap: 8px;
 }
 
 .landing-emoji-chip {
   display: grid;
-  width: 3.4rem;
-  height: 3.4rem;
+  width: 2.65rem;
+  height: 2.65rem;
   place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--panel);
-  font-size: 1.8rem;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(159, 122, 234, 0.28);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 1.35rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
   animation: landing-float 4.8s ease-in-out infinite;
 }
 
 .landing-emoji-chip:nth-child(2) {
-  animation-delay: 0.4s;
+  animation-delay: 0.35s;
 }
 
 .landing-emoji-chip:nth-child(3) {
-  animation-delay: 0.8s;
+  animation-delay: 0.7s;
 }
 
 .landing-emoji-chip:nth-child(4) {
-  animation-delay: 1.2s;
-}
-
-.landing-emoji-chip:nth-child(5) {
-  animation-delay: 1.6s;
-}
-
-.landing-emoji-chip:nth-child(6) {
-  animation-delay: 2s;
+  animation-delay: 1.05s;
 }
 
 @keyframes landing-float {
@@ -578,89 +600,150 @@ input {
 .landing-arena {
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(159, 122, 234, 0.22);
+  border-radius: 18px;
+  padding: 14px 14px 12px;
   background:
-    radial-gradient(circle at top, rgba(159, 122, 234, 0.28), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.05)),
-    rgba(255, 255, 255, 0.04);
+    radial-gradient(circle at top, rgba(159, 122, 234, 0.22), transparent 58%),
+    rgba(0, 0, 0, 0.16);
 }
 
 .landing-arena-badge {
   display: inline-block;
-  margin: 0 0 18px;
+  margin: 0 0 10px;
   border-radius: 999px;
-  background: rgba(251, 113, 133, 0.18);
+  background: rgba(251, 113, 133, 0.16);
   color: #fecdd3;
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
-  padding: 8px 12px;
+  letter-spacing: 0.1em;
+  padding: 5px 10px;
   text-transform: uppercase;
+}
+
+.landing-fighter-row {
+  margin-bottom: 8px;
 }
 
 .landing-vs {
   color: var(--accent-strong);
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 900;
   letter-spacing: 0.08em;
 }
 
 .landing-fighter .emoji {
-  font-size: 4.6rem;
+  font-size: 3.2rem;
+}
+
+.landing-fighter h3 {
+  font-size: 0.95rem;
+  margin: 4px 0 0;
+}
+
+.landing-fighter .muted {
+  font-size: 0.78rem;
 }
 
 .landing-winner {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 0;
+  gap: 8px;
+  margin: 0;
   color: #d7dce8;
-  font-size: 1.05rem;
+  font-size: 0.86rem;
+  line-height: 1.35;
 }
 
 .landing-trophy {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
 }
 
-.landing-step-grid {
+.landing-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(159, 122, 234, 0.35),
+    transparent
+  );
+}
+
+.landing-steps-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.landing-step-card {
-  position: relative;
-  border: 1px solid var(--border);
-  border-radius: 28px;
-  background: var(--panel);
-  padding: 24px 20px 22px;
-  text-align: center;
+.landing-step-pill {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  border: 1px solid rgba(159, 122, 234, 0.18);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.14);
+  padding: 12px 12px 11px;
 }
 
-.landing-step-number {
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  color: var(--accent-strong);
-  font-size: 0.82rem;
+.landing-step-index {
+  display: grid;
+  width: 1.55rem;
+  height: 1.55rem;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(159, 122, 234, 0.22);
+  color: #e9d5ff;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+}
+
+.landing-step-copy h2 {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.landing-step-copy p {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .landing-step-emoji {
-  margin-bottom: 12px;
-  font-size: 3rem;
+  display: inline-block;
+  margin-right: 4px;
+  font-size: 1rem;
   line-height: 1;
+  vertical-align: -0.1em;
 }
 
-.landing-cards-lead {
-  margin-bottom: 24px;
-}
-
-.landing-card-showcase {
+.landing-card-preview {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-  gap: 16px;
+  gap: 10px;
   justify-items: center;
+}
+
+.landing-card-preview-label {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.landing-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.landing-card-row .game-card {
+  max-width: 108px;
 }
 
 .game-card {
@@ -2687,11 +2770,11 @@ h3 {
 
 @media (max-width: 900px) {
   .hero,
-  .landing-hero,
+  .landing-hero-compact,
   .battle-replay-body,
   .stat-grid,
   .feature-grid,
-  .landing-step-grid {
+  .landing-steps-row {
     grid-template-columns: 1fr;
   }
 
