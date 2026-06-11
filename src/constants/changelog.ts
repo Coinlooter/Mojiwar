@@ -9,6 +9,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     version: "1.7.4",
     changes: [
       "Header — Logout erst nach Charaktererstellung, nicht mehr während der Auswahl",
+      "Header — Gäste sehen „Spielen“ statt „Login“",
     ],
   },
   {

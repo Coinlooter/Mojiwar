@@ -33,7 +33,7 @@ export async function SiteHeader() {
             <LogoutButton compact />
           ) : (
             <Link className="button button-compact primary" href={"/login" as Route}>
-              Login
+              Spielen
             </Link>
           )}
         </nav>
