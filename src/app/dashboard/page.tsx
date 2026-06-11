@@ -29,8 +29,8 @@ export default async function DashboardPage({
           <p className="eyebrow">Willkommen</p>
           <h1>Hier startet dein Abenteuer.</h1>
           <p className="lead">
-            Erstelle dein Emoji und kaempfe gegen andere. Dein Fortschritt bleibt
-            auf diesem Geraet gespeichert.
+            Erstelle dein Emoji und kämpfe gegen andere. Dein Fortschritt bleibt
+            auf diesem Gerät gespeichert.
           </p>
           <div className="actions">
             <StartPlayingButton>Jetzt spielen</StartPlayingButton>
@@ -68,7 +68,7 @@ export default async function DashboardPage({
             <h1>{character.name}</h1>
             <p className="muted dashboard-hero-meta">
               Level {character.level} · {character.xp} XP · {character.gold} 🪙
-              Gold · Staerke {character.power}
+              Gold · Stärke {character.power}
             </p>
           </div>
         </div>
@@ -103,12 +103,12 @@ export default async function DashboardPage({
       <div className="dashboard-main">
         <section className="panel battle-card dashboard-battles">
           <div className="dashboard-section-head">
-            <p className="eyebrow">Letzte Kaempfe</p>
+            <p className="eyebrow">Letzte Kämpfe</p>
           </div>
 
           {battles.length === 0 ? (
             <p className="muted dashboard-empty">
-              Noch keine Kaempfe. Starte unter Kampf deinen ersten Kampf.
+              Noch keine Kämpfe. Starte unter Kampf deinen ersten Kampf.
             </p>
           ) : (
             <div className="dashboard-battle-list">

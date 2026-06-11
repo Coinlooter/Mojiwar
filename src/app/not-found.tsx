@@ -6,7 +6,7 @@ export default function NotFound() {
       <p className="eyebrow">404</p>
       <h1>Diese Seite gibt es nicht.</h1>
       <p className="muted not-found-copy">
-        Vielleicht wurde der Kampf geloescht oder der Link ist veraltet.
+        Vielleicht wurde der Kampf gelöscht oder der Link ist veraltet.
       </p>
       <div className="actions">
         <Link className="button primary" href="/">

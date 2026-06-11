@@ -33,11 +33,11 @@ export function OpponentsBoard({
       <header className="fight-top panel battle-card">
         <div>
           <p className="eyebrow">Kampf</p>
-          <h1>Waehle deinen Gegner.</h1>
+          <h1>Wähle deinen Gegner.</h1>
           <p className="muted fight-top-lead">
             {hasRealPlayers
               ? "Echte Spieler oder Übungsgegner — der Kampf startet sofort."
-              : "Zehn Übungsgegner mit steigender Staerke stehen bereit."}
+              : "Zehn Übungsgegner mit steigender Stärke stehen bereit."}
           </p>
         </div>
       </header>
@@ -56,7 +56,7 @@ export function OpponentsBoard({
                 <h2>{match.opponent.name}</h2>
                 <p className="muted">
                   {BOT_OPPONENT_IDS.has(match.opponent.id) ? "Übung · " : ""}
-                  Lv {match.opponent.level} · Staerke {match.opponentPower}
+                  Lv {match.opponent.level} · Stärke {match.opponentPower}
                 </p>
               </div>
             </div>
@@ -68,7 +68,7 @@ export function OpponentsBoard({
             opponentName={match.opponent.name}
             playerEmoji={playerEmoji}
           >
-            Jetzt kaempfen
+            Jetzt kämpfen
           </ChallengeOpponentButton>
         </section>
       ) : null}

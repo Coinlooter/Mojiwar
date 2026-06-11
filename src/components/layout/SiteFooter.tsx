@@ -39,7 +39,7 @@ export function SiteFooter() {
       <footer className="site-footer glass-chrome">
         <div className="site-chrome-inner site-footer-inner" data-testid="site-footer">
           <span className="footer-meta">
-            Baue dein Emoji · kaempfe gegen andere · sammle Karten
+            Baue dein Emoji · kämpfe gegen andere · sammle Karten
           </span>
           <span className="footer-separator" aria-hidden>
             ·
@@ -56,7 +56,7 @@ export function SiteFooter() {
             ·
           </span>
           <button
-            aria-label={`Changelog fuer Version ${pkg.version} oeffnen`}
+            aria-label={`Changelog für Version ${pkg.version} öffnen`}
             className="footer-version"
             onClick={() => setShowChangelog(true)}
             type="button"

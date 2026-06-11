@@ -25,8 +25,8 @@ export default async function LeaderboardPage() {
       <header className="leaderboard-top panel battle-card">
         <PageHeader
           eyebrow="Rangliste"
-          lead="Hier siehst du, wer die meisten Kaempfe gewonnen hat. Uebungsgegner sind nicht dabei — nur echte Spieler."
-          title="Die staerksten Emoji-Helden im Land."
+          lead="Hier siehst du, wer die meisten Kämpfe gewonnen hat. Übungsgegner sind nicht dabei — nur echte Spieler."
+          title="Die stärksten Emoji-Helden im Land."
         />
       </header>
 
@@ -42,7 +42,7 @@ export default async function LeaderboardPage() {
               <h2>{currentEntry.name}</h2>
               <p className="muted">
                 {currentEntry.wins} Siege · {currentEntry.losses} Niederlagen ·
-                Level {currentEntry.level} · Staerke {currentEntry.power}
+                Level {currentEntry.level} · Stärke {currentEntry.power}
               </p>
             </div>
           </div>

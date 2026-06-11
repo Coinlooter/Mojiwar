@@ -10,7 +10,7 @@ export function EmojiPicker() {
   return (
     <div className="emoji-picker">
       <p className="field-label" id="emoji-picker-label">
-        Waehle dein Emoji
+        Wähle dein Emoji
       </p>
       <input name="emoji" required type="hidden" value={selectedEmoji ?? ""} />
       <div
@@ -39,7 +39,7 @@ export function EmojiPicker() {
       <p className="muted emoji-picker-hint">
         {selectedEmoji
           ? `Dein Held: ${selectedEmoji}`
-          : "Tippe auf ein Emoji, das dir gefaellt."}
+          : "Tippe auf ein Emoji, das dir gefällt."}
       </p>
     </div>
   );

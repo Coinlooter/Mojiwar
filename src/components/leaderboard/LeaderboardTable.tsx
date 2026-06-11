@@ -42,7 +42,7 @@ export function LeaderboardTable({
         <span role="columnheader">Siege</span>
         <span role="columnheader">Niederlagen</span>
         <span role="columnheader">Level</span>
-        <span role="columnheader">Staerke</span>
+        <span role="columnheader">Stärke</span>
       </div>
 
       {entries.map((entry) => {

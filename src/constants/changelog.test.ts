@@ -8,7 +8,7 @@ describe("changelog", () => {
     expect(CHANGELOG_VERSIONS[0]?.version).toBe(pkg.version);
   });
 
-  it("enthaelt fuer jede Version mindestens eine Aenderung", () => {
+  it("enthält für jede Version mindestens eine Änderung", () => {
     for (const entry of CHANGELOG_VERSIONS) {
       expect(entry.changes.length).toBeGreaterThan(0);
     }

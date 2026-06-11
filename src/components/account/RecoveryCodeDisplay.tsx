@@ -14,7 +14,7 @@ export function RecoveryCodeDisplay({ parts }: { parts: RecoveryCodeParts }) {
         <span>{display.numberSuffix}</span>
       </p>
       <p className="muted recovery-code-hint">
-        Schreib ihn auf oder mach ein Foto. Damit loggst du dich auf anderen Geraeten
+        Schreib ihn auf oder mach ein Foto. Damit loggst du dich auf anderen Geräten
         ein.
       </p>
       <p className="muted recovery-code-compact">

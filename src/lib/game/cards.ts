@@ -23,7 +23,7 @@ export const starterCards: CardDefinition[] = [
   },
   {
     id: "green-heart",
-    name: "Gruenes Herz",
+    name: "Grünes Herz",
     emoji: "💚",
     rarity: "common",
     effectType: "bonus_hp",
@@ -41,7 +41,7 @@ export const starterCards: CardDefinition[] = [
   },
   {
     id: "lucky-star",
-    name: "Gluecksstern",
+    name: "Glücksstern",
     emoji: "⭐",
     rarity: "rare",
     effectType: "bonus_crit_chance",
@@ -55,7 +55,7 @@ export const starterCards: CardDefinition[] = [
     rarity: "rare",
     effectType: "first_strike_damage",
     effectValue: 9,
-    description: "Fuegt in Runde 1 Extraschaden zu.",
+    description: "Fügt in Runde 1 Extraschaden zu.",
   },
   {
     id: "panic-snack",
@@ -64,7 +64,7 @@ export const starterCards: CardDefinition[] = [
     rarity: "epic",
     effectType: "low_hp_heal",
     effectValue: 16,
-    description: "Heilt einmalig, wenn das Emoji unter 35% Leben faellt.",
+    description: "Heilt einmalig, wenn das Emoji unter 35% Leben fällt.",
   },
 ];
 

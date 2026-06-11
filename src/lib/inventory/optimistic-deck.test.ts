@@ -25,7 +25,7 @@ const cardB = {
 const cardC = {
   playerCardId: "c0000000-0000-4000-8000-000000000003",
   emoji: "💚",
-  name: "Gruenes Herz",
+  name: "Grünes Herz",
   rarity: "common" as const,
   description: "+18 Leben.",
 };

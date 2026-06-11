@@ -6,9 +6,15 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.7.2",
+    changes: [
+      "Texte — durchgängig korrekte Umlaute (ä, ö, ü) statt ae, oe, ue",
+    ],
+  },
+  {
     version: "1.7.1",
     changes: [
-      "Dashboard — einfachere Texte fuer neue Spieler ohne technische Begriffe",
+      "Dashboard — einfachere Texte für neue Spieler ohne technische Begriffe",
     ],
   },
   {
@@ -38,7 +44,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.5.5",
     changes: [
-      "Inventar — Build-Karten auf Desktop auf gleiche Groesse wie Sammlung begrenzt",
+      "Inventar — Build-Karten auf Desktop auf gleiche Größe wie Sammlung begrenzt",
     ],
   },
   {
@@ -50,13 +56,13 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.5.3",
     changes: [
-      "Inventar — Sammlung ohne Slot-Buttons, einheitliche Karten-Groesse, klarer Build-Bereich",
+      "Inventar — Sammlung ohne Slot-Buttons, einheitliche Karten-Größe, klarer Build-Bereich",
     ],
   },
   {
     version: "1.5.2",
     changes: [
-      "Header — eingeloggt nur noch Logo und Logout, Navigation ueber das Dashboard",
+      "Header — eingeloggt nur noch Logo und Logout, Navigation über das Dashboard",
     ],
   },
   {
@@ -109,14 +115,14 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     version: "1.4.0",
     changes: [
       "Fortschritt sichern — Speicher-Code aus Farbe, Tier und zwei Zahlen",
-      "Fortschritt sichern — Eltern-E-Mail zum Verknuepfen des anonymen Accounts",
-      "Fortschritt laden — Code auf neuem Geraet eingeben und Session wiederherstellen",
+      "Fortschritt sichern — Eltern-E-Mail zum Verknüpfen des anonymen Accounts",
+      "Fortschritt laden — Code auf neuem Gerät eingeben und Session wiederherstellen",
     ],
   },
   {
     version: "1.3.0",
     changes: [
-      "Sicherheit — Kampf-RPC nur serverseitig, Character-Progression per Trigger geschuetzt",
+      "Sicherheit — Kampf-RPC nur serverseitig, Character-Progression per Trigger geschützt",
       "Architektur — Page-Data-Helper, Battle-Log-Validierung und erweiterte Tests",
       "UX — Loading/Error/404, Gast-Nav, Tastatur-Inventar und Accessibility-Fixes",
     ],
@@ -124,7 +130,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.2.4",
     changes: [
-      "Branding — Spiel heisst jetzt Emojitsu (Repo, Vercel und UI)",
+      "Branding — Spiel heißt jetzt Emojitsu (Repo, Vercel und UI)",
     ],
   },
   {
@@ -136,8 +142,8 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.2.2",
     changes: [
-      "Navigation — Gegner heisst Kampf und erscheint erst nach Login",
-      "Kampf-Seite — kompakte Gegnerauswahl mit Listen statt grosser Karten",
+      "Navigation — Gegner heißt Kampf und erscheint erst nach Login",
+      "Kampf-Seite — kompakte Gegnerauswahl mit Listen statt größer Karten",
     ],
   },
   {
@@ -149,14 +155,14 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.2.0",
     changes: [
-      "Navigation — Mein Spiel heisst jetzt Dashboard und erscheint erst nach Login",
+      "Navigation — Mein Spiel heißt jetzt Dashboard und erscheint erst nach Login",
       "Dashboard — kompakteres Layout mit weniger Scrollen auf Desktop",
     ],
   },
   {
     version: "1.1.9",
     changes: [
-      "Hintergrund — Comic-Kampfszene mit kaempfenden Emojis als App-Wallpaper",
+      "Hintergrund — Comic-Kampfszene mit kämpfenden Emojis als App-Wallpaper",
     ],
   },
   {
@@ -168,14 +174,14 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.1.7",
     changes: [
-      "Navigation — Menuepunkt Karten heisst jetzt Inventar",
-      "Inventar — Karten per Drag and Drop in Deck-Slots ziehen und zurueck ins Inventar legen",
+      "Navigation — Menüpunkt Karten heißt jetzt Inventar",
+      "Inventar — Karten per Drag and Drop in Deck-Slots ziehen und zurück ins Inventar legen",
     ],
   },
   {
     version: "1.1.6",
     changes: [
-      "Karten — neues Spielkarten-Design mit Muster und Qualitaets-Rand (Gewoehnlich, Selten, Episch)",
+      "Karten — neues Spielkarten-Design mit Muster und Qualitäts-Rand (Gewöhnlich, Selten, Episch)",
     ],
   },
   {
@@ -200,24 +206,24 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
     version: "1.1.2",
     changes: [
-      "Kampf-Replay — Kaempfe laufen automatisch ab, HP aktualisiert sich live",
+      "Kampf-Replay — Kämpfe laufen automatisch ab, HP aktualisiert sich live",
     ],
   },
   {
     version: "1.1.1",
     changes: [
-      "Gegner — zehn Übungsgegner mit steigender Staerke bis echte Spieler mitmachen",
+      "Gegner — zehn Übungsgegner mit steigender Stärke bis echte Spieler mitmachen",
     ],
   },
   {
     version: "1.1.0",
     changes: [
-      "Spielablauf — Herausforderungen starten echte Kaempfe mit serverseitiger Aufloesung",
+      "Spielablauf — Herausforderungen starten echte Kämpfe mit serverseitiger Auflösung",
       "Onboarding — Starter-Deck mit drei Karten beim ersten Charakter",
-      "Dashboard — Inbox mit letzten Kaempfen und Replay-Links",
+      "Dashboard — Inbox mit letzten Kämpfen und Replay-Links",
       "Gegner — echte Spieler aus der Datenbank statt Demo-Daten",
-      "Deck — Karten aus der Sammlung ausruesten und wieder entfernen",
-      "Replay — gespeicherte Kaempfe unter /battle/[id]",
+      "Deck — Karten aus der Sammlung ausrüsten und wieder entfernen",
+      "Replay — gespeicherte Kämpfe unter /battle/[id]",
     ],
   },
   {
@@ -245,7 +251,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     changes: [
       "Startseite — fester Header und Footer auf allen Seiten",
       "Footer — Versionsnummer mit klickbarem Changelog-Dialog",
-      "Landing — ueberarbeitetes Hero-Layout ohne doppelte Navigation",
+      "Landing — überarbeitetes Hero-Layout ohne doppelte Navigation",
     ],
   },
   {
@@ -253,7 +259,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     changes: [
       "Grundlage — Next.js App Router, TypeScript und Vitest",
       "Spiel — reine Battle Engine mit serverseitiger Kampfsimulation",
-      "Daten — Supabase-Schema mit RLS fuer Profile, Charaktere, Karten und Kaempfe",
+      "Daten — Supabase-Schema mit RLS für Profile, Charaktere, Karten und Kämpfe",
       "Auth — anonymer Sofort-spielen-Flow mit Onboarding und Dashboard",
       "Routen — Dashboard, Gegner, Deck und Demo-Kampf",
     ],

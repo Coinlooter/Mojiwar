@@ -12,7 +12,7 @@ describe("createCharacterSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("lehnt Emojis ausserhalb der Starter-Auswahl ab", () => {
+  it("lehnt Emojis außerhalb der Starter-Auswahl ab", () => {
     const result = createCharacterSchema.safeParse({
       emoji: "🚀",
       name: "Rocket",

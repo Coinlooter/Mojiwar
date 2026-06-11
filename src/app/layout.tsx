@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Emojitsu",
-  description: "Baue dein Emoji, kaempfe gegen andere Spieler und sammle Karten.",
+  description: "Baue dein Emoji, kämpfe gegen andere Spieler und sammle Karten.",
 };
 
 export default function RootLayout({

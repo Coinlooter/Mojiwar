@@ -9,7 +9,7 @@ import { getVerifiedUser } from "@/lib/auth/session";
 export const dynamic = "force-dynamic";
 
 const errorMessages: Record<string, string> = {
-  "invalid-code": "Bitte pruefe Farbe, Tier und die zwei Zahlen.",
+  "invalid-code": "Bitte prüfe Farbe, Tier und die zwei Zahlen.",
   "not-found": "Dieser Login-Code wurde nicht gefunden.",
   "rate-limit": "Zu viele Versuche. Bitte warte eine Minute.",
   session: "Login hat gerade nicht geklappt. Versuche es erneut.",
@@ -33,7 +33,7 @@ export default async function LoginPage({
     <div className="account-page login-page">
       <header className="panel battle-card account-top">
         <p className="eyebrow">Login</p>
-        <h1>Willkommen zurueck!</h1>
+        <h1>Willkommen zurück!</h1>
         <p className="muted account-top-copy">
           Gib deinen Login-Code ein — aus Farbe, Tier und zwei Zahlen.
         </p>

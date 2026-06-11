@@ -114,7 +114,7 @@ export function BattleReplay({
         <p className="muted replay-status" aria-live="polite">
           {isComplete
             ? "Ergebnis folgt gleich..."
-            : "Die Emojis kaempfen..."}
+            : "Die Emojis kämpfen..."}
         </p>
         <button
           className="button"
@@ -124,7 +124,7 @@ export function BattleReplay({
           }}
           type="button"
         >
-          {isComplete ? "Fertig" : "Ueberspringen"}
+          {isComplete ? "Fertig" : "Überspringen"}
         </button>
       </footer>
     </div>
@@ -207,7 +207,7 @@ function formatEventTitle(event: BattleEvent) {
     case "card_effect":
       return `R${event.round}: ${event.cardName}`;
     case "fighter_defeated":
-      return `${sideLabel[event.loser]} faellt`;
+      return `${sideLabel[event.loser]} fällt`;
     case "battle_finished":
       return `Sieg: ${sideLabel[event.winner]}`;
   }
