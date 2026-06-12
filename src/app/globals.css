@@ -1970,28 +1970,32 @@ h3 {
 
 .inventory-slots-row {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, 88px);
   gap: 6px;
-  justify-items: center;
+  justify-content: start;
   width: 100%;
 }
 
 .inventory-slot {
   display: grid;
-  gap: 3px;
   justify-items: center;
-  width: 100%;
-  max-width: 88px;
+  width: 88px;
 }
 
 .inventory-talisman-slot {
-  max-width: 80px;
+  width: 76px;
+}
+
+.inventory-talisman-slot-drop {
+  width: 76px;
+  aspect-ratio: 1;
 }
 
 .inventory-slot-drop {
   display: grid;
-  justify-items: center;
-  width: 100%;
+  place-items: center;
+  width: 88px;
+  aspect-ratio: 5 / 7;
 }
 
 .inventory-slot-drop-locked {
@@ -2001,8 +2005,8 @@ h3 {
 .inventory-slot-locked-label {
   display: grid;
   place-items: center;
-  width: 100%;
-  max-width: 118px;
+  width: 88px;
+  height: 100%;
   aspect-ratio: 5 / 7;
   border: 1.5px dashed rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -2016,7 +2020,16 @@ h3 {
 }
 
 .inventory-slot-card,
-.inventory-slot-card .game-card,
+.inventory-slot-card .game-card {
+  width: 88px;
+  max-width: 88px;
+  height: 100%;
+}
+
+.inventory-slot-card .game-card {
+  aspect-ratio: 5 / 7;
+}
+
 .inventory-stash-cell-card .game-card,
 .inventory-stash-cell-card .inventory-draggable {
   width: 88px;
@@ -2066,8 +2079,8 @@ h3 {
 .inventory-slot-empty {
   display: grid;
   place-items: center;
-  width: 88px;
-  max-width: 88px;
+  width: 100%;
+  height: 100%;
   aspect-ratio: 5 / 7;
   border: 1.5px dashed rgba(255, 255, 255, 0.16);
   border-radius: 10px;
@@ -2129,17 +2142,6 @@ h3 {
   box-shadow:
     inset 0 0 0 1.5px rgba(196, 181, 253, 0.72),
     0 0 0 2px rgba(159, 122, 234, 0.35);
-}
-
-.inventory-slot-remove {
-  width: 100%;
-  max-width: 88px;
-  padding: 5px 8px;
-  font-size: 0.62rem;
-}
-
-.inventory-talisman-slot .inventory-slot-remove {
-  max-width: 76px;
 }
 
 .inventory-stash {
@@ -3084,11 +3086,17 @@ h3 {
 
 @media (max-width: 520px) {
   .inventory-slots-row {
+    grid-template-columns: repeat(5, 80px);
     gap: 4px;
   }
 
-  .inventory-slot {
-    max-width: 80px;
+  .inventory-slot,
+  .inventory-slot-drop {
+    width: 80px;
+  }
+
+  .inventory-slot-locked-label {
+    width: 80px;
   }
 
   .inventory-board .game-card,
@@ -3096,9 +3104,7 @@ h3 {
   .inventory-slot-card,
   .inventory-slot-card .game-card,
   .inventory-stash-cell-card .game-card,
-  .inventory-stash-cell-card .inventory-draggable,
-  .inventory-slot-empty,
-  .inventory-slot-remove {
+  .inventory-stash-cell-card .inventory-draggable {
     width: 80px;
     max-width: 80px;
   }
@@ -3115,7 +3121,6 @@ h3 {
   .inventory-slot-talisman-card,
   .inventory-slot-talisman-card .talisman-token,
   .inventory-slot-empty-octagon,
-  .inventory-talisman-slot .inventory-slot-remove,
   .inventory-stash-cell-talisman .talisman-token {
     max-width: 68px;
   }

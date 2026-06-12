@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.6",
+    changes: [
+      "Inventar — alle Build-Slots haben dieselbe Kartengröße",
+      "Inventar — Entfernen-Buttons entfallen, Ausrüsten nur per Drag & Drop",
+    ],
+  },
+  {
     version: "1.11.5",
     changes: [
       "Karten — Seltenheit nur noch im Hover-Fenster, nicht auf der Karte",

@@ -389,25 +389,6 @@ export function InventoryBoard({
             </div>
           )}
         </div>
-        {slot.talisman ? (
-          <button
-            className="button button-compact inventory-slot-remove"
-            disabled={slotSaving}
-            onClick={() => {
-              runTalismanMutation({
-                savingKey: `unequip-talisman:${slot.slotIndex}`,
-                optimisticState: unequipTalismanOptimistically(
-                  talismanState,
-                  slot.slotIndex,
-                ),
-                action: () => unequipTalismanSlotByIndex(slot.slotIndex),
-              });
-            }}
-            type="button"
-          >
-            Entfernen
-          </button>
-        ) : null}
       </div>
     );
   }
@@ -523,25 +504,6 @@ export function InventoryBoard({
                           </div>
                         )}
                       </div>
-                      {slot.card && !isLocked ? (
-                        <button
-                          className="button button-compact inventory-slot-remove"
-                          disabled={slotSaving}
-                          onClick={() => {
-                            runDeckMutation({
-                              savingKey: `unequip:${slot.slotIndex}`,
-                              optimisticState: unequipCardOptimistically(
-                                deckState,
-                                slot.slotIndex,
-                              ),
-                              action: () => unequipDeckSlotByIndex(slot.slotIndex),
-                            });
-                          }}
-                          type="button"
-                        >
-                          Entfernen
-                        </button>
-                      ) : null}
                     </div>
                   );
                 })}
