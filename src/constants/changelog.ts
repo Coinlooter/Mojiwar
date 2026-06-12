@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.4",
+    changes: [
+      "Onboarding — neuer Charakter startet mit leerem Build und leerem Inventar",
+    ],
+  },
+  {
     version: "1.11.3",
     changes: [
       "Talismane — nur Emoji sichtbar, Name und Stats im Hover-Fenster",

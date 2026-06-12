@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import { ensureRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
 import { getVerifiedUser } from "@/lib/auth/session";
 import { calculatePower } from "@/lib/game/calculate-power";
-import { fetchCharacterLoadout } from "@/lib/game/loadout";
 import { createCharacterSchema } from "@/lib/game/schemas";
 
 export async function createCharacter(formData: FormData) {
@@ -87,23 +86,6 @@ export async function createCharacter(formData: FormData) {
 
   if (characterError || !createdCharacter) {
     redirect("/onboarding?error=character" as Route);
-  }
-
-  const { error: starterDeckError } = await supabase.rpc("grant_starter_deck", {
-    p_character_id: createdCharacter.id,
-  });
-
-  if (starterDeckError) {
-    redirect("/onboarding?error=character" as Route);
-  }
-
-  const loadout = await fetchCharacterLoadout(supabase, createdCharacter.id);
-
-  if (loadout) {
-    await supabase
-      .from("characters")
-      .update({ power: calculatePower(loadout) })
-      .eq("id", createdCharacter.id);
   }
 
   await ensureRecoveryCodeForUser(user.id);
