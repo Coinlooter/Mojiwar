@@ -35,3 +35,15 @@ export function hasSecuredEmailAccount({
 }) {
   return !isAnonymous && !!getDisplayEmail(email);
 }
+
+export function canRecoverAccountProgress({
+  hasRecoveryCode,
+  isAnonymous,
+  email,
+}: {
+  hasRecoveryCode: boolean;
+  isAnonymous: boolean;
+  email?: string | null;
+}) {
+  return hasRecoveryCode || hasSecuredEmailAccount({ isAnonymous, email });
+}

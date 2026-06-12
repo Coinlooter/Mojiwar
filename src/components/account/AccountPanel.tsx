@@ -1,6 +1,7 @@
 import { RecoveryCodeDisplay } from "@/components/account/RecoveryCodeDisplay";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import {
+  canRecoverAccountProgress,
   getDisplayEmail,
   hasSecuredEmailAccount,
   usesLoginCodeAccount,
@@ -46,6 +47,11 @@ export async function AccountPanel({
   const displayEmail = getDisplayEmail(email);
   const securedWithEmail = hasSecuredEmailAccount({ isAnonymous, email });
   const showLoginCodeFlow = usesLoginCodeAccount({ isAnonymous, email });
+  const canLogoutSafely = canRecoverAccountProgress({
+    hasRecoveryCode: Boolean(recoveryCode),
+    isAnonymous,
+    email,
+  });
   const statusMessage = loginStatus ? statusMessages[loginStatus] : null;
   const errorMessage = loginError ? errorMessages[loginError] : null;
 
@@ -62,6 +68,13 @@ export async function AccountPanel({
       {errorMessage ? (
         <p className="account-error account-error-inline" role="alert">
           {errorMessage}
+        </p>
+      ) : null}
+
+      {!canLogoutSafely ? (
+        <p className="account-warning account-warning-inline" role="note">
+          Ohne Login-Code oder E-Mail kannst du dich nach dem Ausloggen nicht
+          wieder einloggen. Erstelle zuerst einen Code oder sichere per E-Mail.
         </p>
       ) : null}
 

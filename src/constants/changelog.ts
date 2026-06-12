@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.9.1",
+    changes: [
+      "Dashboard — Login-Code nur als Eingabeform mit Kopieren-Button",
+      "Header — Ausloggen erst nach Code oder E-Mail-Sicherung",
+      "Dashboard — Hinweis, wenn Fortschritt noch nicht gesichert ist",
+    ],
+  },
+  {
     version: "1.9.0",
     changes: [
       "Inventar — freier Talisman-Slot von Anfang an sichtbar",

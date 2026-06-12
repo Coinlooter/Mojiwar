@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  canRecoverAccountProgress,
   getDisplayEmail,
   hasSecuredEmailAccount,
   isInternalRecoveryEmail,
@@ -34,6 +35,32 @@ describe("account email helpers", () => {
     ).toBe(false);
     expect(
       hasSecuredEmailAccount({
+        isAnonymous: false,
+        email: "spieler@beispiel.de",
+      }),
+    ).toBe(true);
+  });
+
+  it("erlaubt Logout nur mit Code oder echter E-Mail", () => {
+    expect(
+      canRecoverAccountProgress({
+        hasRecoveryCode: false,
+        isAnonymous: true,
+        email: null,
+      }),
+    ).toBe(false);
+
+    expect(
+      canRecoverAccountProgress({
+        hasRecoveryCode: true,
+        isAnonymous: true,
+        email: null,
+      }),
+    ).toBe(true);
+
+    expect(
+      canRecoverAccountProgress({
+        hasRecoveryCode: false,
         isAnonymous: false,
         email: "spieler@beispiel.de",
       }),

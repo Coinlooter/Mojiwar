@@ -1,24 +1,46 @@
-import { formatRecoveryCodeDisplay, type RecoveryCodeParts } from "@/lib/auth/recovery-code";
+"use client";
+
+import { useState } from "react";
+
+import { buildRecoveryCode, type RecoveryCodeParts } from "@/lib/auth/recovery-code";
 
 export function RecoveryCodeDisplay({ parts }: { parts: RecoveryCodeParts }) {
-  const display = formatRecoveryCodeDisplay(parts);
+  const code = buildRecoveryCode(parts);
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }
 
   return (
     <div className="recovery-code-display" role="status">
-      <p className="recovery-code-label">Dein Code</p>
-      <p className="recovery-code-value" aria-label={`Weiterspielen-Code ${display.combined}`}>
-        <span>{display.colorLabel}</span>
-        <span aria-hidden>·</span>
-        <span>{display.animalLabel}</span>
-        <span aria-hidden>·</span>
-        <span>{display.numberSuffix}</span>
-      </p>
+      <p className="recovery-code-label">Dein Login-Code</p>
+      <div className="recovery-code-row">
+        <code className="recovery-code-value">{code}</code>
+        <button
+          aria-label={copied ? "Code kopiert" : "Login-Code kopieren"}
+          className="recovery-code-copy"
+          onClick={() => {
+            void handleCopy();
+          }}
+          type="button"
+        >
+          <span aria-hidden className="recovery-code-copy-icon">
+            {copied ? "✓" : "⧉"}
+          </span>
+          <span className="recovery-code-copy-label">
+            {copied ? "Kopiert" : "Kopieren"}
+          </span>
+        </button>
+      </div>
       <p className="muted recovery-code-hint">
-        Schreib ihn auf oder mach ein Foto. Damit spielst du auf anderen Geräten
-        weiter.
-      </p>
-      <p className="muted recovery-code-compact">
-        Kurzform: <code>{display.combined}</code>
+        Gib diesen Code auf einem anderen Gerät unter Spielen ein.
       </p>
     </div>
   );
