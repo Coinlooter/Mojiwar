@@ -62,10 +62,7 @@ export function BattleArena({
 
   return (
     <div className={arenaClasses}>
-      <div className="battle-arena-sky" aria-hidden="true">
-        <span className="battle-arena-cloud battle-arena-cloud-a">☁️</span>
-        <span className="battle-arena-cloud battle-arena-cloud-b">☁️</span>
-      </div>
+      <div aria-hidden="true" className="battle-arena-backdrop" />
 
       <div className="battle-arena-stage">
         <FighterStage
@@ -99,7 +96,6 @@ export function BattleArena({
         />
       </div>
 
-      <div aria-hidden="true" className="battle-arena-floor" />
       <EffectBurst animationKey={events.length} moment={moment} />
     </div>
   );

@@ -1,9 +1,10 @@
 import type { Route } from "next";
 import Link from "next/link";
 
+import { BattleLog } from "@/components/battle/BattleLog";
 import { GameCard } from "@/components/cards/GameCard";
 import { TalismanToken } from "@/components/cards/TalismanToken";
-import type { CardRarity } from "@/lib/game/types";
+import type { BattleEvent, CardRarity } from "@/lib/game/types";
 
 export type BattleLootItem = {
   kind: "card" | "talisman";
@@ -26,7 +27,13 @@ export type BattleSummary = {
   loot?: BattleLootItem;
 };
 
-export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
+export function BattleResultScreen({
+  events,
+  summary,
+}: {
+  events: BattleEvent[];
+  summary: BattleSummary;
+}) {
   const { won, opponentEmoji, opponentName, rounds, xpGained, goldGained, loot } =
     summary;
 
@@ -110,6 +117,13 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
             Ueb dich an den Gegnern und versuch es gleich noch einmal.
           </p>
         )}
+
+        <details className="battle-result-log">
+          <summary className="battle-result-log-toggle">
+            Kampf-Protokoll ansehen
+          </summary>
+          <BattleLog events={events} />
+        </details>
 
         <div className="actions battle-result-actions">
           <Link className="button primary" href={"/dashboard" as Route}>

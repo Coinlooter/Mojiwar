@@ -35,12 +35,15 @@ export function BattleExperience({
   }, [battleId]);
 
   if (phase === "result") {
-    return <BattleResultScreen summary={summary} />;
+    return <BattleResultScreen events={result.events} summary={summary} />;
   }
 
   return (
-    <section className="battle-phase-screen" aria-label="Kampf">
-      <article className="panel battle-card battle-experience-card">
+    <section
+      aria-label="Kampf"
+      className="battle-phase-screen battle-phase-screen-arena"
+    >
+      <article className="battle-experience-card battle-experience-arena">
         <BattleReplay onComplete={showResult} result={result} />
       </article>
     </section>
