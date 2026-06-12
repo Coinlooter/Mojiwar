@@ -8,40 +8,10 @@ import { z } from "zod";
 import { hasSecuredEmailAccount } from "@/lib/auth/account-email";
 import { mapEmailSecureError } from "@/lib/auth/email-secure";
 import { requireUser } from "@/lib/auth/require-character";
-import {
-  assignRecoveryCodeForUser,
-  ensureRecoveryCodeForUser,
-} from "@/lib/auth/progress-recovery";
 import { getAuthConfirmUrl } from "@/lib/auth/site-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const emailSchema = z.email();
-
-export async function createRecoveryCode() {
-  const { user } = await requireUser();
-
-  if (hasSecuredEmailAccount({ isAnonymous: user.is_anonymous ?? false, email: user.email })) {
-    redirect("/dashboard?login-error=already-secured" as Route);
-  }
-
-  await ensureRecoveryCodeForUser(user.id);
-
-  revalidatePath("/dashboard");
-  redirect("/dashboard?login=created" as Route);
-}
-
-export async function regenerateRecoveryCode() {
-  const { user } = await requireUser();
-
-  if (hasSecuredEmailAccount({ isAnonymous: user.is_anonymous ?? false, email: user.email })) {
-    redirect("/dashboard?login-error=already-secured" as Route);
-  }
-
-  await assignRecoveryCodeForUser(user.id);
-
-  revalidatePath("/dashboard");
-  redirect("/dashboard?login=regenerated" as Route);
-}
 
 export async function linkParentEmail(formData: FormData) {
   const { user } = await requireUser();

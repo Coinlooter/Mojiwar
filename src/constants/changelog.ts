@@ -9,7 +9,7 @@ export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
     version: "1.9.3",
     changes: [
       "Login-Code — wird automatisch bei der ersten Anmeldung erzeugt",
-      "Dashboard — „Code erstellen“-Button entfällt, Code erscheint direkt",
+      "Dashboard — Code erscheint direkt, ohne manuelle Buttons",
     ],
   },
   {

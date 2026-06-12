@@ -10,11 +10,10 @@ import {
   ensureRecoveryCodeForUser,
   getRecoveryCodeForUser,
 } from "@/lib/auth/progress-recovery";
-import { linkParentEmail, regenerateRecoveryCode } from "@/app/account/secure/actions";
+import { linkParentEmail } from "@/app/account/secure/actions";
 
 const statusMessages: Record<string, string> = {
   created: "Dein Code ist bereit. Schreib ihn auf oder mach ein Foto.",
-  regenerated: "Dein neuer Code ist aktiv. Der alte Code funktioniert nicht mehr.",
   "email-sent":
     "Wir haben eine E-Mail geschickt. Bitte bestätige den Link, um deinen Fortschritt zu sichern.",
 };
@@ -94,11 +93,6 @@ export async function AccountPanel({
             Mit diesem Code kannst du auf einem anderen Gerät weiterspielen.
           </p>
           <RecoveryCodeDisplay parts={recoveryCode} />
-          {showLoginCodeFlow ? (
-            <form action={regenerateRecoveryCode}>
-              <SubmitButton pendingLabel="Neuer Code...">Neuen Code</SubmitButton>
-            </form>
-          ) : null}
         </>
       ) : null}
 

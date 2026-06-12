@@ -55,10 +55,7 @@ export async function getRecoveryCodeForUser(userId: string) {
   } satisfies RecoveryCodeRecord;
 }
 
-async function persistRecoveryCodeForUser(
-  userId: string,
-  mode: "insert-if-absent" | "upsert",
-) {
+async function createRecoveryCodeForUser(userId: string) {
   const admin = createSupabaseServiceClient();
 
   for (let attempt = 0; attempt < MAX_ASSIGN_ATTEMPTS; attempt += 1) {
@@ -68,30 +65,12 @@ async function persistRecoveryCodeForUser(
       continue;
     }
 
-    const row = {
+    const { error } = await admin.from("progress_recovery_codes").insert({
       user_id: userId,
       color_slug: parts.colorSlug,
       animal_slug: parts.animalSlug,
       number_suffix: parts.numberSuffix,
-    };
-
-    if (mode === "upsert") {
-      const { error } = await admin
-        .from("progress_recovery_codes")
-        .upsert(row, { onConflict: "user_id" });
-
-      if (!error) {
-        return formatRecoveryCodeDisplay(parts);
-      }
-
-      if (error.code !== "23505") {
-        throw new Error("Speicher-Code konnte nicht erstellt werden.");
-      }
-
-      continue;
-    }
-
-    const { error } = await admin.from("progress_recovery_codes").insert(row);
+    });
 
     if (!error) {
       return formatRecoveryCodeDisplay(parts);
@@ -120,11 +99,7 @@ export async function ensureRecoveryCodeForUser(userId: string) {
     return formatRecoveryCodeDisplay(existing);
   }
 
-  return persistRecoveryCodeForUser(userId, "insert-if-absent");
-}
-
-export async function assignRecoveryCodeForUser(userId: string) {
-  return persistRecoveryCodeForUser(userId, "upsert");
+  return createRecoveryCodeForUser(userId);
 }
 
 export async function lookupUserIdByRecoveryCode(parts: RecoveryCodeParts) {
