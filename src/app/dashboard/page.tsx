@@ -3,6 +3,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { AccountPanel } from "@/components/account/AccountPanel";
+import { XpProgressBar } from "@/components/dashboard/XpProgressBar";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { getPrimaryCharacter } from "@/lib/auth/character";
 import { getVerifiedUser } from "@/lib/auth/session";
@@ -67,9 +68,10 @@ export default async function DashboardPage({
             <p className="eyebrow">Dashboard</p>
             <h1>{character.name}</h1>
             <p className="muted dashboard-hero-meta">
-              Level {character.level} · {character.xp} XP · {character.gold} 🪙
-              Gold · Stärke {character.power}
+              Level {character.level} · {character.gold} 🪙 Gold · Stärke{" "}
+              {character.power}
             </p>
+            <XpProgressBar level={character.level} xp={character.xp} />
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   calculateBattleGold,
   calculateBattleXp,
+  getXpProgress,
   levelForXp,
   totalXpForLevel,
   xpForLevel,
@@ -33,6 +34,18 @@ describe("leveling", () => {
     expect(xpForLevel(1)).toBe(0);
     expect(totalXpForLevel(2)).toBeGreaterThan(0);
     expect(levelForXp(0)).toBe(1);
+  });
+
+  it("berechnet den Fortschritt innerhalb des aktuellen Levels", () => {
+    const needed = xpForLevel(2);
+
+    expect(getXpProgress(0, 1)).toEqual({
+      currentInLevel: 0,
+      xpNeededForNextLevel: needed,
+      percent: 0,
+    });
+    expect(getXpProgress(needed / 2, 1).percent).toBe(50);
+    expect(getXpProgress(needed, 2).percent).toBe(0);
   });
 
   it("vergibt mehr XP für einen stärkeren Gegner", () => {

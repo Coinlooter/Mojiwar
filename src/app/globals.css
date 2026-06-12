@@ -1477,6 +1477,50 @@ h3 {
   font-size: 0.9rem;
 }
 
+.xp-progress {
+  display: grid;
+  gap: 4px;
+  width: min(100%, 280px);
+  margin-top: 8px;
+}
+
+.xp-progress-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.xp-progress-label {
+  color: var(--accent-strong);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.xp-progress-level-hint {
+  font-size: 0.68rem;
+}
+
+.xp-progress-track {
+  overflow: hidden;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.xp-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7c3aed, #34d399);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.35);
+  transition: width 240ms ease;
+}
+
 .dashboard-actions {
   margin: 0;
 }

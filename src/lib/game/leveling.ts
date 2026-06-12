@@ -28,6 +28,22 @@ export function levelForXp(xp: number): number {
   return level;
 }
 
+export function getXpProgress(xp: number, level: number) {
+  const xpAtLevelStart = totalXpForLevel(level);
+  const xpNeededForNextLevel = xpForLevel(level + 1);
+  const currentInLevel = Math.max(0, xp - xpAtLevelStart);
+  const percent =
+    xpNeededForNextLevel > 0
+      ? Math.min(100, (currentInLevel / xpNeededForNextLevel) * 100)
+      : 100;
+
+  return {
+    currentInLevel,
+    xpNeededForNextLevel,
+    percent,
+  };
+}
+
 export function calculateBattleXp({
   winner,
   loser,
