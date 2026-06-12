@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.10.0",
+    changes: [
+      "Inventar — nur noch Build und Inventar, alles Gesammelte an einem Ort",
+      "Inventar — kompakteres Layout mit Talisman-Slot direkt im Build",
+      "Talismane — achteckige Stoppschild-Form, Seltenheit am Rand erkennbar",
+    ],
+  },
+  {
     version: "1.9.4",
     changes: [
       "Navigation — Ladebalken erscheint nicht mehr bei Klicks auf die aktuelle Seite",

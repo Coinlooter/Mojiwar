@@ -69,8 +69,7 @@ export function InventoryBoard({
     useState<TalismanDragSource | null>(null);
   const [hoverSlot, setHoverSlot] = useState<number | null>(null);
   const [hoverTalismanSlot, setHoverTalismanSlot] = useState<number | null>(null);
-  const [inventoryHover, setInventoryHover] = useState(false);
-  const [talismanInventoryHover, setTalismanInventoryHover] = useState(false);
+  const [stashHover, setStashHover] = useState(false);
   const [actionError, setActionError] = useState<string | null>(
     initialError ? DECK_ERROR_MESSAGES[initialError] : null,
   );
@@ -80,7 +79,10 @@ export function InventoryBoard({
   const unlockedSlots = deckState.slots.filter((slot) => slot.unlocked);
   const filledSlots = unlockedSlots.filter((slot) => slot.card).length;
   const filledTalismanSlots = talismanState.slots.filter((slot) => slot.talisman).length;
+  const stashCount = deckState.collection.length + talismanState.collection.length;
   const isSaving = savingKeys.length > 0;
+  const isUnequipDrag =
+    cardDragSource?.kind === "slot" || talismanDragSource?.kind === "talisman-slot";
 
   function beginSaving(key: string) {
     setSavingKeys((current) => (current.includes(key) ? current : [...current, key]));
@@ -273,40 +275,33 @@ export function InventoryBoard({
     });
   }
 
-  function handleDropOnInventory(event: React.DragEvent) {
+  function handleDropOnStash(event: React.DragEvent) {
     event.preventDefault();
-    setInventoryHover(false);
+    setStashHover(false);
 
-    const sourceSlotRaw = event.dataTransfer.getData(DRAG_SLOT_MIME);
+    const sourceCardSlotRaw = event.dataTransfer.getData(DRAG_SLOT_MIME);
 
-    if (!sourceSlotRaw) {
+    if (sourceCardSlotRaw) {
+      const slotIndex = Number(sourceCardSlotRaw);
+
+      if (!Number.isNaN(slotIndex)) {
+        runDeckMutation({
+          savingKey: `unequip:${slotIndex}`,
+          optimisticState: unequipCardOptimistically(deckState, slotIndex),
+          action: () => unequipDeckSlotByIndex(slotIndex),
+        });
+      }
+
       return;
     }
 
-    const slotIndex = Number(sourceSlotRaw);
+    const sourceTalismanSlotRaw = event.dataTransfer.getData(DRAG_TALISMAN_SLOT_MIME);
 
-    if (Number.isNaN(slotIndex)) {
+    if (!sourceTalismanSlotRaw) {
       return;
     }
 
-    runDeckMutation({
-      savingKey: `unequip:${slotIndex}`,
-      optimisticState: unequipCardOptimistically(deckState, slotIndex),
-      action: () => unequipDeckSlotByIndex(slotIndex),
-    });
-  }
-
-  function handleDropOnTalismanInventory(event: React.DragEvent) {
-    event.preventDefault();
-    setTalismanInventoryHover(false);
-
-    const sourceSlotRaw = event.dataTransfer.getData(DRAG_TALISMAN_SLOT_MIME);
-
-    if (!sourceSlotRaw) {
-      return;
-    }
-
-    const slotIndex = Number(sourceSlotRaw);
+    const slotIndex = Number(sourceTalismanSlotRaw);
 
     if (Number.isNaN(slotIndex)) {
       return;
@@ -324,297 +319,290 @@ export function InventoryBoard({
     setTalismanDragSource(null);
     setHoverSlot(null);
     setHoverTalismanSlot(null);
-    setInventoryHover(false);
-    setTalismanInventoryHover(false);
+    setStashHover(false);
+  }
+
+  function renderTalismanSlot(slot: InventoryTalismanSlotData) {
+    const isHover = hoverTalismanSlot === slot.slotIndex;
+    const isDraggingFromHere =
+      talismanDragSource?.kind === "talisman-slot" &&
+      talismanDragSource.slotIndex === slot.slotIndex;
+    const slotSaving = savingKeys.some((key) => {
+      if (key === `unequip-talisman:${slot.slotIndex}`) {
+        return true;
+      }
+
+      if (key.endsWith(`:${slot.slotIndex}`) && key.startsWith("equip-talisman:")) {
+        return true;
+      }
+
+      return Boolean(
+        slot.talisman && key.startsWith(`equip-talisman:${slot.talisman.playerTalismanId}:`),
+      );
+    });
+
+    return (
+      <div
+        className={`inventory-slot inventory-talisman-slot${slotSaving ? " inventory-slot-saving" : ""}`}
+        key={slot.slotIndex}
+      >
+        <div
+          className={`inventory-slot-drop inventory-talisman-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.talisman ? " inventory-slot-drop-filled" : ""}`}
+          onDragEnd={clearDragState}
+          onDragLeave={() => {
+            setHoverTalismanSlot((current) =>
+              current === slot.slotIndex ? null : current,
+            );
+          }}
+          onDragOver={(event) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+            setHoverTalismanSlot(slot.slotIndex);
+          }}
+          onDrop={(event) => {
+            handleDropOnTalismanSlot(slot.slotIndex, event);
+            clearDragState();
+          }}
+        >
+          {slot.talisman ? (
+            <div
+              className={`inventory-draggable inventory-slot-card inventory-slot-talisman-card${isDraggingFromHere ? " is-dragging" : ""}`}
+              draggable={!slotSaving}
+              onDragEnd={clearDragState}
+              onDragStart={(event) => {
+                handleDragStartTalismanSlot(slot, event);
+              }}
+            >
+              <GameCard
+                active
+                description={slot.talisman.description}
+                emoji={slot.talisman.emoji}
+                name={slot.talisman.name}
+                rarity={slot.talisman.rarity}
+                size="sm"
+                variant="talisman"
+              />
+            </div>
+          ) : (
+            <div className="inventory-slot-empty inventory-slot-empty-octagon">
+              {isHover ? "Ablegen" : "Talisman"}
+            </div>
+          )}
+        </div>
+        {slot.talisman ? (
+          <button
+            className="button button-compact inventory-slot-remove"
+            disabled={slotSaving}
+            onClick={() => {
+              runTalismanMutation({
+                savingKey: `unequip-talisman:${slot.slotIndex}`,
+                optimisticState: unequipTalismanOptimistically(
+                  talismanState,
+                  slot.slotIndex,
+                ),
+                action: () => unequipTalismanSlotByIndex(slot.slotIndex),
+              });
+            }}
+            type="button"
+          >
+            Entfernen
+          </button>
+        ) : null}
+      </div>
+    );
   }
 
   return (
     <div className={`inventory-board panel battle-card${isSaving ? " inventory-board-saving" : ""}`}>
-      <header className="inventory-board-top">
-        <div className="inventory-section-title-row">
-          <p className="eyebrow">Inventar</p>
-          <span className="inventory-slot-count">
-            {filledSlots}/{unlockedSlots.length} Karten · {filledTalismanSlots}/
-            {talismanState.slots.length} Talisman
-            {isSaving ? " · speichert..." : ""}
-          </span>
-        </div>
-        <p className="muted inventory-board-lead">
-          Karten und Talismane zwischen Build und Sammlung ziehen.
-        </p>
-      </header>
-
       {actionError ? (
         <p className="muted inventory-board-error" role="alert">
           {actionError}
         </p>
       ) : null}
 
-      <section className="inventory-deck-section">
-        <div className="inventory-section-head">
-          <p className="inventory-section-label">Dein Build</p>
-        </div>
-
-        <div className="inventory-deck-panel">
-          <div className="inventory-slots-row">
-            {deckState.slots.map((slot) => {
-              const isLocked = !slot.unlocked;
-              const isHover = !isLocked && hoverSlot === slot.slotIndex;
-              const isDraggingFromHere =
-                cardDragSource?.kind === "slot" &&
-                cardDragSource.slotIndex === slot.slotIndex;
-              const slotSaving = savingKeys.some((key) => {
-                if (key === `unequip:${slot.slotIndex}`) {
-                  return true;
-                }
-
-                if (key.endsWith(`:${slot.slotIndex}`) && key.startsWith("equip:")) {
-                  return true;
-                }
-
-                return Boolean(
-                  slot.card && key.startsWith(`equip:${slot.card.playerCardId}:`),
-                );
-              });
-
-              return (
-                <div
-                  className={`inventory-slot${isLocked ? " inventory-slot-locked" : ""}${slotSaving ? " inventory-slot-saving" : ""}`}
-                  key={slot.slotIndex}
-                >
-                  <div
-                    className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}${isLocked ? " inventory-slot-drop-locked" : ""}`}
-                    onDragEnd={isLocked ? undefined : clearDragState}
-                    onDragLeave={
-                      isLocked
-                        ? undefined
-                        : () => {
-                            setHoverSlot((current) =>
-                              current === slot.slotIndex ? null : current,
-                            );
-                          }
-                    }
-                    onDragOver={
-                      isLocked
-                        ? undefined
-                        : (event) => {
-                            event.preventDefault();
-                            event.dataTransfer.dropEffect = "move";
-                            setHoverSlot(slot.slotIndex);
-                          }
-                    }
-                    onDrop={
-                      isLocked
-                        ? undefined
-                        : (event) => {
-                            handleDropOnSlot(slot.slotIndex, event);
-                            clearDragState();
-                          }
-                    }
-                  >
-                    {isLocked ? (
-                      <div className="inventory-slot-locked-label">
-                        Noch nicht freigeschaltet
-                      </div>
-                    ) : slot.card ? (
-                      <div
-                        className={`inventory-draggable inventory-slot-card${isDraggingFromHere ? " is-dragging" : ""}`}
-                        draggable={!slotSaving}
-                        onDragEnd={clearDragState}
-                        onDragStart={(event) => {
-                          handleDragStartSlot(slot, event);
-                        }}
-                      >
-                        <GameCard
-                          active
-                          description={slot.card.description}
-                          emoji={slot.card.emoji}
-                          name={slot.card.name}
-                          rarity={slot.card.rarity}
-                          size="sm"
-                        />
-                      </div>
-                    ) : (
-                      <div className="inventory-slot-empty">
-                        {isHover ? "Hier ablegen" : "Leer"}
-                      </div>
-                    )}
-                  </div>
-                  {slot.card && !isLocked ? (
-                    <button
-                      className="button button-compact inventory-slot-remove"
-                      disabled={slotSaving}
-                      onClick={() => {
-                        runDeckMutation({
-                          savingKey: `unequip:${slot.slotIndex}`,
-                          optimisticState: unequipCardOptimistically(
-                            deckState,
-                            slot.slotIndex,
-                          ),
-                          action: () => unequipDeckSlotByIndex(slot.slotIndex),
-                        });
-                      }}
-                      type="button"
-                    >
-                      Entfernen
-                    </button>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="inventory-talisman-section">
-        <div className="inventory-section-head">
-          <p className="inventory-section-label">Talisman</p>
-        </div>
-
-        <div className="inventory-deck-panel">
-          <div className="inventory-slots-row inventory-talisman-slots-row">
-            {talismanState.slots.map((slot) => {
-              const isHover = hoverTalismanSlot === slot.slotIndex;
-              const isDraggingFromHere =
-                talismanDragSource?.kind === "talisman-slot" &&
-                talismanDragSource.slotIndex === slot.slotIndex;
-              const slotSaving = savingKeys.some((key) => {
-                if (key === `unequip-talisman:${slot.slotIndex}`) {
-                  return true;
-                }
-
-                if (
-                  key.endsWith(`:${slot.slotIndex}`) &&
-                  key.startsWith("equip-talisman:")
-                ) {
-                  return true;
-                }
-
-                return Boolean(
-                  slot.talisman &&
-                    key.startsWith(`equip-talisman:${slot.talisman.playerTalismanId}:`),
-                );
-              });
-
-              return (
-                <div
-                  className={`inventory-slot inventory-talisman-slot${slotSaving ? " inventory-slot-saving" : ""}`}
-                  key={slot.slotIndex}
-                >
-                  <div
-                    className={`inventory-slot-drop inventory-talisman-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.talisman ? " inventory-slot-drop-filled" : ""}`}
-                    onDragEnd={clearDragState}
-                    onDragLeave={() => {
-                      setHoverTalismanSlot((current) =>
-                        current === slot.slotIndex ? null : current,
-                      );
-                    }}
-                    onDragOver={(event) => {
-                      event.preventDefault();
-                      event.dataTransfer.dropEffect = "move";
-                      setHoverTalismanSlot(slot.slotIndex);
-                    }}
-                    onDrop={(event) => {
-                      handleDropOnTalismanSlot(slot.slotIndex, event);
-                      clearDragState();
-                    }}
-                  >
-                    {slot.talisman ? (
-                      <div
-                        className={`inventory-draggable inventory-slot-card${isDraggingFromHere ? " is-dragging" : ""}`}
-                        draggable={!slotSaving}
-                        onDragEnd={clearDragState}
-                        onDragStart={(event) => {
-                          handleDragStartTalismanSlot(slot, event);
-                        }}
-                      >
-                        <GameCard
-                          active
-                          description={slot.talisman.description}
-                          emoji={slot.talisman.emoji}
-                          name={slot.talisman.name}
-                          rarity={slot.talisman.rarity}
-                          size="sm"
-                          variant="talisman"
-                        />
-                      </div>
-                    ) : (
-                      <div className="inventory-slot-empty inventory-talisman-slot-empty">
-                        {isHover ? "Hier ablegen" : "Talisman-Slot"}
-                      </div>
-                    )}
-                  </div>
-                  {slot.talisman ? (
-                    <button
-                      className="button button-compact inventory-slot-remove"
-                      disabled={slotSaving}
-                      onClick={() => {
-                        runTalismanMutation({
-                          savingKey: `unequip-talisman:${slot.slotIndex}`,
-                          optimisticState: unequipTalismanOptimistically(
-                            talismanState,
-                            slot.slotIndex,
-                          ),
-                          action: () => unequipTalismanSlotByIndex(slot.slotIndex),
-                        });
-                      }}
-                      type="button"
-                    >
-                      Entfernen
-                    </button>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="inventory-collection-section">
-        <div className="inventory-section-head">
+      <section className="inventory-build-section">
+        <header className="inventory-section-head">
           <div className="inventory-section-title-row">
-            <p className="inventory-section-label">Karten-Sammlung</p>
-            {deckState.collection.length > 0 ? (
+            <p className="inventory-section-label">Build</p>
+            <span className="inventory-slot-count">
+              {filledSlots}/{unlockedSlots.length} Karten · {filledTalismanSlots}/
+              {talismanState.slots.length} Talisman
+              {isSaving ? " · speichert..." : ""}
+            </span>
+          </div>
+        </header>
+
+        <div className="inventory-build-panel">
+          <div className="inventory-build-layout">
+            <div className="inventory-build-talisman" aria-label="Talisman-Slot">
+              {talismanState.slots.map(renderTalismanSlot)}
+            </div>
+
+            <div className="inventory-build-cards" aria-label="Karten-Slots">
+              <div className="inventory-slots-row">
+                {deckState.slots.map((slot) => {
+                  const isLocked = !slot.unlocked;
+                  const isHover = !isLocked && hoverSlot === slot.slotIndex;
+                  const isDraggingFromHere =
+                    cardDragSource?.kind === "slot" &&
+                    cardDragSource.slotIndex === slot.slotIndex;
+                  const slotSaving = savingKeys.some((key) => {
+                    if (key === `unequip:${slot.slotIndex}`) {
+                      return true;
+                    }
+
+                    if (key.endsWith(`:${slot.slotIndex}`) && key.startsWith("equip:")) {
+                      return true;
+                    }
+
+                    return Boolean(
+                      slot.card && key.startsWith(`equip:${slot.card.playerCardId}:`),
+                    );
+                  });
+
+                  return (
+                    <div
+                      className={`inventory-slot${isLocked ? " inventory-slot-locked" : ""}${slotSaving ? " inventory-slot-saving" : ""}`}
+                      key={slot.slotIndex}
+                    >
+                      <div
+                        className={`inventory-slot-drop${isHover ? " inventory-slot-drop-hover" : ""}${slot.card ? " inventory-slot-drop-filled" : ""}${isLocked ? " inventory-slot-drop-locked" : ""}`}
+                        onDragEnd={isLocked ? undefined : clearDragState}
+                        onDragLeave={
+                          isLocked
+                            ? undefined
+                            : () => {
+                                setHoverSlot((current) =>
+                                  current === slot.slotIndex ? null : current,
+                                );
+                              }
+                        }
+                        onDragOver={
+                          isLocked
+                            ? undefined
+                            : (event) => {
+                                event.preventDefault();
+                                event.dataTransfer.dropEffect = "move";
+                                setHoverSlot(slot.slotIndex);
+                              }
+                        }
+                        onDrop={
+                          isLocked
+                            ? undefined
+                            : (event) => {
+                                handleDropOnSlot(slot.slotIndex, event);
+                                clearDragState();
+                              }
+                        }
+                      >
+                        {isLocked ? (
+                          <div className="inventory-slot-locked-label">
+                            Gesperrt
+                          </div>
+                        ) : slot.card ? (
+                          <div
+                            className={`inventory-draggable inventory-slot-card${isDraggingFromHere ? " is-dragging" : ""}`}
+                            draggable={!slotSaving}
+                            onDragEnd={clearDragState}
+                            onDragStart={(event) => {
+                              handleDragStartSlot(slot, event);
+                            }}
+                          >
+                            <GameCard
+                              active
+                              description={slot.card.description}
+                              emoji={slot.card.emoji}
+                              name={slot.card.name}
+                              rarity={slot.card.rarity}
+                              size="sm"
+                            />
+                          </div>
+                        ) : (
+                          <div className="inventory-slot-empty">
+                            {isHover ? "Ablegen" : "Leer"}
+                          </div>
+                        )}
+                      </div>
+                      {slot.card && !isLocked ? (
+                        <button
+                          className="button button-compact inventory-slot-remove"
+                          disabled={slotSaving}
+                          onClick={() => {
+                            runDeckMutation({
+                              savingKey: `unequip:${slot.slotIndex}`,
+                              optimisticState: unequipCardOptimistically(
+                                deckState,
+                                slot.slotIndex,
+                              ),
+                              action: () => unequipDeckSlotByIndex(slot.slotIndex),
+                            });
+                          }}
+                          type="button"
+                        >
+                          Entfernen
+                        </button>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="inventory-stash-section">
+        <header className="inventory-section-head">
+          <div className="inventory-section-title-row">
+            <p className="inventory-section-label">Inventar</p>
+            {stashCount > 0 ? (
               <span className="inventory-collection-count">
-                {deckState.collection.length}{" "}
-                {deckState.collection.length === 1 ? "Karte" : "Karten"}
+                {stashCount} {stashCount === 1 ? "Objekt" : "Objekte"}
               </span>
             ) : null}
           </div>
-        </div>
+        </header>
 
         <div
-          className={`inventory-collection${inventoryHover ? " inventory-collection-hover" : ""}${cardDragSource?.kind === "slot" ? " inventory-collection-unequip" : ""}`}
+          className={`inventory-stash${stashHover ? " inventory-stash-hover" : ""}${isUnequipDrag ? " inventory-stash-unequip" : ""}`}
           onDragEnd={clearDragState}
           onDragLeave={(event) => {
             if (event.currentTarget.contains(event.relatedTarget as Node)) {
               return;
             }
 
-            setInventoryHover(false);
+            setStashHover(false);
           }}
           onDragOver={(event) => {
-            if (cardDragSource?.kind !== "slot") {
+            const canUnequip =
+              cardDragSource?.kind === "slot" ||
+              talismanDragSource?.kind === "talisman-slot" ||
+              event.dataTransfer.types.includes(DRAG_SLOT_MIME) ||
+              event.dataTransfer.types.includes(DRAG_TALISMAN_SLOT_MIME);
+
+            if (!canUnequip) {
               return;
             }
 
             event.preventDefault();
             event.dataTransfer.dropEffect = "move";
-            setInventoryHover(true);
+            setStashHover(true);
           }}
           onDrop={(event) => {
-            handleDropOnInventory(event);
+            handleDropOnStash(event);
             clearDragState();
           }}
         >
-          {deckState.collection.length === 0 ? (
-            <p className="muted inventory-collection-empty">
+          {stashCount === 0 ? (
+            <p className="muted inventory-stash-empty">
               {cardDragSource?.kind === "slot"
                 ? "Hier ablegen, um die Karte aus dem Build zu nehmen."
-                : "Alle Karten sind im Build — oder du hast noch keine gesammelt. Gewinne Kämpfe für neue Karten."}
+                : talismanDragSource?.kind === "talisman-slot"
+                  ? "Hier ablegen, um den Talisman aus dem Build zu nehmen."
+                  : "Gesammelte Karten und Talismane erscheinen hier. Gewinne Kämpfe für neue Beute."}
             </p>
           ) : (
-            <div className="inventory-card-grid" aria-label="Karten-Sammlung">
+            <div className="inventory-stash-grid" aria-label="Inventar">
               {deckState.collection.map((card) => {
                 const isDragging =
                   cardDragSource?.kind === "inventory" &&
@@ -625,7 +613,7 @@ export function InventoryBoard({
 
                 return (
                   <div
-                    className={`inventory-card-cell${isDragging ? " is-dragging" : ""}${cardSaving ? " inventory-card-saving" : ""}`}
+                    className={`inventory-stash-cell inventory-stash-cell-card${isDragging ? " is-dragging" : ""}${cardSaving ? " inventory-card-saving" : ""}`}
                     key={card.playerCardId}
                   >
                     <div
@@ -647,56 +635,7 @@ export function InventoryBoard({
                   </div>
                 );
               })}
-            </div>
-          )}
-        </div>
-      </section>
 
-      <section className="inventory-collection-section inventory-talisman-collection-section">
-        <div className="inventory-section-head">
-          <div className="inventory-section-title-row">
-            <p className="inventory-section-label">Talisman-Sammlung</p>
-            {talismanState.collection.length > 0 ? (
-              <span className="inventory-collection-count">
-                {talismanState.collection.length}{" "}
-                {talismanState.collection.length === 1 ? "Talisman" : "Talismane"}
-              </span>
-            ) : null}
-          </div>
-        </div>
-
-        <div
-          className={`inventory-collection${talismanInventoryHover ? " inventory-collection-hover" : ""}${talismanDragSource?.kind === "talisman-slot" ? " inventory-collection-unequip" : ""}`}
-          onDragEnd={clearDragState}
-          onDragLeave={(event) => {
-            if (event.currentTarget.contains(event.relatedTarget as Node)) {
-              return;
-            }
-
-            setTalismanInventoryHover(false);
-          }}
-          onDragOver={(event) => {
-            if (talismanDragSource?.kind !== "talisman-slot") {
-              return;
-            }
-
-            event.preventDefault();
-            event.dataTransfer.dropEffect = "move";
-            setTalismanInventoryHover(true);
-          }}
-          onDrop={(event) => {
-            handleDropOnTalismanInventory(event);
-            clearDragState();
-          }}
-        >
-          {talismanState.collection.length === 0 ? (
-            <p className="muted inventory-collection-empty">
-              {talismanDragSource?.kind === "talisman-slot"
-                ? "Hier ablegen, um den Talisman aus dem Slot zu nehmen."
-                : "Noch keine Talismane — sie sind seltener als Karten und erscheinen manchmal als Kampfbeute."}
-            </p>
-          ) : (
-            <div className="inventory-card-grid" aria-label="Talisman-Sammlung">
               {talismanState.collection.map((talisman) => {
                 const isDragging =
                   talismanDragSource?.kind === "talisman-inventory" &&
@@ -707,7 +646,7 @@ export function InventoryBoard({
 
                 return (
                   <div
-                    className={`inventory-card-cell${isDragging ? " is-dragging" : ""}${talismanSaving ? " inventory-card-saving" : ""}`}
+                    className={`inventory-stash-cell inventory-stash-cell-talisman${isDragging ? " is-dragging" : ""}${talismanSaving ? " inventory-card-saving" : ""}`}
                     key={talisman.playerTalismanId}
                   >
                     <div

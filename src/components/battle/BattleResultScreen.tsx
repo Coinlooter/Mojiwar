@@ -87,8 +87,8 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
             </div>
             <p className="muted battle-result-loot-hint">
               {loot.kind === "talisman"
-                ? "Der Talisman liegt jetzt in deinem Inventar. Ziehe ihn in den Talisman-Slot."
-                : "Die Karte liegt jetzt in deinem Inventar. Ziehe sie in einen Slot."}
+                ? "Der Talisman liegt jetzt in deinem Inventar. Ziehe ihn in den Build."
+                : "Die Karte liegt jetzt in deinem Inventar. Ziehe sie in den Build."}
             </p>
           </div>
         ) : won ? (
