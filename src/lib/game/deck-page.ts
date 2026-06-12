@@ -2,7 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { MAX_DECK_SLOTS } from "@/lib/game/cards";
 import { MAX_TALISMAN_SLOTS } from "@/lib/game/talismans";
-import { mapCardRow, mapTalismanRow } from "@/lib/game/loadout";
+import {
+  buildPlayerCardDefinition,
+  mapCardRow,
+  mapTalismanRow,
+} from "@/lib/game/loadout";
+import type { CardAffix, CardRarity } from "@/lib/game/types";
 import type {
   InventoryCardData,
   InventorySlotData,
@@ -38,7 +43,7 @@ export async function fetchDeckPageData(
       .maybeSingle(),
     supabase
       .from("player_cards")
-      .select("id, card_id")
+      .select("id, card_id, quality, display_name, affixes, legendary_affix")
       .eq("user_id", userId)
       .order("created_at", { ascending: true }),
     supabase
@@ -86,15 +91,41 @@ export async function fetchDeckPageData(
   const activeCardIds = new Set(activeBySlot.values());
   const activeTalismanIds = new Set(activeTalismanBySlot.values());
 
-  function toInventoryCard(playerCardId: string, cardId: string): InventoryCardData | null {
-    const card = cardsById.get(cardId);
+  function toInventoryCard(
+    ownedCard: {
+      id: string;
+      card_id: string;
+      quality: string | null;
+      display_name: string | null;
+      affixes: unknown;
+      legendary_affix: unknown;
+    },
+  ): InventoryCardData | null {
+    const baseCard = cardsById.get(ownedCard.card_id);
 
-    if (!card) {
+    if (!baseCard) {
       return null;
     }
 
+    const card = buildPlayerCardDefinition(
+      {
+        id: ownedCard.id,
+        card_id: ownedCard.card_id,
+        quality: ownedCard.quality as CardRarity | null,
+        display_name: ownedCard.display_name,
+        affixes: Array.isArray(ownedCard.affixes)
+          ? (ownedCard.affixes as CardAffix[])
+          : null,
+        legendary_affix:
+          ownedCard.legendary_affix && typeof ownedCard.legendary_affix === "object"
+            ? (ownedCard.legendary_affix as CardAffix)
+            : null,
+      },
+      baseCard,
+    );
+
     return {
-      playerCardId,
+      playerCardId: ownedCard.id,
       emoji: card.emoji,
       name: card.name,
       rarity: card.rarity,
@@ -110,10 +141,7 @@ export async function fetchDeckPageData(
     return {
       slotIndex,
       unlocked,
-      card:
-        unlocked && playerCardId && ownedCard
-          ? toInventoryCard(playerCardId, ownedCard.card_id)
-          : null,
+      card: unlocked && ownedCard ? toInventoryCard(ownedCard) : null,
     };
   });
 
@@ -122,7 +150,7 @@ export async function fetchDeckPageData(
       return [];
     }
 
-    const card = toInventoryCard(ownedCard.id, ownedCard.card_id);
+    const card = toInventoryCard(ownedCard);
 
     return card ? [card] : [];
   });

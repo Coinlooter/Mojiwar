@@ -1,3 +1,4 @@
+import { getCombatAffixes } from "./card-affixes";
 import { applyLoadoutBonuses, calculatePower } from "./calculate-power";
 import { calculateBattleXp } from "./leveling";
 import { createSeededRandom } from "./random";
@@ -5,6 +6,7 @@ import type {
   BattleEvent,
   BattleParticipantSnapshot,
   BattleResult,
+  CardAffix,
   CardDefinition,
   CharacterLoadout,
   FighterSide,
@@ -19,6 +21,7 @@ type RuntimeFighter = {
   snapshot: BattleParticipantSnapshot;
   currentHp: number;
   lowHpHealUsed: boolean;
+  openingBarrierUsed: boolean;
 };
 
 export function simulateBattle({
@@ -70,13 +73,13 @@ export function simulateBattle({
         break;
       }
 
-      const attackEvent = performAttack({
+      const attackEvents = performAttack({
         actor,
         target,
         round,
         random,
       });
-      events.push(attackEvent);
+      events.push(...attackEvents);
 
       applyLowHpHeal({
         fighter: target,
@@ -174,6 +177,7 @@ function createRuntimeFighter(
     snapshot,
     currentHp: finalStats.hp,
     lowHpHealUsed: false,
+    openingBarrierUsed: false,
   };
 }
 
@@ -191,6 +195,112 @@ function getTurnOrder(
     : [defender, attacker];
 }
 
+function sumAffixValues(affixes: CardAffix[]) {
+  return affixes.reduce((total, affix) => total + affix.value, 0);
+}
+
+function getActorAttack(actor: RuntimeFighter) {
+  let attack = actor.snapshot.finalStats.attack;
+  const frenzyAffixes = actor.loadout.deck.flatMap((card) =>
+    getCombatAffixes(card).filter((affix) => affix.effectType === "battle_frenzy_attack"),
+  );
+
+  if (actor.currentHp <= actor.snapshot.finalStats.hp * 0.5) {
+    attack += sumAffixValues(frenzyAffixes);
+  }
+
+  return attack;
+}
+
+function calculateMitigatedDamage({
+  actor,
+  target,
+  random,
+}: {
+  actor: RuntimeFighter;
+  target: RuntimeFighter;
+  random: () => number;
+}) {
+  const actorStats = actor.snapshot.finalStats;
+  const targetStats = target.snapshot.finalStats;
+  const variance = 0.9 + random() * 0.2;
+  const critical = random() < actorStats.critChance;
+  const rawDamage = getActorAttack(actor) * variance * (critical ? 1.6 : 1);
+  let mitigatedDamage = Math.max(1, Math.round(rawDamage - targetStats.defense * 0.65));
+
+  if (!target.openingBarrierUsed) {
+    const barrierAffixes = target.loadout.deck.flatMap((card) =>
+      getCombatAffixes(card).filter((affix) => affix.effectType === "opening_barrier"),
+    );
+    const reduction = Math.min(0.8, sumAffixValues(barrierAffixes));
+
+    if (reduction > 0) {
+      mitigatedDamage = Math.max(1, Math.round(mitigatedDamage * (1 - reduction)));
+      target.openingBarrierUsed = true;
+    }
+  }
+
+  return { mitigatedDamage, critical };
+}
+
+function applyPostHitEffects({
+  actor,
+  target,
+  round,
+  damage,
+  events,
+}: {
+  actor: RuntimeFighter;
+  target: RuntimeFighter;
+  round: number;
+  damage: number;
+  events: BattleEvent[];
+}) {
+  const lifestealAffixes = actor.loadout.deck.flatMap((card) =>
+    getCombatAffixes(card).filter((affix) => affix.effectType === "vampiric_lifesteal"),
+  );
+  const lifestealRate = Math.min(0.75, sumAffixValues(lifestealAffixes));
+
+  if (lifestealRate > 0) {
+    const healAmount = Math.max(1, Math.round(damage * lifestealRate));
+    actor.currentHp = Math.min(
+      actor.snapshot.finalStats.hp,
+      actor.currentHp + healAmount,
+    );
+    events.push({
+      type: "card_effect",
+      round,
+      actor: actor.side,
+      cardId: `${actor.side}-lifesteal`,
+      cardName: "Lebensraub",
+      effectType: "vampiric_lifesteal",
+      value: healAmount,
+      actorHpAfter: actor.currentHp,
+    });
+  }
+
+  const thornsAffixes = target.loadout.deck.flatMap((card) =>
+    getCombatAffixes(card).filter((affix) => affix.effectType === "thorns_reflect"),
+  );
+  const thornsRate = Math.min(0.75, sumAffixValues(thornsAffixes));
+
+  if (thornsRate > 0) {
+    const reflectDamage = Math.max(1, Math.round(damage * thornsRate));
+    actor.currentHp = Math.max(0, actor.currentHp - reflectDamage);
+    events.push({
+      type: "card_effect",
+      round,
+      actor: target.side,
+      target: actor.side,
+      cardId: `${target.side}-thorns`,
+      cardName: "Dornen",
+      effectType: "thorns_reflect",
+      value: reflectDamage,
+      targetHpAfter: actor.currentHp,
+    });
+  }
+}
+
 function performAttack({
   actor,
   target,
@@ -202,24 +312,58 @@ function performAttack({
   round: number;
   random: () => number;
 }) {
-  const actorStats = actor.snapshot.finalStats;
-  const targetStats = target.snapshot.finalStats;
-  const variance = 0.9 + random() * 0.2;
-  const critical = random() < actorStats.critChance;
-  const rawDamage = actorStats.attack * variance * (critical ? 1.6 : 1);
-  const mitigatedDamage = Math.max(1, Math.round(rawDamage - targetStats.defense * 0.65));
+  const events: BattleEvent[] = [];
+  const { mitigatedDamage, critical } = calculateMitigatedDamage({
+    actor,
+    target,
+    random,
+  });
 
   target.currentHp = Math.max(0, target.currentHp - mitigatedDamage);
-
-  return {
-    type: "attack" as const,
+  events.push({
+    type: "attack",
     round,
     actor: actor.side,
     target: target.side,
     damage: mitigatedDamage,
     critical,
     targetHpAfter: target.currentHp,
-  };
+  });
+  applyPostHitEffects({
+    actor,
+    target,
+    round,
+    damage: mitigatedDamage,
+    events,
+  });
+
+  const doubleStrikeAffixes = actor.loadout.deck.flatMap((card) =>
+    getCombatAffixes(card).filter((affix) => affix.effectType === "double_strike_chance"),
+  );
+  const doubleStrikeChance = Math.min(0.6, sumAffixValues(doubleStrikeAffixes));
+
+  if (target.currentHp > 0 && random() < doubleStrikeChance) {
+    const followUp = calculateMitigatedDamage({ actor, target, random });
+    target.currentHp = Math.max(0, target.currentHp - followUp.mitigatedDamage);
+    events.push({
+      type: "attack",
+      round,
+      actor: actor.side,
+      target: target.side,
+      damage: followUp.mitigatedDamage,
+      critical: followUp.critical,
+      targetHpAfter: target.currentHp,
+    });
+    applyPostHitEffects({
+      actor,
+      target,
+      round,
+      damage: followUp.mitigatedDamage,
+      events,
+    });
+  }
+
+  return events;
 }
 
 function applyFirstStrike({
@@ -238,13 +382,25 @@ function applyFirstStrike({
   }
 
   for (const card of actor.loadout.deck) {
-    if (card.effectType !== "first_strike_damage") {
-      continue;
+    for (const affix of getCombatAffixes(card).filter(
+      (entry) => entry.effectType === "first_strike_damage",
+    )) {
+      const damage = Math.max(
+        1,
+        Math.round(affix.value - target.snapshot.finalStats.defense * 0.25),
+      );
+      target.currentHp = Math.max(0, target.currentHp - damage);
+      events.push(
+        toCardDamageEvent({
+          actor,
+          target,
+          card,
+          affix,
+          round,
+          damage,
+        }),
+      );
     }
-
-    const damage = Math.max(1, Math.round(card.effectValue - target.snapshot.finalStats.defense * 0.25));
-    target.currentHp = Math.max(0, target.currentHp - damage);
-    events.push(toCardDamageEvent({ actor, target, card, round, damage }));
   }
 }
 
@@ -261,26 +417,38 @@ function applyLowHpHeal({
     return;
   }
 
-  const healCard = fighter.loadout.deck.find((card) => card.effectType === "low_hp_heal");
   const lowHpThreshold = fighter.snapshot.finalStats.hp * 0.35;
+  let bestHeal:
+    | { card: CardDefinition; affix: CardAffix; value: number }
+    | null = null;
 
-  if (!healCard || fighter.currentHp > lowHpThreshold) {
+  for (const card of fighter.loadout.deck) {
+    for (const affix of getCombatAffixes(card).filter(
+      (entry) => entry.effectType === "low_hp_heal",
+    )) {
+      if (!bestHeal || affix.value > bestHeal.value) {
+        bestHeal = { card, affix, value: affix.value };
+      }
+    }
+  }
+
+  if (!bestHeal || fighter.currentHp > lowHpThreshold) {
     return;
   }
 
   fighter.lowHpHealUsed = true;
   fighter.currentHp = Math.min(
     fighter.snapshot.finalStats.hp,
-    fighter.currentHp + healCard.effectValue,
+    fighter.currentHp + bestHeal.value,
   );
   events.push({
     type: "card_effect",
     round,
     actor: fighter.side,
-    cardId: healCard.id,
-    cardName: healCard.name,
-    effectType: healCard.effectType,
-    value: healCard.effectValue,
+    cardId: bestHeal.card.id,
+    cardName: bestHeal.card.name,
+    effectType: bestHeal.affix.effectType,
+    value: bestHeal.value,
     actorHpAfter: fighter.currentHp,
   });
 }
@@ -289,12 +457,14 @@ function toCardDamageEvent({
   actor,
   target,
   card,
+  affix,
   round,
   damage,
 }: {
   actor: RuntimeFighter;
   target: RuntimeFighter;
   card: CardDefinition;
+  affix: CardAffix;
   round: number;
   damage: number;
 }): BattleEvent {
@@ -305,7 +475,7 @@ function toCardDamageEvent({
     target: target.side,
     cardId: card.id,
     cardName: card.name,
-    effectType: card.effectType,
+    effectType: affix.effectType,
     value: damage,
     targetHpAfter: target.currentHp,
   };

@@ -57,24 +57,38 @@ export async function fetchBattleForParticipant(
   if (won && battle.reward_player_card_id) {
     const { data: rewardRow } = await supabase
       .from("player_cards")
-      .select("card_id")
+      .select("card_id, quality, display_name, affixes, legendary_affix")
       .eq("id", battle.reward_player_card_id)
       .maybeSingle();
 
     if (rewardRow?.card_id) {
       const { data: card } = await supabase
         .from("cards")
-        .select("name, emoji, rarity, description")
+        .select("emoji")
         .eq("id", rewardRow.card_id)
         .maybeSingle();
 
-      if (card) {
+      if (card && rewardRow.display_name && rewardRow.quality) {
+        const affixes = Array.isArray(rewardRow.affixes)
+          ? (rewardRow.affixes as Array<{ description: string }>)
+          : [];
+        const legendaryAffix =
+          rewardRow.legendary_affix &&
+          typeof rewardRow.legendary_affix === "object"
+            ? (rewardRow.legendary_affix as { description: string })
+            : null;
+
         loot = {
           kind: "card",
           emoji: card.emoji,
-          name: card.name,
-          rarity: card.rarity,
-          description: card.description,
+          name: rewardRow.display_name,
+          rarity: rewardRow.quality,
+          description: [
+            ...affixes.map((affix) => affix.description),
+            legendaryAffix ? `★ ${legendaryAffix.description}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · "),
         };
       }
     }

@@ -5,6 +5,16 @@ export const DEFAULT_UNLOCKED_DECK_SLOTS = 3;
 /** @deprecated Verwende MAX_DECK_SLOTS oder DEFAULT_UNLOCKED_DECK_SLOTS */
 export const MAX_STARTER_DECK_SIZE = DEFAULT_UNLOCKED_DECK_SLOTS;
 
+export const cardDropBases = [
+  { id: "ember-punch", nameStem: "Funkenhieb", emoji: "🔥" },
+  { id: "tiny-shield", nameStem: "Schild", emoji: "🛡️" },
+  { id: "green-heart", nameStem: "Herz", emoji: "💚" },
+  { id: "swift-sneaker", nameStem: "Sneaker", emoji: "👟" },
+  { id: "lucky-star", nameStem: "Stern", emoji: "⭐" },
+  { id: "opening-boom", nameStem: "Knall", emoji: "💥" },
+  { id: "panic-snack", nameStem: "Snack", emoji: "🍱" },
+] as const;
+
 export const starterCards: CardDefinition[] = [
   {
     id: "ember-punch",

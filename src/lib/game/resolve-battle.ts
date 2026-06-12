@@ -5,7 +5,7 @@ import { calculatePower } from "./calculate-power";
 import { calculateBattleGold, levelForXp } from "./leveling";
 import { createSeededRandom } from "./random";
 import { rollBattleReward } from "./rewards";
-import type { BattleResult, CharacterLoadout } from "./types";
+import type { BattleResult, CharacterLoadout, RolledCardDrop } from "./types";
 
 export type BattlePersistenceInput = {
   attackerCharacterId: string;
@@ -20,7 +20,7 @@ export type BattlePersistenceInput = {
   attackerXpGained: number;
   defenderXpGained: number;
   battleLog: BattleResult;
-  rewardCardId: string | null;
+  rewardCardRoll: RolledCardDrop | null;
   rewardTalismanId: string | null;
   attackerXpAfter: number;
   attackerLevelAfter: number;
@@ -102,7 +102,7 @@ export function resolveBattleBetween({
     attackerXpGained: simulatedBattle.xp.attacker,
     defenderXpGained: simulatedBattle.xp.defender,
     battleLog,
-    rewardCardId: battleReward.kind === "card" ? battleReward.item.id : null,
+    rewardCardRoll: battleReward.kind === "card" ? battleReward.roll : null,
     rewardTalismanId:
       battleReward.kind === "talisman" ? battleReward.item.id : null,
     attackerXpAfter: attackerProgress.xpAfter,

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { STARTER_EMOJIS } from "@/constants/starter-emojis";
 import type { BattleResult } from "./types";
 
-const cardRaritySchema = z.enum(["common", "rare", "epic"]);
+const cardRaritySchema = z.enum(["common", "rare", "epic", "legendary"]);
 const cardEffectTypeSchema = z.enum([
   "bonus_hp",
   "bonus_attack",
@@ -12,6 +12,11 @@ const cardEffectTypeSchema = z.enum([
   "bonus_crit_chance",
   "first_strike_damage",
   "low_hp_heal",
+  "vampiric_lifesteal",
+  "thorns_reflect",
+  "battle_frenzy_attack",
+  "opening_barrier",
+  "double_strike_chance",
 ]);
 const fighterSideSchema = z.enum(["attacker", "defender"]);
 

@@ -1,14 +1,13 @@
+import { rollCardDrop } from "./card-roll";
 import { pickWeighted } from "./random";
-import { starterCards } from "./cards";
 import { starterTalismans } from "./talismans";
 import type {
   BattleReward,
-  CardDefinition,
   CardRarity,
   TalismanDefinition,
 } from "./types";
 
-const rarityWeights: Record<CardRarity, number> = {
+const talismanRarityWeights: Record<Exclude<CardRarity, "legendary">, number> = {
   common: 75,
   rare: 20,
   epic: 5,
@@ -20,31 +19,20 @@ const rewardKindWeights = {
   talisman: 25,
 } as const;
 
-function rollByRarity<T extends { rarity: CardRarity }>(
-  catalog: T[],
-  random: () => number,
-): T {
-  const rarity = pickWeighted<CardRarity>(
+function rollTalismanByRarity(random: () => number): TalismanDefinition {
+  const rarity = pickWeighted<Exclude<CardRarity, "legendary">>(
     [
-      { item: "common", weight: rarityWeights.common },
-      { item: "rare", weight: rarityWeights.rare },
-      { item: "epic", weight: rarityWeights.epic },
+      { item: "common", weight: talismanRarityWeights.common },
+      { item: "rare", weight: talismanRarityWeights.rare },
+      { item: "epic", weight: talismanRarityWeights.epic },
     ],
     random,
   );
 
-  const candidates = catalog.filter((entry) => entry.rarity === rarity);
+  const candidates = starterTalismans.filter((entry) => entry.rarity === rarity);
   const index = Math.floor(random() * candidates.length);
 
-  return candidates[index] ?? catalog[0];
-}
-
-export function rollRewardCard(random: () => number): CardDefinition {
-  return rollByRarity(starterCards, random);
-}
-
-export function rollRewardTalisman(random: () => number): TalismanDefinition {
-  return rollByRarity(starterTalismans, random);
+  return candidates[index] ?? starterTalismans[0];
 }
 
 export function rollBattleReward(random: () => number): BattleReward {
@@ -57,8 +45,8 @@ export function rollBattleReward(random: () => number): BattleReward {
   );
 
   if (kind === "talisman") {
-    return { kind: "talisman", item: rollRewardTalisman(random) };
+    return { kind: "talisman", item: rollTalismanByRarity(random) };
   }
 
-  return { kind: "card", item: rollRewardCard(random) };
+  return { kind: "card", roll: rollCardDrop(random) };
 }

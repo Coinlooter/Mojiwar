@@ -141,6 +141,10 @@ export type Database = {
           user_id: string;
           card_id: string;
           acquired_from_battle_id: string | null;
+          quality: Database["public"]["Enums"]["card_rarity"] | null;
+          display_name: string | null;
+          affixes: Json | null;
+          legendary_affix: Json | null;
           created_at: string;
         };
         Insert: {
@@ -148,6 +152,10 @@ export type Database = {
           user_id: string;
           card_id: string;
           acquired_from_battle_id?: string | null;
+          quality?: Database["public"]["Enums"]["card_rarity"] | null;
+          display_name?: string | null;
+          affixes?: Json | null;
+          legendary_affix?: Json | null;
           created_at?: string;
         };
         Update: {
@@ -155,6 +163,10 @@ export type Database = {
           user_id?: string;
           card_id?: string;
           acquired_from_battle_id?: string | null;
+          quality?: Database["public"]["Enums"]["card_rarity"] | null;
+          display_name?: string | null;
+          affixes?: Json | null;
+          legendary_affix?: Json | null;
           created_at?: string;
         };
         Relationships: [];
@@ -402,7 +414,7 @@ export type Database = {
           p_attacker_xp_gained: number;
           p_defender_xp_gained: number;
           p_battle_log: Json;
-          p_reward_card_id: string | null;
+          p_reward_card_roll: Json | null;
           p_reward_talisman_id: string | null;
           p_attacker_xp_after: number;
           p_attacker_level_after: number;
@@ -442,7 +454,7 @@ export type Database = {
       };
     };
     Enums: {
-      card_rarity: "common" | "rare" | "epic";
+      card_rarity: "common" | "rare" | "epic" | "legendary";
       card_effect_type:
         | "bonus_hp"
         | "bonus_attack"
@@ -450,7 +462,12 @@ export type Database = {
         | "bonus_speed"
         | "bonus_crit_chance"
         | "first_strike_damage"
-        | "low_hp_heal";
+        | "low_hp_heal"
+        | "vampiric_lifesteal"
+        | "thorns_reflect"
+        | "battle_frenzy_attack"
+        | "opening_barrier"
+        | "double_strike_chance";
     };
     CompositeTypes: {
       [_ in never]: never;

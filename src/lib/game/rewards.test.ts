@@ -1,24 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import { QUALITY_TIER_CONFIG } from "./card-roll";
 import { createSeededRandom } from "./random";
-import { rollBattleReward, rollRewardCard } from "./rewards";
-import { starterCards } from "./cards";
+import { rollBattleReward } from "./rewards";
 import { starterTalismans } from "./talismans";
-
-describe("rollRewardCard", () => {
-  it("ist deterministisch für denselben Seed", () => {
-    const first = rollRewardCard(createSeededRandom("reward-seed"));
-    const second = rollRewardCard(createSeededRandom("reward-seed"));
-
-    expect(first.id).toBe(second.id);
-  });
-
-  it("liefert eine gültige Starter-Karte", () => {
-    const reward = rollRewardCard(createSeededRandom("reward-check"));
-
-    expect(starterCards.some((card) => card.id === reward.id)).toBe(true);
-  });
-});
 
 describe("rollBattleReward", () => {
   it("ist deterministisch für denselben Seed", () => {
@@ -37,7 +22,9 @@ describe("rollBattleReward", () => {
 
       if (reward.kind === "card") {
         cardCount += 1;
-        expect(starterCards.some((card) => card.id === reward.item.id)).toBe(true);
+        expect(reward.roll.affixes.length).toBe(
+          QUALITY_TIER_CONFIG[reward.roll.quality].affixCount,
+        );
       } else {
         talismanCount += 1;
         expect(

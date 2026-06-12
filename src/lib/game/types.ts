@@ -1,4 +1,4 @@
-export type CardRarity = "common" | "rare" | "epic";
+export type CardRarity = "common" | "rare" | "epic" | "legendary";
 
 export type CardEffectType =
   | "bonus_hp"
@@ -7,15 +7,41 @@ export type CardEffectType =
   | "bonus_speed"
   | "bonus_crit_chance"
   | "first_strike_damage"
-  | "low_hp_heal";
+  | "low_hp_heal"
+  | "vampiric_lifesteal"
+  | "thorns_reflect"
+  | "battle_frenzy_attack"
+  | "opening_barrier"
+  | "double_strike_chance";
+
+export type CardAffix = {
+  id: string;
+  label: string;
+  effectType: CardEffectType;
+  value: number;
+  description: string;
+};
 
 export type CardDefinition = {
   id: string;
+  baseId?: string;
   name: string;
   emoji: string;
   rarity: CardRarity;
-  effectType: CardEffectType;
-  effectValue: number;
+  description: string;
+  affixes?: CardAffix[];
+  legendaryAffix?: CardAffix;
+  effectType?: CardEffectType;
+  effectValue?: number;
+};
+
+export type RolledCardDrop = {
+  baseCardId: string;
+  emoji: string;
+  quality: CardRarity;
+  displayName: string;
+  affixes: CardAffix[];
+  legendaryAffix?: CardAffix;
   description: string;
 };
 
@@ -30,7 +56,7 @@ export type TalismanDefinition = {
 };
 
 export type BattleReward =
-  | { kind: "card"; item: CardDefinition }
+  | { kind: "card"; roll: RolledCardDrop }
   | { kind: "talisman"; item: TalismanDefinition };
 
 export type CombatStats = {

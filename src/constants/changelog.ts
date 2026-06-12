@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.14.0",
+    changes: [
+      "Karten-Drops — Affix-System mit 4 Qualitätsstufen: Gewöhnlich, Selten, Episch, Legendär",
+      "Karten-Drops — Namen und Stats passen zu den vergebenen Affixen",
+      "Karten-Drops — Legendär mit einzigartiger Kampf-Eigenschaft",
+    ],
+  },
+  {
     version: "1.13.0",
     changes: [
       "Kampf — Fallback auf Übungsgegner und erweiterte Suche bei leerer Gegnerliste",

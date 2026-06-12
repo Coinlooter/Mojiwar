@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import type { Database } from "@/lib/supabase/database.types";
 import type {
+  CardAffix,
   CardDefinition,
   CardEffectType,
   CardRarity,
@@ -30,12 +31,69 @@ export function mapTalismanRow(talisman: TalismanRow): TalismanDefinition {
 export function mapCardRow(card: CardRow): CardDefinition {
   return {
     id: card.id,
+    baseId: card.id,
     name: card.name,
     emoji: card.emoji,
     rarity: card.rarity as CardRarity,
     effectType: card.effect_type as CardEffectType,
     effectValue: Number(card.effect_value),
     description: card.description,
+  };
+}
+
+type PlayerCardRollRow = {
+  id: string;
+  card_id: string;
+  quality: CardRarity | null;
+  display_name: string | null;
+  affixes: CardAffix[] | null;
+  legendary_affix: CardAffix | null;
+};
+
+function parseAffixes(value: unknown): CardAffix[] | null {
+  if (!Array.isArray(value)) {
+    return null;
+  }
+
+  return value as CardAffix[];
+}
+
+function parseLegendaryAffix(value: unknown): CardAffix | undefined {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  return value as CardAffix;
+}
+
+export function buildPlayerCardDefinition(
+  playerCard: PlayerCardRollRow,
+  baseCard: CardDefinition,
+): CardDefinition {
+  if (!playerCard.quality || !playerCard.display_name || !playerCard.affixes?.length) {
+    return {
+      ...baseCard,
+      id: playerCard.id,
+      baseId: baseCard.id,
+    };
+  }
+
+  return {
+    id: playerCard.id,
+    baseId: baseCard.id,
+    name: playerCard.display_name,
+    emoji: baseCard.emoji,
+    rarity: playerCard.quality,
+    description: [
+      ...playerCard.affixes.map((affix) => affix.description),
+      playerCard.legendary_affix
+        ? `★ ${playerCard.legendary_affix.description}`
+        : null,
+    ]
+      .filter(Boolean)
+      .join(" · "),
+    affixes: playerCard.affixes,
+    legendaryAffix: playerCard.legendary_affix ?? undefined,
   };
 }
 
@@ -85,7 +143,7 @@ async function fetchDeckForCharacter(
   const playerCardIds = deckSlots.map((slot) => slot.player_card_id);
   const { data: playerCards, error: playerCardsError } = await supabase
     .from("player_cards")
-    .select("id, card_id")
+    .select("id, card_id, quality, display_name, affixes, legendary_affix")
     .in("id", playerCardIds);
 
   if (playerCardsError || !playerCards?.length) {
@@ -107,10 +165,30 @@ async function fetchDeckForCharacter(
     playerCards.map((playerCard) => [playerCard.id, playerCard.card_id]),
   );
 
+  const playerCardsById = new Map(
+    (playerCards ?? []).map((playerCard) => [
+      playerCard.id,
+      {
+        ...playerCard,
+        quality: playerCard.quality as CardRarity | null,
+        affixes: parseAffixes(playerCard.affixes),
+        legendary_affix: parseLegendaryAffix(playerCard.legendary_affix) ?? null,
+      },
+    ]),
+  );
+
   return deckSlots
     .map((slot) => {
-      const cardId = playerCardById.get(slot.player_card_id);
-      return cardId ? cardsById.get(cardId) : undefined;
+      const playerCard = playerCardsById.get(slot.player_card_id);
+      const cardId = playerCard?.card_id;
+
+      if (!playerCard || !cardId) {
+        return undefined;
+      }
+
+      const baseCard = cardsById.get(cardId);
+
+      return baseCard ? buildPlayerCardDefinition(playerCard, baseCard) : undefined;
     })
     .filter((card): card is CardDefinition => card !== undefined);
 }
