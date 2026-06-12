@@ -1,4 +1,9 @@
 import {
+  getAnimalGender,
+  getColorPhraseForAnimal,
+  resolveColorSlugFromPhrase,
+} from "./recovery-grammar";
+import {
   RECOVERY_ANIMAL_SLUGS,
   RECOVERY_ANIMALS,
   RECOVERY_COLOR_SLUGS,
@@ -14,7 +19,12 @@ export type RecoveryCodeParts = {
 };
 
 export function buildRecoveryCode(parts: RecoveryCodeParts) {
-  return `${parts.colorSlug}${parts.animalSlug}${parts.numberSuffix}`;
+  const colorPhrase = getColorPhraseForAnimal(
+    parts.colorSlug,
+    getAnimalGender(parts.animalSlug),
+  );
+
+  return `${colorPhrase}${parts.animalSlug}${parts.numberSuffix}`;
 }
 
 export function formatRecoveryCodeDisplay(parts: RecoveryCodeParts) {
@@ -65,9 +75,10 @@ export function parseRecoveryCodeInput(value: string): RecoveryCodeParts | null 
       continue;
     }
 
-    const colorSlug = prefix.slice(0, prefix.length - animal.slug.length);
+    const colorPhrase = prefix.slice(0, prefix.length - animal.slug.length);
+    const colorSlug = resolveColorSlugFromPhrase(colorPhrase);
 
-    if (!RECOVERY_COLOR_SLUGS.has(colorSlug)) {
+    if (!colorSlug) {
       continue;
     }
 

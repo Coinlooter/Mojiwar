@@ -9,7 +9,7 @@ import {
 } from "./recovery-code";
 
 describe("recovery code", () => {
-  it("builds and parses a combined code", () => {
+  it("builds and parses a combined code with masculine grammar", () => {
     const parts = {
       colorSlug: "blauer",
       animalSlug: "elefant",
@@ -21,17 +21,41 @@ describe("recovery code", () => {
     expect(parseRecoveryCodeInput(" Blauer Elefant 65 ")).toEqual(parts);
   });
 
+  it("uses neuter grammar for animals like Schaf", () => {
+    const parts = {
+      colorSlug: "goldener",
+      animalSlug: "schaf",
+      numberSuffix: "34",
+    };
+
+    expect(buildRecoveryCode(parts)).toBe("goldenesschaf34");
+    expect(parseRecoveryCodeInput("goldenesschaf34")).toEqual(parts);
+    expect(parseRecoveryCodeInput("goldenerschaf34")).toEqual(parts);
+  });
+
+  it("uses feminine grammar for animals like Katze", () => {
+    const parts = {
+      colorSlug: "goldener",
+      animalSlug: "katze",
+      numberSuffix: "12",
+    };
+
+    expect(buildRecoveryCode(parts)).toBe("goldenekatze12");
+    expect(parseRecoveryCodeInput("goldenekatze12")).toEqual(parts);
+    expect(parseRecoveryCodeInput("goldenerkatze12")).toEqual(parts);
+  });
+
   it("formats a readable display label", () => {
     const display = formatRecoveryCodeDisplay({
-      colorSlug: "blauer",
-      animalSlug: "elefant",
-      numberSuffix: "65",
+      colorSlug: "goldener",
+      animalSlug: "schaf",
+      numberSuffix: "34",
     });
 
-    expect(display.combined).toBe("blauerelefant65");
-    expect(display.colorLabel).toBe("Blau");
-    expect(display.animalLabel).toBe("Elefant");
-    expect(display.numberSuffix).toBe("65");
+    expect(display.combined).toBe("goldenesschaf34");
+    expect(display.colorLabel).toBe("Gold");
+    expect(display.animalLabel).toBe("Schaf");
+    expect(display.numberSuffix).toBe("34");
   });
 
   it("validates known word lists", () => {

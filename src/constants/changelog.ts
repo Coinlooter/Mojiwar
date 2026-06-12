@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.9.2",
+    changes: [
+      "Login-Code — grammatikalisch korrekte Form (z. B. goldenesschaf34 statt goldenerschaf34)",
+      "Login — alte und intuitive Eingabevarianten werden weiterhin akzeptiert",
+    ],
+  },
+  {
     version: "1.9.1",
     changes: [
       "Dashboard — Login-Code nur als Eingabeform mit Kopieren-Button",

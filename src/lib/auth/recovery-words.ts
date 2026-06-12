@@ -1,6 +1,13 @@
+export type AnimalGender = "m" | "f" | "n";
+
 export type RecoveryWord = {
   slug: string;
   label: string;
+  gender?: AnimalGender;
+};
+
+export type RecoveryAnimal = RecoveryWord & {
+  gender: AnimalGender;
 };
 
 export const RECOVERY_COLORS: RecoveryWord[] = [
@@ -21,42 +28,42 @@ export const RECOVERY_COLORS: RecoveryWord[] = [
   { slug: "silberner", label: "Silber" },
 ];
 
-export const RECOVERY_ANIMALS: RecoveryWord[] = [
-  { slug: "elefant", label: "Elefant" },
-  { slug: "fuchs", label: "Fuchs" },
-  { slug: "frosch", label: "Frosch" },
-  { slug: "panda", label: "Panda" },
-  { slug: "tiger", label: "Tiger" },
-  { slug: "loewe", label: "Löwe" },
-  { slug: "affe", label: "Affe" },
-  { slug: "hund", label: "Hund" },
-  { slug: "katze", label: "Katze" },
-  { slug: "vogel", label: "Vogel" },
-  { slug: "drache", label: "Drache" },
-  { slug: "einhorn", label: "Einhorn" },
-  { slug: "baer", label: "Bär" },
-  { slug: "wolf", label: "Wolf" },
-  { slug: "hase", label: "Hase" },
-  { slug: "maus", label: "Maus" },
-  { slug: "pferd", label: "Pferd" },
-  { slug: "kuh", label: "Kuh" },
-  { slug: "schaf", label: "Schaf" },
-  { slug: "ziege", label: "Ziege" },
-  { slug: "huuhn", label: "Huhn" },
-  { slug: "ente", label: "Ente" },
-  { slug: "pinguin", label: "Pinguin" },
-  { slug: "delfin", label: "Delfin" },
-  { slug: "wal", label: "Wal" },
-  { slug: "hai", label: "Hai" },
-  { slug: "krake", label: "Krake" },
-  { slug: "biene", label: "Biene" },
-  { slug: "schmetterling", label: "Schmetterling" },
-  { slug: "krokodil", label: "Krokodil" },
-  { slug: "nashorn", label: "Nashorn" },
-  { slug: "giraffe", label: "Giraffe" },
-  { slug: "zebra", label: "Zebra" },
-  { slug: "koala", label: "Koala" },
-  { slug: "schnecke", label: "Schnecke" },
+export const RECOVERY_ANIMALS: RecoveryAnimal[] = [
+  { slug: "elefant", label: "Elefant", gender: "m" },
+  { slug: "fuchs", label: "Fuchs", gender: "m" },
+  { slug: "frosch", label: "Frosch", gender: "m" },
+  { slug: "panda", label: "Panda", gender: "m" },
+  { slug: "tiger", label: "Tiger", gender: "m" },
+  { slug: "loewe", label: "Löwe", gender: "m" },
+  { slug: "affe", label: "Affe", gender: "m" },
+  { slug: "hund", label: "Hund", gender: "m" },
+  { slug: "katze", label: "Katze", gender: "f" },
+  { slug: "vogel", label: "Vogel", gender: "m" },
+  { slug: "drache", label: "Drache", gender: "m" },
+  { slug: "einhorn", label: "Einhorn", gender: "n" },
+  { slug: "baer", label: "Bär", gender: "m" },
+  { slug: "wolf", label: "Wolf", gender: "m" },
+  { slug: "hase", label: "Hase", gender: "m" },
+  { slug: "maus", label: "Maus", gender: "f" },
+  { slug: "pferd", label: "Pferd", gender: "n" },
+  { slug: "kuh", label: "Kuh", gender: "f" },
+  { slug: "schaf", label: "Schaf", gender: "n" },
+  { slug: "ziege", label: "Ziege", gender: "f" },
+  { slug: "huuhn", label: "Huhn", gender: "n" },
+  { slug: "ente", label: "Ente", gender: "f" },
+  { slug: "pinguin", label: "Pinguin", gender: "m" },
+  { slug: "delfin", label: "Delfin", gender: "m" },
+  { slug: "wal", label: "Wal", gender: "m" },
+  { slug: "hai", label: "Hai", gender: "m" },
+  { slug: "krake", label: "Krake", gender: "f" },
+  { slug: "biene", label: "Biene", gender: "f" },
+  { slug: "schmetterling", label: "Schmetterling", gender: "m" },
+  { slug: "krokodil", label: "Krokodil", gender: "n" },
+  { slug: "nashorn", label: "Nashorn", gender: "n" },
+  { slug: "giraffe", label: "Giraffe", gender: "f" },
+  { slug: "zebra", label: "Zebra", gender: "n" },
+  { slug: "koala", label: "Koala", gender: "m" },
+  { slug: "schnecke", label: "Schnecke", gender: "f" },
 ];
 
 export const RECOVERY_COLOR_SLUGS = new Set(
