@@ -1,32 +1,31 @@
 import { ChallengeOpponentButton } from "@/components/opponents/ChallengeOpponentButton";
-import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
-import { calculatePower } from "@/lib/game/calculate-power";
 import type { CharacterLoadout } from "@/lib/game/types";
 
 export function OpponentRow({
   candidate,
   playerEmoji,
+  power,
+  rank,
   onError,
 }: {
   candidate: CharacterLoadout;
   playerEmoji: string;
+  power: number;
+  rank: number;
   onError?: (message: string) => void;
 }) {
-  const isBot = BOT_OPPONENT_IDS.has(candidate.id);
-  const power = calculatePower(candidate);
-
   return (
     <article className="fight-opponent-row">
+      <span aria-hidden className="fight-opponent-rank">
+        {rank}
+      </span>
       <span aria-hidden className="fight-opponent-emoji">
         {candidate.emoji}
       </span>
       <div className="fight-opponent-copy">
-        <strong>
-          {candidate.name}
-          {isBot ? <span className="fight-opponent-tag">Übung</span> : null}
-        </strong>
+        <strong>{candidate.name}</strong>
         <span className="muted">
-          Lv {candidate.level} · {power} · {candidate.deck.length} Karten
+          Lv {candidate.level} · Stärke {power} · {candidate.deck.length} Karten
         </span>
       </div>
       <ChallengeOpponentButton

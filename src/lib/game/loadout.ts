@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import type { Database } from "@/lib/supabase/database.types";
 import type {
   CardDefinition,
@@ -183,4 +184,16 @@ export async function fetchCharacterLoadouts(
   );
 
   return loadouts.filter((loadout): loadout is CharacterLoadout => loadout !== null);
+}
+
+export async function fetchOpponentCharacterLoadout(characterId: string) {
+  const supabase = createSupabaseServiceClient();
+
+  return fetchCharacterLoadout(supabase, characterId);
+}
+
+export async function fetchOpponentCharacterLoadouts(characterIds: string[]) {
+  const supabase = createSupabaseServiceClient();
+
+  return fetchCharacterLoadouts(supabase, characterIds);
 }

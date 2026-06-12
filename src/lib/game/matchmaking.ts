@@ -1,57 +1,70 @@
 import { calculatePower } from "./calculate-power";
 import type { CharacterLoadout } from "./types";
 
-export type MatchmakingCandidate = CharacterLoadout & {
-  lastBattledAt?: string | null;
+export const OPPONENT_POWER_TOLERANCE = 0.05;
+
+export type RankedOpponent = {
+  candidate: CharacterLoadout;
+  power: number;
+  powerDelta: number;
 };
 
-export function getPowerRange(power: number, tolerance = 0.15) {
+export function getPowerRange(power: number, tolerance = OPPONENT_POWER_TOLERANCE) {
   const min = Math.floor(power * (1 - tolerance));
   const max = Math.ceil(power * (1 + tolerance));
 
   return { min, max };
 }
 
-export function findBestAutomaticOpponent({
+export function rankOpponentsInPowerRange({
   player,
   candidates,
-  toleranceSteps = [0.15, 0.25, 0.4],
+  tolerance = OPPONENT_POWER_TOLERANCE,
 }: {
   player: CharacterLoadout;
-  candidates: MatchmakingCandidate[];
-  toleranceSteps?: number[];
+  candidates: CharacterLoadout[];
+  tolerance?: number;
+}): RankedOpponent[] {
+  const playerPower = calculatePower(player);
+  const range = getPowerRange(playerPower, tolerance);
+
+  return candidates
+    .filter((candidate) => candidate.id !== player.id)
+    .map((candidate) => {
+      const power = calculatePower(candidate);
+
+      return {
+        candidate,
+        power,
+        powerDelta: Math.abs(power - playerPower),
+      };
+    })
+    .filter(({ power }) => power >= range.min && power <= range.max)
+    .sort((left, right) => {
+      if (left.powerDelta !== right.powerDelta) {
+        return left.powerDelta - right.powerDelta;
+      }
+
+      if (left.power !== right.power) {
+        return left.power - right.power;
+      }
+
+      return left.candidate.name.localeCompare(right.candidate.name);
+    });
+}
+
+export function isOpponentInPowerRange({
+  player,
+  opponent,
+  tolerance = OPPONENT_POWER_TOLERANCE,
+}: {
+  player: CharacterLoadout;
+  opponent: CharacterLoadout;
+  tolerance?: number;
 }) {
   const playerPower = calculatePower(player);
+  const opponentPower = calculatePower(opponent);
+  const range = getPowerRange(playerPower, tolerance);
 
-  for (const tolerance of toleranceSteps) {
-    const range = getPowerRange(playerPower, tolerance);
-    const matches = candidates
-      .filter((candidate) => candidate.id !== player.id)
-      .map((candidate) => ({
-        candidate,
-        power: calculatePower(candidate),
-      }))
-      .filter(({ power }) => power >= range.min && power <= range.max)
-      .sort((left, right) => {
-        const leftDelta = Math.abs(left.power - playerPower);
-        const rightDelta = Math.abs(right.power - playerPower);
-
-        if (leftDelta !== rightDelta) {
-          return leftDelta - rightDelta;
-        }
-
-        return left.candidate.name.localeCompare(right.candidate.name);
-      });
-
-    if (matches.length > 0) {
-      return {
-        opponent: matches[0].candidate,
-        opponentPower: matches[0].power,
-        playerPower,
-        tolerance,
-      };
-    }
-  }
-
-  return null;
+  return opponentPower >= range.min && opponentPower <= range.max;
 }

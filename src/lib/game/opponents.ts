@@ -1,33 +1,30 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
 import type { Database } from "@/lib/supabase/database.types";
-
-export function isBotOpponent(characterId: string) {
-  return BOT_OPPONENT_IDS.has(characterId);
-}
 
 export async function fetchOpponentCharacterIds(
   supabase: SupabaseClient<Database>,
-  currentUserId: string,
+  {
+    excludeCharacterId,
+    minPower,
+    maxPower,
+  }: {
+    excludeCharacterId: string;
+    minPower: number;
+    maxPower: number;
+  },
 ) {
-  const [{ data: bots }, { data: players }] = await Promise.all([
-    supabase.from("characters").select("id").eq("is_bot", true).order("power", { ascending: true }),
-    supabase
-      .from("characters")
-      .select("id")
-      .eq("is_bot", false)
-      .neq("user_id", currentUserId)
-      .order("power", { ascending: true }),
-  ]);
+  const { data, error } = await supabase
+    .from("characters")
+    .select("id")
+    .neq("id", excludeCharacterId)
+    .gte("power", minPower)
+    .lte("power", maxPower)
+    .order("power", { ascending: true });
 
-  const playerIds = (players ?? []).map((row) => row.id);
-  const botIds = (bots ?? []).map((row) => row.id);
+  if (error) {
+    return [];
+  }
 
-  return {
-    botIds,
-    playerIds,
-    allIds: [...playerIds, ...botIds],
-    hasRealPlayers: playerIds.length > 0,
-  };
+  return (data ?? []).map((row) => row.id);
 }

@@ -1,7 +1,11 @@
 import { OpponentsBoard } from "@/components/opponents/OpponentsBoard";
 import { requireCharacter } from "@/lib/auth/require-character";
-import { fetchCharacterLoadout, fetchCharacterLoadouts } from "@/lib/game/loadout";
-import { findBestAutomaticOpponent } from "@/lib/game/matchmaking";
+import { calculatePower } from "@/lib/game/calculate-power";
+import {
+  fetchCharacterLoadout,
+  fetchOpponentCharacterLoadouts,
+} from "@/lib/game/loadout";
+import { getPowerRange, rankOpponentsInPowerRange } from "@/lib/game/matchmaking";
 import { fetchOpponentCharacterIds } from "@/lib/game/opponents";
 import {
   getSearchParamErrorMessage,
@@ -22,10 +26,7 @@ export default async function OpponentsPage({
     OPPONENT_ERROR_MESSAGES,
   );
 
-  const [player, opponentIds] = await Promise.all([
-    fetchCharacterLoadout(supabase, character.id),
-    fetchOpponentCharacterIds(supabase, character.user_id),
-  ]);
+  const player = await fetchCharacterLoadout(supabase, character.id);
 
   if (!player) {
     return (
@@ -40,23 +41,23 @@ export default async function OpponentsPage({
     );
   }
 
-  const { allIds, botIds, playerIds, hasRealPlayers } = opponentIds;
-  const candidates = await fetchCharacterLoadouts(supabase, allIds);
-  const botCandidates = candidates.filter((candidate) => botIds.includes(candidate.id));
-  const playerCandidates = candidates.filter((candidate) =>
-    playerIds.includes(candidate.id),
-  );
-
-  const match = findBestAutomaticOpponent({ player, candidates });
+  const playerPower = calculatePower(player);
+  const powerRange = getPowerRange(playerPower);
+  const opponentIds = await fetchOpponentCharacterIds(supabase, {
+    excludeCharacterId: character.id,
+    minPower: powerRange.min,
+    maxPower: powerRange.max,
+  });
+  const candidates = await fetchOpponentCharacterLoadouts(opponentIds);
+  const rankedOpponents = rankOpponentsInPowerRange({ player, candidates });
 
   return (
     <OpponentsBoard
-      botCandidates={botCandidates}
-      hasRealPlayers={hasRealPlayers}
       initialErrorMessage={errorMessage}
-      match={match}
-      playerCandidates={playerCandidates}
+      opponents={rankedOpponents}
       playerEmoji={player.emoji}
+      playerPower={playerPower}
+      powerRange={powerRange}
     />
   );
 }

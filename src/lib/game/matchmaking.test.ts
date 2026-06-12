@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { starterCards } from "./cards";
-import { findBestAutomaticOpponent, getPowerRange } from "./matchmaking";
+import {
+  getPowerRange,
+  isOpponentInPowerRange,
+  OPPONENT_POWER_TOLERANCE,
+  rankOpponentsInPowerRange,
+} from "./matchmaking";
 import type { CharacterLoadout } from "./types";
 
 const player: CharacterLoadout = {
@@ -25,11 +30,15 @@ const player: CharacterLoadout = {
 
 describe("matchmaking", () => {
   it("calculates a symmetric power range", () => {
-    expect(getPowerRange(200, 0.15)).toEqual({ min: 170, max: 230 });
+    expect(getPowerRange(200, 0.05)).toEqual({ min: 190, max: 210 });
   });
 
-  it("selects the closest candidate in the first matching tolerance", () => {
-    const match = findBestAutomaticOpponent({
+  it("uses a 5 percent tolerance by default", () => {
+    expect(OPPONENT_POWER_TOLERANCE).toBe(0.05);
+  });
+
+  it("ranks only opponents within the power range", () => {
+    const ranked = rankOpponentsInPowerRange({
       player,
       candidates: [
         {
@@ -55,7 +64,30 @@ describe("matchmaking", () => {
       ],
     });
 
-    expect(match?.opponent.id).toBe("close");
-    expect(match?.tolerance).toBe(0.15);
+    expect(ranked).toHaveLength(1);
+    expect(ranked[0]?.candidate.id).toBe("close");
+  });
+
+  it("rejects opponents outside the power range", () => {
+    const tooStrong = {
+      ...player,
+      id: "too-strong",
+      name: "Too Strong",
+      level: 8,
+      baseStats: {
+        hp: 180,
+        attack: 34,
+        defense: 16,
+        speed: 20,
+        critChance: 0.12,
+      },
+    };
+
+    expect(
+      isOpponentInPowerRange({
+        player,
+        opponent: tooStrong,
+      }),
+    ).toBe(false);
   });
 });

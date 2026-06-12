@@ -3,28 +3,21 @@
 import { useState } from "react";
 
 import { OpponentRow } from "@/components/opponents/OpponentRow";
-import { ChallengeOpponentButton } from "@/components/opponents/ChallengeOpponentButton";
 import { AlertBanner } from "@/components/ui/AlertBanner";
-import { BOT_OPPONENT_IDS } from "@/constants/bot-opponents";
-import type { CharacterLoadout } from "@/lib/game/types";
+import type { RankedOpponent } from "@/lib/game/matchmaking";
 
 export function OpponentsBoard({
   playerEmoji,
+  playerPower,
+  powerRange,
   initialErrorMessage,
-  match,
-  botCandidates,
-  playerCandidates,
-  hasRealPlayers,
+  opponents,
 }: {
   playerEmoji: string;
+  playerPower: number;
+  powerRange: { min: number; max: number };
   initialErrorMessage: string | null;
-  match: {
-    opponent: CharacterLoadout;
-    opponentPower: number;
-  } | null;
-  botCandidates: CharacterLoadout[];
-  playerCandidates: CharacterLoadout[];
-  hasRealPlayers: boolean;
+  opponents: RankedOpponent[];
 }) {
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
@@ -35,77 +28,42 @@ export function OpponentsBoard({
           <p className="eyebrow">Kampf</p>
           <h1>Wähle deinen Gegner.</h1>
           <p className="muted fight-top-lead">
-            {hasRealPlayers
-              ? "Echte Spieler oder Übungsgegner — der Kampf startet sofort."
-              : "Zehn Übungsgegner mit steigender Stärke stehen bereit."}
+            Deine Stärke: {playerPower}. Angreifbar sind nur Gegner zwischen{" "}
+            {powerRange.min} und {powerRange.max} (±5 %).
           </p>
         </div>
       </header>
 
       {errorMessage ? <AlertBanner>{errorMessage}</AlertBanner> : null}
 
-      {match ? (
-        <section className="fight-match panel battle-card">
-          <div className="fight-match-copy">
-            <p className="eyebrow">Empfohlen</p>
-            <div className="fight-match-main">
-              <span aria-hidden className="fight-match-emoji">
-                {match.opponent.emoji}
-              </span>
-              <div>
-                <h2>{match.opponent.name}</h2>
-                <p className="muted">
-                  {BOT_OPPONENT_IDS.has(match.opponent.id) ? "Übung · " : ""}
-                  Lv {match.opponent.level} · Stärke {match.opponentPower}
-                </p>
-              </div>
-            </div>
-          </div>
-          <ChallengeOpponentButton
-            defenderCharacterId={match.opponent.id}
-            onError={setErrorMessage}
-            opponentEmoji={match.opponent.emoji}
-            opponentName={match.opponent.name}
-            playerEmoji={playerEmoji}
-          >
-            Jetzt kämpfen
-          </ChallengeOpponentButton>
-        </section>
-      ) : null}
+      <section className="panel battle-card fight-list-card">
+        <div className="fight-list-head">
+          <p className="eyebrow">Rangliste</p>
+          <span className="fight-list-count">
+            {opponents.length} {opponents.length === 1 ? "Gegner" : "Gegner"}
+          </span>
+        </div>
 
-      <div
-        className={`fight-lists${playerCandidates.length === 0 ? " fight-lists-single" : ""}`}
-      >
-        {playerCandidates.length > 0 ? (
-          <section className="panel battle-card fight-list-card">
-            <p className="eyebrow">Echte Spieler</p>
-            <div aria-label="Echte Spieler" className="fight-opponent-list">
-              {playerCandidates.map((candidate) => (
-                <OpponentRow
-                  candidate={candidate}
-                  key={candidate.id}
-                  onError={setErrorMessage}
-                  playerEmoji={playerEmoji}
-                />
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        <section className="panel battle-card fight-list-card">
-          <p className="eyebrow">Übungsgegner</p>
-          <div aria-label="Übungsgegner" className="fight-opponent-list">
-            {botCandidates.map((candidate) => (
+        {opponents.length === 0 ? (
+          <p className="muted fight-opponents-empty">
+            Gerade ist niemand in deiner Stärkeklasse online. Rüste dein Deck aus
+            oder komm später wieder.
+          </p>
+        ) : (
+          <div aria-label="Rangliste" className="fight-opponent-list">
+            {opponents.map((entry, index) => (
               <OpponentRow
-                candidate={candidate}
-                key={candidate.id}
+                candidate={entry.candidate}
+                key={entry.candidate.id}
                 onError={setErrorMessage}
                 playerEmoji={playerEmoji}
+                power={entry.power}
+                rank={index + 1}
               />
             ))}
           </div>
-        </section>
-      </div>
+        )}
+      </section>
     </div>
   );
 }

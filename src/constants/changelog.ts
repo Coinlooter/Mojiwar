@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.0",
+    changes: [
+      "Kampf — eine gemeinsame Rangliste statt Trennung zwischen echten und KI-Gegnern",
+      "Kampf — nur Gegner in derselben Stärkeklasse (±5 %) sind angreifbar",
+      "Kampf — Kartenanzahl der Gegner wird wieder korrekt angezeigt",
+    ],
+  },
+  {
     version: "1.10.0",
     changes: [
       "Inventar — nur noch Build und Inventar, alles Gesammelte an einem Ort",
