@@ -12,33 +12,6 @@ alter table public.player_cards
   add column if not exists affixes jsonb,
   add column if not exists legendary_affix jsonb;
 
-revoke execute on function public.resolve_battle(
-  uuid,
-  uuid,
-  uuid,
-  uuid,
-  uuid,
-  integer,
-  text,
-  integer,
-  integer,
-  integer,
-  integer,
-  integer,
-  jsonb,
-  text,
-  text,
-  integer,
-  integer,
-  integer,
-  integer,
-  integer,
-  integer,
-  integer,
-  integer,
-  integer
-) from public, anon, authenticated, service_role;
-
 drop function if exists public.resolve_battle(
   uuid,
   uuid,
@@ -55,6 +28,7 @@ drop function if exists public.resolve_battle(
   jsonb,
   text,
   text,
+  integer,
   integer,
   integer,
   integer,
@@ -359,6 +333,7 @@ grant execute on function public.resolve_battle(
   jsonb,
   jsonb,
   text,
+  integer,
   integer,
   integer,
   integer,
