@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.9.3",
+    changes: [
+      "Login-Code — wird automatisch bei der ersten Anmeldung erzeugt",
+      "Dashboard — „Code erstellen“-Button entfällt, Code erscheint direkt",
+    ],
+  },
+  {
     version: "1.9.2",
     changes: [
       "Login-Code — grammatikalisch korrekte Form (z. B. goldenesschaf34 statt goldenerschaf34)",

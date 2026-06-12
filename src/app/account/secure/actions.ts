@@ -8,7 +8,10 @@ import { z } from "zod";
 import { hasSecuredEmailAccount } from "@/lib/auth/account-email";
 import { mapEmailSecureError } from "@/lib/auth/email-secure";
 import { requireUser } from "@/lib/auth/require-character";
-import { assignRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
+import {
+  assignRecoveryCodeForUser,
+  ensureRecoveryCodeForUser,
+} from "@/lib/auth/progress-recovery";
 import { getAuthConfirmUrl } from "@/lib/auth/site-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -21,7 +24,7 @@ export async function createRecoveryCode() {
     redirect("/dashboard?login-error=already-secured" as Route);
   }
 
-  await assignRecoveryCodeForUser(user.id);
+  await ensureRecoveryCodeForUser(user.id);
 
   revalidatePath("/dashboard");
   redirect("/dashboard?login=created" as Route);

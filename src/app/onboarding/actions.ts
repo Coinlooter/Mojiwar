@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import type { Route } from "next";
 import { redirect } from "next/navigation";
 
+import { ensureRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
 import { getVerifiedUser } from "@/lib/auth/session";
 import { calculatePower } from "@/lib/game/calculate-power";
 import { fetchCharacterLoadout } from "@/lib/game/loadout";
@@ -104,6 +105,8 @@ export async function createCharacter(formData: FormData) {
       .update({ power: calculatePower(loadout) })
       .eq("id", createdCharacter.id);
   }
+
+  await ensureRecoveryCodeForUser(user.id);
 
   revalidatePath("/", "layout");
   redirect("/dashboard");

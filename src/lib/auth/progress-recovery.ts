@@ -55,7 +55,10 @@ export async function getRecoveryCodeForUser(userId: string) {
   } satisfies RecoveryCodeRecord;
 }
 
-export async function assignRecoveryCodeForUser(userId: string) {
+async function persistRecoveryCodeForUser(
+  userId: string,
+  mode: "insert-if-absent" | "upsert",
+) {
   const admin = createSupabaseServiceClient();
 
   for (let attempt = 0; attempt < MAX_ASSIGN_ATTEMPTS; attempt += 1) {
@@ -65,26 +68,63 @@ export async function assignRecoveryCodeForUser(userId: string) {
       continue;
     }
 
-    const { error } = await admin.from("progress_recovery_codes").upsert(
-      {
-        user_id: userId,
-        color_slug: parts.colorSlug,
-        animal_slug: parts.animalSlug,
-        number_suffix: parts.numberSuffix,
-      },
-      { onConflict: "user_id" },
-    );
+    const row = {
+      user_id: userId,
+      color_slug: parts.colorSlug,
+      animal_slug: parts.animalSlug,
+      number_suffix: parts.numberSuffix,
+    };
+
+    if (mode === "upsert") {
+      const { error } = await admin
+        .from("progress_recovery_codes")
+        .upsert(row, { onConflict: "user_id" });
+
+      if (!error) {
+        return formatRecoveryCodeDisplay(parts);
+      }
+
+      if (error.code !== "23505") {
+        throw new Error("Speicher-Code konnte nicht erstellt werden.");
+      }
+
+      continue;
+    }
+
+    const { error } = await admin.from("progress_recovery_codes").insert(row);
 
     if (!error) {
       return formatRecoveryCodeDisplay(parts);
     }
 
-    if (error.code !== "23505") {
-      throw new Error("Speicher-Code konnte nicht erstellt werden.");
+    if (error.code === "23505") {
+      const existing = await getRecoveryCodeForUser(userId);
+
+      if (existing) {
+        return formatRecoveryCodeDisplay(existing);
+      }
+
+      continue;
     }
+
+    throw new Error("Speicher-Code konnte nicht erstellt werden.");
   }
 
   throw new Error("Kein freier Speicher-Code gefunden. Bitte versuche es erneut.");
+}
+
+export async function ensureRecoveryCodeForUser(userId: string) {
+  const existing = await getRecoveryCodeForUser(userId);
+
+  if (existing) {
+    return formatRecoveryCodeDisplay(existing);
+  }
+
+  return persistRecoveryCodeForUser(userId, "insert-if-absent");
+}
+
+export async function assignRecoveryCodeForUser(userId: string) {
+  return persistRecoveryCodeForUser(userId, "upsert");
 }
 
 export async function lookupUserIdByRecoveryCode(parts: RecoveryCodeParts) {

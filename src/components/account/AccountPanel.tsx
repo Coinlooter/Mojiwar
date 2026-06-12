@@ -6,12 +6,11 @@ import {
   hasSecuredEmailAccount,
   usesLoginCodeAccount,
 } from "@/lib/auth/account-email";
-import { getRecoveryCodeForUser } from "@/lib/auth/progress-recovery";
 import {
-  createRecoveryCode,
-  linkParentEmail,
-  regenerateRecoveryCode,
-} from "@/app/account/secure/actions";
+  ensureRecoveryCodeForUser,
+  getRecoveryCodeForUser,
+} from "@/lib/auth/progress-recovery";
+import { linkParentEmail, regenerateRecoveryCode } from "@/app/account/secure/actions";
 
 const statusMessages: Record<string, string> = {
   created: "Dein Code ist bereit. Schreib ihn auf oder mach ein Foto.",
@@ -43,10 +42,15 @@ export async function AccountPanel({
   loginStatus?: string;
   loginError?: string;
 }) {
-  const recoveryCode = await getRecoveryCodeForUser(userId);
   const displayEmail = getDisplayEmail(email);
   const securedWithEmail = hasSecuredEmailAccount({ isAnonymous, email });
   const showLoginCodeFlow = usesLoginCodeAccount({ isAnonymous, email });
+  let recoveryCode = await getRecoveryCodeForUser(userId);
+
+  if (showLoginCodeFlow && !recoveryCode) {
+    await ensureRecoveryCodeForUser(userId);
+    recoveryCode = await getRecoveryCodeForUser(userId);
+  }
   const canLogoutSafely = canRecoverAccountProgress({
     hasRecoveryCode: Boolean(recoveryCode),
     isAnonymous,
@@ -74,7 +78,8 @@ export async function AccountPanel({
       {!canLogoutSafely ? (
         <p className="account-warning account-warning-inline" role="note">
           Ohne Login-Code oder E-Mail kannst du dich nach dem Ausloggen nicht
-          wieder einloggen. Erstelle zuerst einen Code oder sichere per E-Mail.
+          wieder einloggen. Sichere deinen Fortschritt per E-Mail oder warte,
+          bis dein Code geladen ist.
         </p>
       ) : null}
 
@@ -94,18 +99,6 @@ export async function AccountPanel({
               <SubmitButton pendingLabel="Neuer Code...">Neuen Code</SubmitButton>
             </form>
           ) : null}
-        </>
-      ) : showLoginCodeFlow ? (
-        <>
-          <p className="muted dashboard-account-copy">
-            Erstelle einen Code, um deinen Fortschritt auf einem anderen Gerät
-            fortzusetzen.
-          </p>
-          <form action={createRecoveryCode}>
-            <SubmitButton pendingLabel="Code wird erstellt..." variant="primary">
-              Code erstellen
-            </SubmitButton>
-          </form>
         </>
       ) : null}
 
