@@ -94,10 +94,6 @@ export function BattleArena({
           side="attacker"
         />
 
-        <div aria-hidden="true" className="battle-arena-vs">
-          <span>⚔️</span>
-        </div>
-
         <FighterSprite
           animationKey={events.length}
           classes={defenderClasses}

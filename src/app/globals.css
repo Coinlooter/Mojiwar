@@ -2393,17 +2393,11 @@ h3 {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
   align-items: end;
   min-height: 0;
-  padding: 0 16px 42px;
-}
-
-.battle-arena-vs {
-  align-self: center;
-  font-size: 1.6rem;
-  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+  padding: 0 10% 22%;
 }
 
 .battle-fighter {
@@ -2475,9 +2469,10 @@ h3 {
 
 .battle-fighter-sprite-wrap {
   position: relative;
-  min-height: min(36vh, 280px);
+  min-height: min(32vh, 240px);
   display: grid;
   place-items: end center;
+  transform: translateY(-8%);
 }
 
 .battle-fighter-shadow {
@@ -3154,11 +3149,12 @@ h3 {
   }
 
   .battle-arena-stage {
-    padding: 0 10px 34px;
+    padding: 0 6% 20%;
   }
 
   .battle-fighter-sprite-wrap {
-    min-height: min(30vh, 220px);
+    min-height: min(28vh, 200px);
+    transform: translateY(-6%);
   }
 
   .battle-result-log .event-list {
