@@ -29,7 +29,7 @@ export function OpponentsBoard({
           <h1>Wähle deinen Gegner.</h1>
           <p className="muted fight-top-lead">
             Deine Stärke: {playerPower}. Angreifbar sind nur Gegner zwischen{" "}
-            {powerRange.min} und {powerRange.max} (±5 %).
+            {powerRange.min} und {powerRange.max} (−6 % bis +10 %).
           </p>
         </div>
       </header>

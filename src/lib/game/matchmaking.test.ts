@@ -4,7 +4,8 @@ import { starterCards } from "./cards";
 import {
   getPowerRange,
   isOpponentInPowerRange,
-  OPPONENT_POWER_TOLERANCE,
+  OPPONENT_POWER_MAX_TOLERANCE,
+  OPPONENT_POWER_MIN_TOLERANCE,
   rankOpponentsInPowerRange,
 } from "./matchmaking";
 import type { CharacterLoadout } from "./types";
@@ -29,12 +30,13 @@ const player: CharacterLoadout = {
 };
 
 describe("matchmaking", () => {
-  it("calculates a symmetric power range", () => {
-    expect(getPowerRange(200, 0.05)).toEqual({ min: 190, max: 210 });
+  it("calculates an asymmetric power range", () => {
+    expect(getPowerRange(200)).toEqual({ min: 188, max: 221 });
   });
 
-  it("uses a 5 percent tolerance by default", () => {
-    expect(OPPONENT_POWER_TOLERANCE).toBe(0.05);
+  it("uses -6% and +10% tolerances by default", () => {
+    expect(OPPONENT_POWER_MIN_TOLERANCE).toBe(0.06);
+    expect(OPPONENT_POWER_MAX_TOLERANCE).toBe(0.1);
   });
 
   it("ranks only opponents within the power range", () => {

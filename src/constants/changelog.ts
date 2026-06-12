@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.1",
+    changes: [
+      "Kampf — Stärkeklasse auf −6 % bis +10 % angepasst",
+    ],
+  },
+  {
     version: "1.11.0",
     changes: [
       "Kampf — eine gemeinsame Rangliste statt Trennung zwischen echten und KI-Gegnern",

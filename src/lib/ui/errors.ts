@@ -10,7 +10,7 @@ export const OPPONENT_ERROR_MESSAGES: Record<string, string> = {
   invalid: "Dieser Gegner konnte nicht herausgefordert werden.",
   self: "Du kannst dich nicht selbst herausfordern.",
   missing: "Der Gegner wurde nicht gefunden.",
-  range: "Dieser Gegner liegt außerhalb deiner Stärkeklasse (±5 %).",
+  range: "Dieser Gegner liegt außerhalb deiner Stärkeklasse (−6 % bis +10 %).",
   battle: "Der Kampf konnte gerade nicht gestartet werden. Versuche es erneut.",
 };
 
