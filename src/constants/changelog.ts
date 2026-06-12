@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.5",
+    changes: [
+      "Karten — Seltenheit nur noch im Hover-Fenster, nicht auf der Karte",
+      "Inventar — alle Karten haben dieselbe Größe im Build und Inventar",
+    ],
+  },
+  {
     version: "1.11.4",
     changes: [
       "Onboarding — neuer Charakter startet mit leerem Build und leerem Inventar",

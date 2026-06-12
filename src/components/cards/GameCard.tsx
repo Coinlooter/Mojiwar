@@ -20,12 +20,13 @@ export function GameCard({
   active = false,
   className = "",
 }: GameCardProps) {
+  const hasTooltip = Boolean(description);
   const classes = [
     "game-card",
     `game-card-${rarity}`,
     `game-card-${size}`,
     active ? "game-card-active" : "",
-    description ? "game-card-has-stats" : "",
+    hasTooltip ? "game-card-has-stats" : "",
     className,
   ]
     .filter(Boolean)
@@ -39,11 +40,10 @@ export function GameCard({
           : `${name}, ${CARD_RARITY_LABEL[rarity]}`
       }
       className={classes}
-      tabIndex={description ? 0 : undefined}
+      tabIndex={hasTooltip ? 0 : undefined}
     >
       <div className="game-card-frame">
         <div className="game-card-inner">
-          <span className="game-card-rarity">{CARD_RARITY_LABEL[rarity]}</span>
           <div aria-hidden className="game-card-art">
             {emoji}
           </div>
@@ -51,9 +51,10 @@ export function GameCard({
         </div>
       </div>
 
-      {description ? (
+      {hasTooltip ? (
         <div className="game-card-tooltip" role="tooltip">
           <p className="game-card-tooltip-title">{name}</p>
+          <p className="game-card-tooltip-rarity">{CARD_RARITY_LABEL[rarity]}</p>
           <p className="game-card-tooltip-stat">{description}</p>
         </div>
       ) : null}
