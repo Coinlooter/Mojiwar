@@ -2347,22 +2347,46 @@ h3 {
 
 .battle-arena {
   position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
   min-height: min(68vh, 560px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 22px;
   overflow: hidden;
   box-shadow:
-    inset 0 0 90px rgba(0, 0, 0, 0.42),
-    0 16px 42px rgba(0, 0, 0, 0.35);
+    inset 0 0 24px rgba(255, 255, 255, 0.08),
+    0 16px 42px rgba(0, 0, 0, 0.22);
 }
 
 .battle-arena-backdrop {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(7, 8, 18, 0.12) 0%, rgba(7, 8, 18, 0.5) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.1) 100%),
     url("/images/battle-arena.png") center center / cover no-repeat;
   pointer-events: none;
+}
+
+.battle-arena-hud {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 14px 8px;
+}
+
+.battle-fighter-hud {
+  display: grid;
+  gap: 8px;
+}
+
+.battle-fighter-hud-attacker {
+  text-align: left;
+}
+
+.battle-fighter-hud-defender {
+  text-align: right;
 }
 
 .battle-arena-stage {
@@ -2372,8 +2396,8 @@ h3 {
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 12px;
   align-items: end;
-  min-height: min(62vh, 500px);
-  padding: 18px 16px 42px;
+  min-height: 0;
+  padding: 0 16px 42px;
 }
 
 .battle-arena-vs {
@@ -2384,16 +2408,21 @@ h3 {
 
 .battle-fighter {
   display: grid;
-  gap: 10px;
+  align-content: end;
   text-align: center;
 }
 
 .battle-fighter-meta {
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.55);
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.48);
-  padding: 6px 8px;
-  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.82);
+  padding: 6px 10px;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+  color: #1a1f33;
+}
+
+.battle-fighter-meta .muted {
+  color: rgba(26, 31, 51, 0.72);
 }
 
 .battle-fighter-meta h3 {
@@ -2408,20 +2437,20 @@ h3 {
 
 .battle-hp {
   display: grid;
-  gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.42);
-  padding: 6px 8px;
-  backdrop-filter: blur(4px);
+  gap: 4px;
+}
+
+.battle-fighter-hud-defender .battle-hp-label {
+  text-align: right;
 }
 
 .battle-hp-track {
-  height: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  height: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.28);
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.22);
   overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .battle-hp-fill {
@@ -2438,14 +2467,15 @@ h3 {
 }
 
 .battle-hp-label {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 700;
+  color: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
 }
 
 .battle-fighter-sprite-wrap {
   position: relative;
-  min-height: 7rem;
+  min-height: min(36vh, 280px);
   display: grid;
   place-items: end center;
 }
@@ -3118,9 +3148,17 @@ h3 {
     min-height: min(58vh, 420px);
   }
 
+  .battle-arena-hud {
+    padding: 10px 10px 6px;
+    gap: 8px;
+  }
+
   .battle-arena-stage {
-    min-height: min(52vh, 360px);
-    padding: 12px 10px 34px;
+    padding: 0 10px 34px;
+  }
+
+  .battle-fighter-sprite-wrap {
+    min-height: min(30vh, 220px);
   }
 
   .battle-result-log .event-list {

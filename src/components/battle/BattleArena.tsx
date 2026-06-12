@@ -64,12 +64,9 @@ export function BattleArena({
     <div className={arenaClasses}>
       <div aria-hidden="true" className="battle-arena-backdrop" />
 
-      <div className="battle-arena-stage">
-        <FighterStage
-          animationKey={events.length}
-          classes={attackerClasses}
+      <div className="battle-arena-hud">
+        <FighterHud
           emoji={result.attackerSnapshot.emoji}
-          floaters={floaters.filter((floater) => floater.side === "attacker")}
           hp={fighterHp.attacker}
           hpRatio={attackerHpRatio}
           maxHp={attackerMaxHp}
@@ -77,16 +74,8 @@ export function BattleArena({
           power={result.attackerSnapshot.power}
           side="attacker"
         />
-
-        <div aria-hidden="true" className="battle-arena-vs">
-          <span>⚔️</span>
-        </div>
-
-        <FighterStage
-          animationKey={events.length}
-          classes={defenderClasses}
+        <FighterHud
           emoji={result.defenderSnapshot.emoji}
-          floaters={floaters.filter((floater) => floater.side === "defender")}
           hp={fighterHp.defender}
           hpRatio={defenderHpRatio}
           maxHp={defenderMaxHp}
@@ -96,12 +85,34 @@ export function BattleArena({
         />
       </div>
 
+      <div className="battle-arena-stage">
+        <FighterSprite
+          animationKey={events.length}
+          classes={attackerClasses}
+          emoji={result.attackerSnapshot.emoji}
+          floaters={floaters.filter((floater) => floater.side === "attacker")}
+          side="attacker"
+        />
+
+        <div aria-hidden="true" className="battle-arena-vs">
+          <span>⚔️</span>
+        </div>
+
+        <FighterSprite
+          animationKey={events.length}
+          classes={defenderClasses}
+          emoji={result.defenderSnapshot.emoji}
+          floaters={floaters.filter((floater) => floater.side === "defender")}
+          side="defender"
+        />
+      </div>
+
       <EffectBurst animationKey={events.length} moment={moment} />
     </div>
   );
 }
 
-function FighterStage({
+function FighterHud({
   side,
   name,
   emoji,
@@ -109,9 +120,6 @@ function FighterStage({
   hp,
   maxHp,
   hpRatio,
-  classes,
-  floaters,
-  animationKey,
 }: {
   side: FighterSide;
   name: string;
@@ -120,16 +128,15 @@ function FighterStage({
   hp: number;
   maxHp: number;
   hpRatio: number;
-  classes: string;
-  floaters: Floater[];
-  animationKey: number;
 }) {
   const lowHp = hpRatio <= 0.3 && hp > 0;
 
   return (
-    <article className={`battle-fighter battle-fighter-${side} ${classes}`}>
+    <article className={`battle-fighter-hud battle-fighter-hud-${side}`}>
       <div className="battle-fighter-meta">
-        <h3>{name}</h3>
+        <h3>
+          {emoji} {name}
+        </h3>
         <p className="muted">Power {power}</p>
       </div>
 
@@ -150,7 +157,25 @@ function FighterStage({
           {hp}/{maxHp} HP
         </span>
       </div>
+    </article>
+  );
+}
 
+function FighterSprite({
+  side,
+  emoji,
+  classes,
+  floaters,
+  animationKey,
+}: {
+  side: FighterSide;
+  emoji: string;
+  classes: string;
+  floaters: Floater[];
+  animationKey: number;
+}) {
+  return (
+    <article className={`battle-fighter battle-fighter-${side} ${classes}`}>
       <div className="battle-fighter-sprite-wrap">
         <div className="battle-fighter-shadow" />
         <div className="battle-fighter-sprite" key={`sprite-${animationKey}`}>

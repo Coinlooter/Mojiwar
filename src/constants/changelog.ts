@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.12.1",
+    changes: [
+      "Kampf — Lebensbalken oben in der Arena statt mittig zwischen den Kämpfern",
+      "Kampf — helleres Comic-Arena-Bild mit freundlicherer Atmosphäre",
+    ],
+  },
+  {
     version: "1.12.0",
     changes: [
       "Kampf — Arena mit Hintergrundbild, Emojis kämpfen direkt in der Arena",
