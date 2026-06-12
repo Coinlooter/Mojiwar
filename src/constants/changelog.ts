@@ -6,6 +6,13 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.2",
+    changes: [
+      "Talismane — eigene Darstellung mit Stein-Look statt Pergament-Karte",
+      "Talismane — achteckige Form ohne Verzerrung, kompakter im Inventar",
+    ],
+  },
+  {
     version: "1.11.1",
     changes: [
       "Kampf — Stärkeklasse auf −6 % bis +10 % angepasst",

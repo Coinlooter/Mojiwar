@@ -952,7 +952,7 @@ input {
   text-transform: uppercase;
 }
 
-.game-card-talisman {
+.talisman-token {
   --talisman-octagon: polygon(
     30% 0%,
     70% 0%,
@@ -963,32 +963,201 @@ input {
     0% 70%,
     0% 30%
   );
-}
-
-.game-card-talisman .game-card-frame {
-  border-radius: 0;
-  clip-path: var(--talisman-octagon);
-}
-
-.game-card-talisman .game-card-inner {
-  border-radius: 0;
+  position: relative;
+  width: 100%;
+  max-width: 76px;
   aspect-ratio: 1;
+  overflow: visible;
+  transition: transform 180ms ease;
+}
+
+.talisman-token:hover,
+.talisman-token:focus-within {
+  transform: translateY(-2px);
+  z-index: 5;
+}
+
+.talisman-token-octagon {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
   clip-path: var(--talisman-octagon);
-  grid-template-rows: auto 1fr;
-  padding: 8px 8px 10px;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.42));
 }
 
-.game-card-talisman .game-card-name {
-  margin-top: 2px;
-}
-
-.game-card-talisman .game-card-art {
-  font-size: clamp(1.8rem, 46%, 2.8rem);
-}
-
-.game-card-talisman .game-card-pattern {
-  border-radius: 0;
+.talisman-token-surface {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-content: center;
+  justify-items: center;
+  width: 86%;
+  height: 86%;
   clip-path: var(--talisman-octagon);
+  padding: 5px 4px 6px;
+  text-align: center;
+  color: #e2e8f0;
+}
+
+.talisman-token-common .talisman-token-octagon {
+  background: linear-gradient(145deg, #9ca3af, #6b7280 45%, #d1d5db 100%);
+}
+
+.talisman-token-common .talisman-token-surface {
+  background:
+    radial-gradient(circle at 50% 24%, rgba(148, 163, 184, 0.42), transparent 52%),
+    radial-gradient(circle at 50% 88%, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 1) 72%),
+    linear-gradient(180deg, rgba(51, 65, 85, 0.95), rgba(15, 23, 42, 1));
+  box-shadow:
+    inset 0 0 0 1px rgba(148, 163, 184, 0.28),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.talisman-token-rare .talisman-token-octagon {
+  background: linear-gradient(145deg, #60a5fa, #7c3aed 48%, #c084fc 100%);
+}
+
+.talisman-token-rare .talisman-token-surface {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(96, 165, 250, 0.5), transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(49, 46, 129, 0.96), rgba(15, 23, 42, 1) 70%),
+    linear-gradient(180deg, rgba(67, 56, 202, 0.88), rgba(15, 23, 42, 1));
+  box-shadow:
+    inset 0 0 0 1px rgba(129, 140, 248, 0.35),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.35);
+}
+
+.talisman-token-epic .talisman-token-octagon {
+  background: linear-gradient(145deg, #fbbf24, #f59e0b 35%, #a855f7 72%, #fde047 100%);
+}
+
+.talisman-token-epic .talisman-token-surface {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(251, 191, 36, 0.55), transparent 48%),
+    radial-gradient(circle at 50% 92%, rgba(88, 28, 135, 0.96), rgba(30, 14, 48, 1) 72%),
+    linear-gradient(180deg, rgba(120, 53, 15, 0.82), rgba(30, 14, 48, 1));
+  box-shadow:
+    inset 0 0 0 1px rgba(251, 191, 36, 0.32),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.38);
+}
+
+.talisman-token-rarity {
+  z-index: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 23, 42, 0.55);
+  color: rgba(226, 232, 240, 0.92);
+  font-size: 0.46rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  padding: 2px 5px;
+  text-transform: uppercase;
+}
+
+.talisman-token-emoji {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  font-size: clamp(1.15rem, 52%, 1.55rem);
+  line-height: 1;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
+}
+
+.talisman-token-name {
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: #f8fafc;
+  font-size: 0.52rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+.talisman-token-md {
+  max-width: 96px;
+}
+
+.talisman-token-md .talisman-token-emoji {
+  font-size: clamp(1.35rem, 54%, 1.85rem);
+}
+
+.talisman-token-md .talisman-token-name {
+  font-size: 0.58rem;
+}
+
+.talisman-token-active .talisman-token-octagon {
+  filter:
+    drop-shadow(0 0 10px rgba(52, 211, 153, 0.45))
+    drop-shadow(0 8px 18px rgba(0, 0, 0, 0.42));
+}
+
+.talisman-token-active-badge {
+  position: absolute;
+  top: -5px;
+  right: -4px;
+  z-index: 3;
+  border-radius: 999px;
+  background: var(--success);
+  color: #052e1c;
+  font-size: 0.48rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 2px 5px;
+  text-transform: uppercase;
+}
+
+.talisman-token-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: 12;
+  width: max-content;
+  max-width: min(200px, 72vw);
+  padding: 8px 10px;
+  border: 1px solid rgba(159, 122, 234, 0.45);
+  border-radius: 10px;
+  background: rgba(17, 12, 32, 0.96);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-4px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms ease;
+}
+
+.talisman-token-tooltip-title {
+  margin: 0 0 3px;
+  color: #f3e8ff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.talisman-token-tooltip-stat {
+  margin: 0;
+  color: #c4b5fd;
+  font-size: 0.66rem;
+  line-height: 1.35;
+}
+
+.talisman-token-has-stats:hover .talisman-token-tooltip,
+.talisman-token-has-stats:focus-within .talisman-token-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.talisman-token-has-stats:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
 .deck-card-grid {
@@ -1053,7 +1222,9 @@ input {
 }
 
 .inventory-slot-saving .game-card-frame,
-.inventory-card-saving .game-card-frame {
+.inventory-card-saving .game-card-frame,
+.inventory-slot-saving .talisman-token-octagon,
+.inventory-card-saving .talisman-token-octagon {
   outline: 2px solid rgba(159, 122, 234, 0.45);
   outline-offset: 2px;
 }
@@ -1843,7 +2014,7 @@ h3 {
 
 .inventory-build-layout {
   display: grid;
-  grid-template-columns: minmax(84px, 96px) minmax(0, 1fr);
+  grid-template-columns: minmax(72px, 80px) minmax(0, 1fr);
   gap: 10px;
   align-items: start;
 }
@@ -1875,7 +2046,7 @@ h3 {
 }
 
 .inventory-talisman-slot {
-  max-width: 92px;
+  max-width: 80px;
 }
 
 .inventory-slot-drop {
@@ -1912,9 +2083,9 @@ h3 {
 }
 
 .inventory-slot-talisman-card,
-.inventory-slot-talisman-card .game-card {
+.inventory-slot-talisman-card .talisman-token {
   width: 100%;
-  max-width: 92px;
+  max-width: 76px;
 }
 
 .inventory-stash-cell .inventory-draggable,
@@ -1975,18 +2146,19 @@ h3 {
 }
 
 .inventory-slot-empty-octagon {
-  max-width: 92px;
+  max-width: 76px;
   aspect-ratio: 1;
   border-radius: 0;
   border: none;
-  color: rgba(255, 255, 255, 0.52);
-  font-size: 0.6rem;
+  color: rgba(196, 181, 253, 0.72);
+  font-size: 0.56rem;
+  font-weight: 700;
   line-height: 1.15;
   text-align: center;
-  padding: 10px;
+  padding: 8px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(0, 0, 0, 0.24);
+    radial-gradient(circle at 50% 30%, rgba(159, 122, 234, 0.16), transparent 55%),
+    rgba(8, 10, 24, 0.82);
   clip-path: polygon(
     30% 0%,
     70% 0%,
@@ -1997,7 +2169,7 @@ h3 {
     0% 70%,
     0% 30%
   );
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1.5px rgba(159, 122, 234, 0.28);
 }
 
 .inventory-slot-drop-hover .inventory-slot-empty:not(.inventory-slot-empty-octagon),
@@ -2031,7 +2203,7 @@ h3 {
 }
 
 .inventory-talisman-slot .inventory-slot-remove {
-  max-width: 92px;
+  max-width: 76px;
 }
 
 .inventory-stash {
@@ -2061,8 +2233,8 @@ h3 {
   justify-items: center;
 }
 
-.inventory-stash-cell-talisman .game-card {
-  width: min(100%, 92px);
+.inventory-stash-cell-talisman .talisman-token {
+  width: min(100%, 76px);
 }
 
 .inventory-stash-cell.is-dragging {
@@ -2076,20 +2248,6 @@ h3 {
   font-size: 0.76rem;
   line-height: 1.4;
   text-align: center;
-}
-
-.inventory-board .game-card-talisman .game-card-rarity {
-  font-size: 0.48rem;
-  padding: 2px 5px;
-}
-
-.inventory-board .game-card-talisman .game-card-name {
-  font-size: 0.58rem;
-  line-height: 1.1;
-}
-
-.inventory-board .game-card-talisman .game-card-art {
-  font-size: clamp(1.35rem, 34%, 1.75rem);
 }
 
 .feature-grid {
@@ -3004,15 +3162,16 @@ h3 {
   }
 
   .inventory-build-layout {
-    grid-template-columns: minmax(68px, 76px) minmax(0, 1fr);
+    grid-template-columns: minmax(64px, 72px) minmax(0, 1fr);
   }
 
   .inventory-talisman-slot,
   .inventory-slot-talisman-card,
-  .inventory-slot-talisman-card .game-card,
+  .inventory-slot-talisman-card .talisman-token,
   .inventory-slot-empty-octagon,
-  .inventory-talisman-slot .inventory-slot-remove {
-    max-width: 76px;
+  .inventory-talisman-slot .inventory-slot-remove,
+  .inventory-stash-cell-talisman .talisman-token {
+    max-width: 68px;
   }
 
   .inventory-board .game-card-name {

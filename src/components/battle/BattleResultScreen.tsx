@@ -2,6 +2,7 @@ import type { Route } from "next";
 import Link from "next/link";
 
 import { GameCard } from "@/components/cards/GameCard";
+import { TalismanToken } from "@/components/cards/TalismanToken";
 import type { CardRarity } from "@/lib/game/types";
 
 export type BattleLootItem = {
@@ -76,14 +77,23 @@ export function BattleResultScreen({ summary }: { summary: BattleSummary }) {
           <div className="battle-result-loot">
             <p className="eyebrow">Beute</p>
             <div className="battle-result-loot-display">
-              <GameCard
-                description={loot.description}
-                emoji={loot.emoji}
-                name={loot.name}
-                rarity={loot.rarity}
-                size="md"
-                variant={loot.kind}
-              />
+              {loot.kind === "talisman" ? (
+                <TalismanToken
+                  description={loot.description}
+                  emoji={loot.emoji}
+                  name={loot.name}
+                  rarity={loot.rarity}
+                  size="md"
+                />
+              ) : (
+                <GameCard
+                  description={loot.description}
+                  emoji={loot.emoji}
+                  name={loot.name}
+                  rarity={loot.rarity}
+                  size="md"
+                />
+              )}
             </div>
             <p className="muted battle-result-loot-hint">
               {loot.kind === "talisman"

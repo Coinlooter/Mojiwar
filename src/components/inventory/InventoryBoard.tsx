@@ -10,6 +10,7 @@ import {
   type DeckActionError,
 } from "@/app/deck/actions";
 import { GameCard } from "@/components/cards/GameCard";
+import { TalismanToken } from "@/components/cards/TalismanToken";
 import { DECK_ERROR_MESSAGES } from "@/lib/ui/errors";
 import {
   equipCardOptimistically,
@@ -373,15 +374,14 @@ export function InventoryBoard({
                 handleDragStartTalismanSlot(slot, event);
               }}
             >
-              <GameCard
-                active
-                description={slot.talisman.description}
-                emoji={slot.talisman.emoji}
-                name={slot.talisman.name}
-                rarity={slot.talisman.rarity}
-                size="sm"
-                variant="talisman"
-              />
+                        <TalismanToken
+                          active
+                          description={slot.talisman.description}
+                          emoji={slot.talisman.emoji}
+                          name={slot.talisman.name}
+                          rarity={slot.talisman.rarity}
+                          size="sm"
+                        />
             </div>
           ) : (
             <div className="inventory-slot-empty inventory-slot-empty-octagon">
@@ -657,13 +657,12 @@ export function InventoryBoard({
                         handleDragStartTalismanInventory(talisman, event);
                       }}
                     >
-                      <GameCard
+                      <TalismanToken
                         description={talisman.description}
                         emoji={talisman.emoji}
                         name={talisman.name}
                         rarity={talisman.rarity}
                         size="sm"
-                        variant="talisman"
                       />
                     </div>
                   </div>
