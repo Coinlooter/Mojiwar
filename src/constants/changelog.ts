@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.9.4",
+    changes: [
+      "Navigation — Ladebalken erscheint nicht mehr bei Klicks auf die aktuelle Seite",
+    ],
+  },
+  {
     version: "1.9.3",
     changes: [
       "Login-Code — wird automatisch bei der ersten Anmeldung erzeugt",
