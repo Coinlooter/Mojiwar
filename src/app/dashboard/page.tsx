@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { AccountPanel } from "@/components/account/AccountPanel";
 import { XpProgressBar } from "@/components/dashboard/XpProgressBar";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 import { getPrimaryCharacter } from "@/lib/auth/character";
 import { getVerifiedUser } from "@/lib/auth/session";
 import { fetchDashboardData } from "@/lib/game/dashboard";
@@ -50,7 +51,7 @@ export default async function DashboardPage({
     redirect("/onboarding" as Route);
   }
 
-  const { inboxStats, battles } = await fetchDashboardData(
+  const { inboxStats, battles, loadError } = await fetchDashboardData(
     supabase,
     user.id,
     character,
@@ -87,6 +88,8 @@ export default async function DashboardPage({
           </Link>
         </div>
       </header>
+
+      {loadError ? <AlertBanner>{loadError}</AlertBanner> : null}
 
       <section aria-label="Spielstatistiken" className="dashboard-stats">
         {inboxStats.map((stat) => (

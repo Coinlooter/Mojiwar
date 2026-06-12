@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/supabase/database.types";
+import { LOAD_ERROR_MESSAGE } from "@/lib/ui/load-result";
 
 type CharacterRow = Database["public"]["Tables"]["characters"]["Row"];
 type BattleRow = Pick<
@@ -25,6 +26,7 @@ export type DashboardPageData = {
   character: CharacterRow;
   inboxStats: Array<{ label: string; value: number }>;
   battles: DashboardBattleRow[];
+  loadError: string | null;
 };
 
 async function getCount<T>(
@@ -69,6 +71,7 @@ export async function fetchDashboardData(
       .limit(5),
   ]);
 
+  const battlesLoadError = battlesResult.error ? LOAD_ERROR_MESSAGE : null;
   const battles = battlesResult.data ?? [];
   const opponentIds = [
     ...new Set(
@@ -121,5 +124,6 @@ export async function fetchDashboardData(
       { label: "Karten", value: ownedCards },
     ],
     battles: dashboardBattles,
+    loadError: battlesLoadError,
   };
 }

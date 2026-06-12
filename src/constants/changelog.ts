@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.13.0",
+    changes: [
+      "Kampf — Fallback auf Übungsgegner und erweiterte Suche bei leerer Gegnerliste",
+      "Rangliste — mobiles Karten-Layout statt horizontalem Scrollen",
+      "Fehler — verständliche Meldungen statt leerer Listen oder technischer Texte",
+    ],
+  },
+  {
     version: "1.11.7",
     changes: [
       "Dashboard — Erfahrung als Fortschrittsbalken statt XP-Zahl",

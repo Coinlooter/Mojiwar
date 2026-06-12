@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/supabase/database.types";
+import {
+  loadError,
+  loadOk,
+  type LoadResult,
+} from "@/lib/ui/load-result";
 
 export type LeaderboardEntry = {
   rank: number;
@@ -16,23 +21,25 @@ export type LeaderboardEntry = {
 export async function fetchLeaderboard(
   supabase: SupabaseClient<Database>,
   limit = 50,
-): Promise<LeaderboardEntry[]> {
+): Promise<LoadResult<LeaderboardEntry[]>> {
   const { data, error } = await supabase.rpc("get_leaderboard", {
     p_limit: limit,
   });
 
   if (error || !data) {
-    return [];
+    return loadError();
   }
 
-  return data.map((entry) => ({
-    rank: Number(entry.rank),
-    characterId: entry.character_id,
-    emoji: entry.emoji,
-    name: entry.name,
-    level: entry.level,
-    power: entry.power,
-    wins: entry.wins,
-    losses: entry.losses,
-  }));
+  return loadOk(
+    data.map((entry) => ({
+      rank: Number(entry.rank),
+      characterId: entry.character_id,
+      emoji: entry.emoji,
+      name: entry.name,
+      level: entry.level,
+      power: entry.power,
+      wins: entry.wins,
+      losses: entry.losses,
+    })),
+  );
 }

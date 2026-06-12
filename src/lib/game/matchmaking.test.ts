@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { starterCards } from "./cards";
 import {
   getPowerRange,
+  isOpponentChallengeable,
   isOpponentInPowerRange,
   OPPONENT_POWER_MAX_TOLERANCE,
   OPPONENT_POWER_MIN_TOLERANCE,
@@ -68,6 +69,30 @@ describe("matchmaking", () => {
 
     expect(ranked).toHaveLength(1);
     expect(ranked[0]?.candidate.id).toBe("close");
+  });
+
+  it("allows widened range challenges for low-level players", () => {
+    const slightlyStronger = {
+      ...player,
+      id: "slightly-stronger",
+      name: "Slightly Stronger",
+      level: 2,
+      baseStats: {
+        hp: 112,
+        attack: 14,
+        defense: 6,
+        speed: 10,
+        critChance: 0.05,
+      },
+      deck: [starterCards[0], starterCards[1], starterCards[2]],
+    };
+
+    expect(
+      isOpponentChallengeable({
+        player: { ...player, level: 2 },
+        opponent: slightlyStronger,
+      }),
+    ).toBe(true);
   });
 
   it("rejects opponents outside the power range", () => {

@@ -10,7 +10,7 @@ import {
   fetchCharacterLoadout,
   fetchOpponentCharacterLoadout,
 } from "@/lib/game/loadout";
-import { isOpponentInPowerRange } from "@/lib/game/matchmaking";
+import { isOpponentChallengeable } from "@/lib/game/matchmaking";
 import { persistBattleResult } from "@/lib/game/persist-battle";
 import { resolveBattleBetween } from "@/lib/game/resolve-battle";
 import { challengeCharacterSchema } from "@/lib/game/schemas";
@@ -41,7 +41,7 @@ export async function startChallenge(
     return { ok: false, error: "missing" };
   }
 
-  if (!isOpponentInPowerRange({ player: attacker, opponent: defender })) {
+  if (!isOpponentChallengeable({ player: attacker, opponent: defender })) {
     return { ok: false, error: "range" };
   }
 

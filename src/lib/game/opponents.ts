@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/lib/supabase/database.types";
+import {
+  loadError,
+  loadOk,
+  type LoadResult,
+} from "@/lib/ui/load-result";
 
 export async function fetchOpponentCharacterIds(
   supabase: SupabaseClient<Database>,
@@ -13,7 +18,7 @@ export async function fetchOpponentCharacterIds(
     minPower: number;
     maxPower: number;
   },
-) {
+): Promise<LoadResult<string[]>> {
   const { data, error } = await supabase
     .from("characters")
     .select("id")
@@ -23,8 +28,24 @@ export async function fetchOpponentCharacterIds(
     .order("power", { ascending: true });
 
   if (error) {
-    return [];
+    return loadError();
   }
 
-  return (data ?? []).map((row) => row.id);
+  return loadOk((data ?? []).map((row) => row.id));
+}
+
+export async function fetchBotCharacterIds(
+  supabase: SupabaseClient<Database>,
+): Promise<LoadResult<string[]>> {
+  const { data, error } = await supabase
+    .from("characters")
+    .select("id")
+    .eq("is_bot", true)
+    .order("power", { ascending: true });
+
+  if (error) {
+    return loadError();
+  }
+
+  return loadOk((data ?? []).map((row) => row.id));
 }

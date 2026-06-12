@@ -1331,6 +1331,49 @@ input {
   color: var(--success);
 }
 
+.leaderboard-cards {
+  display: none;
+  gap: 10px;
+}
+
+.leaderboard-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 14px 16px;
+}
+
+.leaderboard-card-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.leaderboard-card-copy {
+  min-width: 0;
+}
+
+.leaderboard-card-copy strong {
+  display: block;
+}
+
+.leaderboard-card-meta {
+  margin: 4px 0 0;
+  font-size: 0.84rem;
+}
+
+.leaderboard-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .eyebrow {
   color: var(--accent-strong);
   font-size: 0.8rem;
@@ -1732,6 +1775,14 @@ h3 {
   font-weight: 700;
   letter-spacing: 0.03em;
   padding: 3px 9px;
+}
+
+.fight-opponents-hint {
+  margin: 0;
+  padding: 12px 14px;
+  color: #dbe4ff;
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .fight-opponents-empty {
@@ -3073,14 +3124,12 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .leaderboard-table {
-    overflow-x: auto;
-    padding-bottom: 4px;
+  .leaderboard-table-desktop {
+    display: none;
   }
 
-  .leaderboard-header,
-  .leaderboard-row {
-    min-width: 620px;
+  .leaderboard-cards-mobile {
+    display: grid;
   }
 
   .dashboard-stats {

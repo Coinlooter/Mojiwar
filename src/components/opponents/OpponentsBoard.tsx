@@ -11,12 +11,14 @@ export function OpponentsBoard({
   playerPower,
   powerRange,
   initialErrorMessage,
+  fallbackHint,
   opponents,
 }: {
   playerEmoji: string;
   playerPower: number;
   powerRange: { min: number; max: number };
   initialErrorMessage: string | null;
+  fallbackHint: string | null;
   opponents: RankedOpponent[];
 }) {
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
@@ -28,17 +30,20 @@ export function OpponentsBoard({
           <p className="eyebrow">Kampf</p>
           <h1>Wähle deinen Gegner.</h1>
           <p className="muted fight-top-lead">
-            Deine Stärke: {playerPower}. Angreifbar sind nur Gegner zwischen{" "}
+            Deine Stärke: {playerPower}. Angreifbar sind Gegner zwischen{" "}
             {powerRange.min} und {powerRange.max} (−6 % bis +10 %).
           </p>
         </div>
       </header>
 
       {errorMessage ? <AlertBanner>{errorMessage}</AlertBanner> : null}
+      {fallbackHint && opponents.length > 0 ? (
+        <p className="fight-opponents-hint panel battle-card">{fallbackHint}</p>
+      ) : null}
 
       <section className="panel battle-card fight-list-card">
         <div className="fight-list-head">
-          <p className="eyebrow">Rangliste</p>
+          <p className="eyebrow">Gegner</p>
           <span className="fight-list-count">
             {opponents.length} {opponents.length === 1 ? "Gegner" : "Gegner"}
           </span>
@@ -46,11 +51,11 @@ export function OpponentsBoard({
 
         {opponents.length === 0 ? (
           <p className="muted fight-opponents-empty">
-            Gerade ist niemand in deiner Stärkeklasse online. Rüste dein Deck aus
-            oder komm später wieder.
+            {fallbackHint ??
+              "Gerade ist niemand in deiner Stärkeklasse online. Rüste dein Deck aus oder komm später wieder."}
           </p>
         ) : (
-          <div aria-label="Rangliste" className="fight-opponent-list">
+          <div aria-label="Gegnerliste" className="fight-opponent-list">
             {opponents.map((entry, index) => (
               <OpponentRow
                 candidate={entry.candidate}
