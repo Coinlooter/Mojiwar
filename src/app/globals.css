@@ -2397,7 +2397,7 @@ h3 {
   gap: 12px;
   align-items: end;
   min-height: 0;
-  padding: 0 10% 22%;
+  padding: 0 10% 14%;
 }
 
 .battle-fighter {
@@ -2472,7 +2472,7 @@ h3 {
   min-height: min(32vh, 240px);
   display: grid;
   place-items: end center;
-  transform: translateY(-8%);
+  transform: translateY(-2%);
 }
 
 .battle-fighter-shadow {
@@ -3149,12 +3149,12 @@ h3 {
   }
 
   .battle-arena-stage {
-    padding: 0 6% 20%;
+    padding: 0 6% 12%;
   }
 
   .battle-fighter-sprite-wrap {
     min-height: min(28vh, 200px);
-    transform: translateY(-6%);
+    transform: none;
   }
 
   .battle-result-log .event-list {
