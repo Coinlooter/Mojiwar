@@ -20,12 +20,13 @@ export function TalismanToken({
   active = false,
   className = "",
 }: TalismanTokenProps) {
+  const hasTooltip = Boolean(description);
   const classes = [
     "talisman-token",
     `talisman-token-${rarity}`,
     `talisman-token-${size}`,
     active ? "talisman-token-active" : "",
-    description ? "talisman-token-has-stats" : "",
+    hasTooltip ? "talisman-token-has-stats" : "",
     className,
   ]
     .filter(Boolean)
@@ -39,24 +40,21 @@ export function TalismanToken({
           : `${name}, ${CARD_RARITY_LABEL[rarity]}`
       }
       className={classes}
-      tabIndex={description ? 0 : undefined}
+      tabIndex={hasTooltip ? 0 : undefined}
     >
       <div className="talisman-token-octagon" aria-hidden>
         <div className="talisman-token-surface">
-          <span className="talisman-token-rarity">{CARD_RARITY_LABEL[rarity]}</span>
           <div className="talisman-token-emoji">{emoji}</div>
-          <p className="talisman-token-name">{name}</p>
         </div>
       </div>
 
-      {description ? (
+      {hasTooltip ? (
         <div className="talisman-token-tooltip" role="tooltip">
           <p className="talisman-token-tooltip-title">{name}</p>
+          <p className="talisman-token-tooltip-rarity">{CARD_RARITY_LABEL[rarity]}</p>
           <p className="talisman-token-tooltip-stat">{description}</p>
         </div>
       ) : null}
-
-      {active ? <span className="talisman-token-active-badge">Angelegt</span> : null}
     </article>
   );
 }

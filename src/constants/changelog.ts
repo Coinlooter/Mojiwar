@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.11.3",
+    changes: [
+      "Talismane — nur Emoji sichtbar, Name und Stats im Hover-Fenster",
+    ],
+  },
+  {
     version: "1.11.2",
     changes: [
       "Talismane — eigene Darstellung mit Stein-Look statt Pergament-Karte",
