@@ -1,12 +1,9 @@
 import { OpponentsBoard } from "@/components/opponents/OpponentsBoard";
 import { requireCharacter } from "@/lib/auth/require-character";
 import { calculatePower } from "@/lib/game/calculate-power";
-import {
-  fetchCharacterLoadout,
-  fetchOpponentCharacterLoadouts,
-} from "@/lib/game/loadout";
-import { getPowerRange, rankOpponentsInPowerRange } from "@/lib/game/matchmaking";
-import { fetchOpponentCharacterIds } from "@/lib/game/opponents";
+import { fetchCharacterLoadout } from "@/lib/game/loadout";
+import { resolveOpponentList } from "@/lib/game/opponent-selection";
+import { getPowerRange } from "@/lib/game/matchmaking";
 import {
   getSearchParamErrorMessage,
   OPPONENT_ERROR_MESSAGES,
@@ -43,18 +40,16 @@ export default async function OpponentsPage({
 
   const playerPower = calculatePower(player);
   const powerRange = getPowerRange(playerPower);
-  const opponentIds = await fetchOpponentCharacterIds(supabase, {
-    excludeCharacterId: character.id,
-    minPower: powerRange.min,
-    maxPower: powerRange.max,
-  });
-  const candidates = await fetchOpponentCharacterLoadouts(opponentIds);
-  const rankedOpponents = rankOpponentsInPowerRange({ player, candidates });
+  const { opponents, fallbackHint, loadError } = await resolveOpponentList(
+    supabase,
+    player,
+  );
 
   return (
     <OpponentsBoard
-      initialErrorMessage={errorMessage}
-      opponents={rankedOpponents}
+      fallbackHint={fallbackHint}
+      initialErrorMessage={errorMessage ?? loadError}
+      opponents={opponents}
       playerEmoji={player.emoji}
       playerPower={playerPower}
       powerRange={powerRange}

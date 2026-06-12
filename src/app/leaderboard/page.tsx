@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { LeaderboardTable } from "@/components/leaderboard/LeaderboardTable";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { getPrimaryCharacter } from "@/lib/auth/character";
 import { requireUser } from "@/lib/auth/require-character";
@@ -11,11 +12,13 @@ export const dynamic = "force-dynamic";
 export default async function LeaderboardPage() {
   const { supabase, user } = await requireUser();
 
-  const [{ character }, entries] = await Promise.all([
+  const [{ character }, leaderboardResult] = await Promise.all([
     getPrimaryCharacter(supabase, user.id).then((row) => ({ character: row })),
     fetchLeaderboard(supabase),
   ]);
 
+  const entries = leaderboardResult.ok ? leaderboardResult.data : [];
+  const loadError = leaderboardResult.ok ? null : leaderboardResult.message;
   const currentEntry = character
     ? entries.find((entry) => entry.characterId === character.id)
     : undefined;
@@ -29,6 +32,8 @@ export default async function LeaderboardPage() {
           title="Die stärksten Emoji-Helden im Land."
         />
       </header>
+
+      {loadError ? <AlertBanner>{loadError}</AlertBanner> : null}
 
       {currentEntry ? (
         <section className="leaderboard-summary panel battle-card">
@@ -62,6 +67,7 @@ export default async function LeaderboardPage() {
         <LeaderboardTable
           currentCharacterId={character?.id}
           entries={entries}
+          loadFailed={Boolean(loadError)}
         />
       </section>
     </div>
