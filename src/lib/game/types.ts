@@ -45,6 +45,12 @@ export type RolledCardDrop = {
   description: string;
 };
 
+export type RolledTalismanDrop = {
+  talismanId: string;
+  effectValue: number;
+  description: string;
+};
+
 export type TalismanDefinition = {
   id: string;
   name: string;
@@ -57,7 +63,7 @@ export type TalismanDefinition = {
 
 export type BattleReward =
   | { kind: "card"; roll: RolledCardDrop }
-  | { kind: "talisman"; item: TalismanDefinition };
+  | { kind: "talisman"; roll: RolledTalismanDrop; item: TalismanDefinition };
 
 export type CombatStats = {
   hp: number;

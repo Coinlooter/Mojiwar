@@ -28,6 +28,29 @@ export function mapTalismanRow(talisman: TalismanRow): TalismanDefinition {
   };
 }
 
+type PlayerTalismanRollRow = {
+  talisman_id: string;
+  effect_value: number | null;
+  rolled_description: string | null;
+};
+
+export function buildPlayerTalismanDefinition(
+  playerTalisman: PlayerTalismanRollRow,
+  baseTalisman: TalismanDefinition,
+): TalismanDefinition {
+  if (playerTalisman.effect_value == null) {
+    return {
+      ...baseTalisman,
+    };
+  }
+
+  return {
+    ...baseTalisman,
+    effectValue: Number(playerTalisman.effect_value),
+    description: playerTalisman.rolled_description ?? baseTalisman.description,
+  };
+}
+
 export function mapCardRow(card: CardRow): CardDefinition {
   return {
     id: card.id,
@@ -210,7 +233,7 @@ async function fetchTalismanForCharacter(
 
   const { data: playerTalisman, error: playerTalismanError } = await supabase
     .from("player_talismans")
-    .select("talisman_id")
+    .select("talisman_id, effect_value, rolled_description")
     .eq("id", talismanSlot.player_talisman_id)
     .maybeSingle();
 
@@ -228,7 +251,7 @@ async function fetchTalismanForCharacter(
     return null;
   }
 
-  return mapTalismanRow(talisman);
+  return buildPlayerTalismanDefinition(playerTalisman, mapTalismanRow(talisman));
 }
 
 export async function fetchCharacterLoadout(

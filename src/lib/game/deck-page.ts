@@ -4,6 +4,7 @@ import { MAX_DECK_SLOTS } from "@/lib/game/cards";
 import { MAX_TALISMAN_SLOTS } from "@/lib/game/talismans";
 import {
   buildPlayerCardDefinition,
+  buildPlayerTalismanDefinition,
   mapCardRow,
   mapTalismanRow,
 } from "@/lib/game/loadout";
@@ -53,7 +54,7 @@ export async function fetchDeckPageData(
       .order("slot_index", { ascending: true }),
     supabase
       .from("player_talismans")
-      .select("id, talisman_id")
+      .select("id, talisman_id, effect_value, rolled_description")
       .eq("user_id", userId)
       .order("created_at", { ascending: true }),
     supabase
@@ -156,17 +157,23 @@ export async function fetchDeckPageData(
   });
 
   function toInventoryTalisman(
-    playerTalismanId: string,
-    talismanId: string,
+    ownedTalisman: {
+      id: string;
+      talisman_id: string;
+      effect_value: number | null;
+      rolled_description: string | null;
+    },
   ): InventoryTalismanData | null {
-    const talisman = talismansById.get(talismanId);
+    const baseTalisman = talismansById.get(ownedTalisman.talisman_id);
 
-    if (!talisman) {
+    if (!baseTalisman) {
       return null;
     }
 
+    const talisman = buildPlayerTalismanDefinition(ownedTalisman, baseTalisman);
+
     return {
-      playerTalismanId,
+      playerTalismanId: ownedTalisman.id,
       emoji: talisman.emoji,
       name: talisman.name,
       rarity: talisman.rarity,
@@ -185,8 +192,8 @@ export async function fetchDeckPageData(
       return {
         slotIndex,
         talisman:
-          playerTalismanId && ownedTalisman
-            ? toInventoryTalisman(playerTalismanId, ownedTalisman.talisman_id)
+          ownedTalisman
+            ? toInventoryTalisman(ownedTalisman)
             : null,
       };
     },
@@ -198,7 +205,7 @@ export async function fetchDeckPageData(
         return [];
       }
 
-      const talisman = toInventoryTalisman(ownedTalisman.id, ownedTalisman.talisman_id);
+      const talisman = toInventoryTalisman(ownedTalisman);
 
       return talisman ? [talisman] : [];
     },

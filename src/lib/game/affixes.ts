@@ -1,3 +1,7 @@
+import {
+  deriveStatRange,
+  rollStatInRange,
+} from "./stat-ranges";
 import type { CardAffix, CardEffectType } from "./types";
 
 export type AffixTemplate = {
@@ -5,82 +9,88 @@ export type AffixTemplate = {
   label: string;
   effectType: CardEffectType;
   baseValue: number;
+  minValue: number;
+  maxValue: number;
   statLabel: string;
 };
 
+function createAffixTemplate(
+  template: Omit<AffixTemplate, "minValue" | "maxValue"> & { baseValue: number },
+): AffixTemplate {
+  const range = deriveStatRange(template.effectType, template.baseValue);
+
+  return {
+    ...template,
+    minValue: range.minValue,
+    maxValue: range.maxValue,
+  };
+}
+
 export const AFFIX_POOL: AffixTemplate[] = [
-  { id: "fierce", label: "Wütend", effectType: "bonus_attack", baseValue: 4, statLabel: "Angriff" },
-  { id: "savage", label: "Wild", effectType: "bonus_attack", baseValue: 5, statLabel: "Angriff" },
-  { id: "keen", label: "Spitz", effectType: "bonus_attack", baseValue: 3, statLabel: "Angriff" },
-  { id: "sturdy", label: "Stämmig", effectType: "bonus_defense", baseValue: 3, statLabel: "Verteidigung" },
-  { id: "armored", label: "Gepanzert", effectType: "bonus_defense", baseValue: 4, statLabel: "Verteidigung" },
-  { id: "watchful", label: "Wachsam", effectType: "bonus_defense", baseValue: 2, statLabel: "Verteidigung" },
-  { id: "lively", label: "Lebendig", effectType: "bonus_hp", baseValue: 18, statLabel: "Leben" },
-  { id: "unyielding", label: "Unbezwingbar", effectType: "bonus_hp", baseValue: 24, statLabel: "Leben" },
-  { id: "renewing", label: "Regenerierend", effectType: "bonus_hp", baseValue: 14, statLabel: "Leben" },
-  { id: "swift", label: "Flink", effectType: "bonus_speed", baseValue: 3, statLabel: "Tempo" },
-  { id: "hasty", label: "Hastig", effectType: "bonus_speed", baseValue: 4, statLabel: "Tempo" },
-  { id: "windy", label: "Windig", effectType: "bonus_speed", baseValue: 2, statLabel: "Tempo" },
-  { id: "sharp", label: "Scharf", effectType: "bonus_crit_chance", baseValue: 0.06, statLabel: "Kritchance" },
-  { id: "deadly", label: "Tödlich", effectType: "bonus_crit_chance", baseValue: 0.08, statLabel: "Kritchance" },
-  { id: "precise", label: "Präzise", effectType: "bonus_crit_chance", baseValue: 0.05, statLabel: "Kritchance" },
-  { id: "opening", label: "Eröffnend", effectType: "first_strike_damage", baseValue: 9, statLabel: "Startschaden" },
-  { id: "ambush", label: "Hinterhältig", effectType: "first_strike_damage", baseValue: 12, statLabel: "Startschaden" },
-  { id: "comfort", label: "Tröstend", effectType: "low_hp_heal", baseValue: 16, statLabel: "Notheilung" },
-  { id: "resilient", label: "Zäh", effectType: "low_hp_heal", baseValue: 22, statLabel: "Notheilung" },
+  createAffixTemplate({ id: "fierce", label: "Wütend", effectType: "bonus_attack", baseValue: 4, statLabel: "Angriff" }),
+  createAffixTemplate({ id: "savage", label: "Wild", effectType: "bonus_attack", baseValue: 5, statLabel: "Angriff" }),
+  createAffixTemplate({ id: "keen", label: "Spitz", effectType: "bonus_attack", baseValue: 3, statLabel: "Angriff" }),
+  createAffixTemplate({ id: "sturdy", label: "Stämmig", effectType: "bonus_defense", baseValue: 3, statLabel: "Verteidigung" }),
+  createAffixTemplate({ id: "armored", label: "Gepanzert", effectType: "bonus_defense", baseValue: 4, statLabel: "Verteidigung" }),
+  createAffixTemplate({ id: "watchful", label: "Wachsam", effectType: "bonus_defense", baseValue: 2, statLabel: "Verteidigung" }),
+  createAffixTemplate({ id: "lively", label: "Lebendig", effectType: "bonus_hp", baseValue: 18, statLabel: "Leben" }),
+  createAffixTemplate({ id: "unyielding", label: "Unbezwingbar", effectType: "bonus_hp", baseValue: 24, statLabel: "Leben" }),
+  createAffixTemplate({ id: "renewing", label: "Regenerierend", effectType: "bonus_hp", baseValue: 14, statLabel: "Leben" }),
+  createAffixTemplate({ id: "swift", label: "Flink", effectType: "bonus_speed", baseValue: 3, statLabel: "Tempo" }),
+  createAffixTemplate({ id: "hasty", label: "Hastig", effectType: "bonus_speed", baseValue: 4, statLabel: "Tempo" }),
+  createAffixTemplate({ id: "windy", label: "Windig", effectType: "bonus_speed", baseValue: 2, statLabel: "Tempo" }),
+  createAffixTemplate({ id: "sharp", label: "Scharf", effectType: "bonus_crit_chance", baseValue: 0.06, statLabel: "Kritchance" }),
+  createAffixTemplate({ id: "deadly", label: "Tödlich", effectType: "bonus_crit_chance", baseValue: 0.08, statLabel: "Kritchance" }),
+  createAffixTemplate({ id: "precise", label: "Präzise", effectType: "bonus_crit_chance", baseValue: 0.05, statLabel: "Kritchance" }),
+  createAffixTemplate({ id: "opening", label: "Eröffnend", effectType: "first_strike_damage", baseValue: 9, statLabel: "Startschaden" }),
+  createAffixTemplate({ id: "ambush", label: "Hinterhältig", effectType: "first_strike_damage", baseValue: 12, statLabel: "Startschaden" }),
+  createAffixTemplate({ id: "comfort", label: "Tröstend", effectType: "low_hp_heal", baseValue: 16, statLabel: "Notheilung" }),
+  createAffixTemplate({ id: "resilient", label: "Zäh", effectType: "low_hp_heal", baseValue: 22, statLabel: "Notheilung" }),
 ];
 
 export const LEGENDARY_AFFIX_POOL: AffixTemplate[] = [
-  {
+  createAffixTemplate({
     id: "vampiric",
     label: "Vampirisch",
     effectType: "vampiric_lifesteal",
     baseValue: 0.25,
     statLabel: "Lebensraub",
-  },
-  {
+  }),
+  createAffixTemplate({
     id: "thorns",
     label: "Dornen",
     effectType: "thorns_reflect",
     baseValue: 0.3,
     statLabel: "Reflektion",
-  },
-  {
+  }),
+  createAffixTemplate({
     id: "frenzy",
     label: "Kampfrausch",
     effectType: "battle_frenzy_attack",
     baseValue: 8,
     statLabel: "Rausch-Angriff",
-  },
-  {
+  }),
+  createAffixTemplate({
     id: "barrier",
     label: "Schutzwall",
     effectType: "opening_barrier",
     baseValue: 0.4,
     statLabel: "Erste Abwehr",
-  },
-  {
+  }),
+  createAffixTemplate({
     id: "double",
     label: "Doppelschlag",
     effectType: "double_strike_chance",
     baseValue: 0.2,
     statLabel: "Zweiter Schlag",
-  },
+  }),
 ];
-
-export function scaleAffixValue(baseValue: number, multiplier: number) {
-  if (baseValue < 1) {
-    return Math.round(baseValue * multiplier * 1000) / 1000;
-  }
-
-  return Math.max(1, Math.round(baseValue * multiplier));
-}
 
 export function buildAffixFromTemplate(
   template: AffixTemplate,
-  multiplier: number,
+  random: () => number,
 ): CardAffix {
-  const value = scaleAffixValue(template.baseValue, multiplier);
+  const value = rollStatInRange(template.minValue, template.maxValue, random);
 
   return {
     id: template.id,

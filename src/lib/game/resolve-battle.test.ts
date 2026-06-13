@@ -47,9 +47,9 @@ describe("resolveBattleBetween", () => {
     expect(result.attackerCharacterId).toBe("attacker-id");
     expect(result.defenderCharacterId).toBe("defender-id");
     expect(result.battleLog.seed).toBe("test-seed");
-    expect(result.rewardCardRoll || result.rewardTalismanId).toBeTruthy();
+    expect(result.rewardCardRoll || result.rewardTalismanRoll).toBeTruthy();
     expect(
-      Boolean(result.rewardCardRoll) !== Boolean(result.rewardTalismanId),
+      Boolean(result.rewardCardRoll) !== Boolean(result.rewardTalismanRoll),
     ).toBe(true);
     expect(result.attackerXpAfter).toBeGreaterThanOrEqual(0);
     expect(result.defenderXpAfter).toBeGreaterThanOrEqual(0);

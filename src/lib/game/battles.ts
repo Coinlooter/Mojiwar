@@ -97,24 +97,27 @@ export async function fetchBattleForParticipant(
   if (won && battle.reward_player_talisman_id) {
     const { data: rewardRow } = await supabase
       .from("player_talismans")
-      .select("talisman_id")
+      .select("talisman_id, effect_value, rolled_description")
       .eq("id", battle.reward_player_talisman_id)
       .maybeSingle();
 
     if (rewardRow?.talisman_id) {
       const { data: talisman } = await supabase
         .from("talismans")
-        .select("name, emoji, rarity, description")
+        .select("name, emoji, rarity, effect_type, effect_value, description")
         .eq("id", rewardRow.talisman_id)
         .maybeSingle();
 
       if (talisman) {
+        const description =
+          rewardRow.rolled_description ??
+          talisman.description;
         loot = {
           kind: "talisman",
           emoji: talisman.emoji,
           name: talisman.name,
           rarity: talisman.rarity,
-          description: talisman.description,
+          description,
         };
       }
     }

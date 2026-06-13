@@ -213,6 +213,8 @@ export type Database = {
           user_id: string;
           talisman_id: string;
           acquired_from_battle_id: string | null;
+          effect_value: number | null;
+          rolled_description: string | null;
           created_at: string;
         };
         Insert: {
@@ -220,6 +222,8 @@ export type Database = {
           user_id: string;
           talisman_id: string;
           acquired_from_battle_id?: string | null;
+          effect_value?: number | null;
+          rolled_description?: string | null;
           created_at?: string;
         };
         Update: {
@@ -227,6 +231,8 @@ export type Database = {
           user_id?: string;
           talisman_id?: string;
           acquired_from_battle_id?: string | null;
+          effect_value?: number | null;
+          rolled_description?: string | null;
           created_at?: string;
         };
         Relationships: [];
@@ -429,7 +435,7 @@ export type Database = {
           p_defender_xp_gained: number;
           p_battle_log: Json;
           p_reward_card_roll: Json | null;
-          p_reward_talisman_id: string | null;
+          p_reward_talisman_roll: Json | null;
           p_attacker_xp_after: number;
           p_attacker_level_after: number;
           p_attacker_power_after: number;

@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { QUALITY_TIER_CONFIG } from "./card-roll";
 import { createSeededRandom } from "./random";
 import { rollBattleReward } from "./rewards";
-import { starterTalismans } from "./talismans";
+import { deriveStatRange } from "./stat-ranges";
+import { getTalismanById, starterTalismans } from "./talismans";
 
 describe("rollBattleReward", () => {
   it("ist deterministisch für denselben Seed", () => {
@@ -30,6 +31,14 @@ describe("rollBattleReward", () => {
         expect(
           starterTalismans.some((talisman) => talisman.id === reward.item.id),
         ).toBe(true);
+
+        const template = getTalismanById(reward.roll.talismanId);
+        expect(template).toBeDefined();
+
+        const range = deriveStatRange(template!.effectType, template!.effectValue);
+        expect(reward.roll.effectValue).toBeGreaterThanOrEqual(range.minValue);
+        expect(reward.roll.effectValue).toBeLessThanOrEqual(range.maxValue);
+        expect(reward.roll.description).toBe(reward.item.description);
       }
     }
 

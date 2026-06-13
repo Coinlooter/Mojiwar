@@ -145,14 +145,14 @@ export function rollCardDrop(random: () => number): RolledCardDrop {
   const base = cardDropBases[baseIndex] ?? cardDropBases[0];
   const affixTemplates = pickUniqueAffixes(AFFIX_POOL, config.affixCount, random);
   const affixes = affixTemplates.map((template) =>
-    buildAffixFromTemplate(template, config.statMultiplier),
+    buildAffixFromTemplate(template, random),
   );
   const legendaryTemplate =
     quality === "legendary"
       ? pickUniqueAffixes(LEGENDARY_AFFIX_POOL, 1, random)[0]
       : undefined;
   const legendaryAffix = legendaryTemplate
-    ? buildAffixFromTemplate(legendaryTemplate, config.statMultiplier)
+    ? buildAffixFromTemplate(legendaryTemplate, random)
     : undefined;
   const displayName = buildCardDisplayName({
     baseName: base.nameStem,

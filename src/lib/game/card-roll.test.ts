@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { AFFIX_POOL } from "./affixes";
 import { QUALITY_TIER_CONFIG } from "./card-roll";
 import { rollCardDrop } from "./card-roll";
 import { createSeededRandom } from "./random";
@@ -33,20 +34,17 @@ describe("rollCardDrop", () => {
     }
   });
 
-  it("skaliert seltene Affix-Werte höher als gewöhnliche", () => {
-    const common = rollCardDrop(createSeededRandom("common-affix-scale"));
-    const rare = rollCardDrop(createSeededRandom("rare-affix-scale"));
+  it("rollt Affix-Werte innerhalb der definierten Range", () => {
+    const templatesById = new Map(AFFIX_POOL.map((template) => [template.id, template]));
 
-    if (common.quality === "common" && rare.quality === "rare") {
-      const commonAttack = common.affixes.find(
-        (affix) => affix.effectType === "bonus_attack",
-      );
-      const rareAttack = rare.affixes.find(
-        (affix) => affix.effectType === "bonus_attack",
-      );
+    for (let index = 0; index < 120; index += 1) {
+      const drop = rollCardDrop(createSeededRandom(`card-roll-range-${index}`));
 
-      if (commonAttack && rareAttack && commonAttack.id === rareAttack.id) {
-        expect(rareAttack.value).toBeGreaterThan(commonAttack.value);
+      for (const affix of drop.affixes) {
+        const template = templatesById.get(affix.id);
+        expect(template).toBeDefined();
+        expect(affix.value).toBeGreaterThanOrEqual(template!.minValue);
+        expect(affix.value).toBeLessThanOrEqual(template!.maxValue);
       }
     }
   });

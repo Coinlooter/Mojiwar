@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.16.0",
+    changes: [
+      "Loot — Karten- und Talisman-Stats werden beim Drop zufällig in einer Range gerollt",
+      "Loot — Beispiel: Angriff +4 kann nun zwischen +2 und +6 fallen",
+      "Loot — Qualitätsstufen bestimmen weiterhin die Affix-Anzahl, nicht mehr den Stat-Multiplikator",
+    ],
+  },
+  {
     version: "1.15.10",
     changes: [
       "Angeln — Eimer weiter links und bleibt beim Fang fest stehen",
