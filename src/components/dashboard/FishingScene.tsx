@@ -114,18 +114,37 @@ export function FishingScene({
 
       <div className="fishing-scene-stage">
         <div className="fishing-angler-wrap">
-          <div className="fishing-angler">
-            <span aria-hidden className="fishing-character-emoji">
-              {characterEmoji}
-            </span>
-            <span aria-hidden className="fishing-rod">
-              🎣
-            </span>
-          </div>
+          <span aria-hidden className="fishing-character-emoji">
+            {characterEmoji}
+          </span>
 
-          <div className="fishing-rig">
-            <div className="fishing-line" />
-            <span className="fishing-bobber" />
+          <div aria-hidden className="fishing-rod-pivot">
+            <svg
+              className="fishing-rod-svg"
+              fill="none"
+              viewBox="0 0 80 120"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 112 C28 78 48 38 72 10"
+                stroke="#5c3d22"
+                strokeLinecap="round"
+                strokeWidth="6"
+              />
+              <path
+                d="M18 112 C28 78 48 38 72 10"
+                stroke="#9a6b42"
+                strokeLinecap="round"
+                strokeWidth="3.5"
+              />
+              <circle cx="18" cy="112" fill="#4a3020" r="5" />
+              <circle cx="72" cy="10" fill="#d8dee8" r="3.5" stroke="#8b95a7" strokeWidth="1.5" />
+            </svg>
+
+            <div className="fishing-rig">
+              <div className="fishing-line" />
+              <span className="fishing-bobber" />
+            </div>
           </div>
         </div>
 

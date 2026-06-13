@@ -1705,39 +1705,40 @@ h3 {
   transform: translateX(-50%);
 }
 
-.fishing-angler {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 2px;
-  height: 100%;
-}
-
 .fishing-character-emoji {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
   font-size: clamp(3rem, 8vw, 4.2rem);
   line-height: 1;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
-  transform: translateY(6px);
+  transform: translateX(-58%) translateY(6px);
   animation: fishing-idle-bob 2.8s ease-in-out infinite;
 }
 
-.fishing-rod {
+.fishing-rod-pivot {
   position: absolute;
-  right: 8px;
-  bottom: 34px;
-  font-size: 2.1rem;
-  line-height: 1;
-  transform-origin: 72% 88%;
+  right: 2px;
+  bottom: 30px;
+  width: 82px;
+  height: 118px;
+  transform-origin: 22% 94%;
   transform: rotate(-34deg);
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.28));
   animation: fishing-rod-sway 3.6s ease-in-out infinite;
 }
 
+.fishing-rod-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
 .fishing-rig {
   position: absolute;
-  right: 24px;
-  top: 52px;
+  left: calc(90% - 1px);
+  top: 7%;
   width: 2px;
   height: 92px;
   transform-origin: top center;
@@ -1810,7 +1811,7 @@ h3 {
   pointer-events: none;
 }
 
-.fishing-scene.is-phase-cast .fishing-rod {
+.fishing-scene.is-phase-cast .fishing-rod-pivot {
   animation: fishing-rod-cast 900ms ease-in-out;
 }
 
@@ -1835,7 +1836,7 @@ h3 {
   animation: fishing-splash-pop 550ms ease-out forwards;
 }
 
-.fishing-scene.is-phase-reel .fishing-rod {
+.fishing-scene.is-phase-reel .fishing-rod-pivot {
   animation: fishing-rod-reel 1.3s ease-in-out;
 }
 
@@ -1847,7 +1848,7 @@ h3 {
   animation: fishing-fish-rise 1.3s ease-out forwards;
 }
 
-.fishing-scene.is-phase-catching .fishing-rod {
+.fishing-scene.is-phase-catching .fishing-rod-pivot {
   animation: fishing-rod-reel 1.5s ease-in-out infinite;
 }
 
@@ -1866,7 +1867,7 @@ h3 {
 .fishing-scene.prefers-reduced-motion .fishing-scene-backdrop,
 .fishing-scene.prefers-reduced-motion .fishing-ripple,
 .fishing-scene.prefers-reduced-motion .fishing-character-emoji,
-.fishing-scene.prefers-reduced-motion .fishing-rod,
+.fishing-scene.prefers-reduced-motion .fishing-rod-pivot,
 .fishing-scene.prefers-reduced-motion .fishing-rig,
 .fishing-scene.prefers-reduced-motion .fishing-bobber {
   animation: none !important;
@@ -1886,11 +1887,11 @@ h3 {
 @keyframes fishing-idle-bob {
   0%,
   100% {
-    transform: translateY(6px);
+    transform: translateX(-58%) translateY(6px);
   }
 
   50% {
-    transform: translateY(1px);
+    transform: translateX(-58%) translateY(1px);
   }
 }
 
@@ -3642,7 +3643,7 @@ h3 {
   .fishing-scene-backdrop,
   .fishing-ripple,
   .fishing-character-emoji,
-  .fishing-rod,
+  .fishing-rod-pivot,
   .fishing-rig,
   .fishing-bobber,
   .fishing-loop-fish,
