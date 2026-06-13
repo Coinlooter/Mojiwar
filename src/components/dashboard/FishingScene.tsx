@@ -150,11 +150,8 @@ export function FishingScene({
           viewBox="0 0 100 100"
         >
           <line className="fishing-line-stroke" x1="57" x2="84" y1="38" y2="74" />
+          <circle className="fishing-bobber-svg" cx="84" cy="74" r="2.4" />
         </svg>
-
-        <div className="fishing-bobber-anchor">
-          <span className="fishing-bobber" />
-        </div>
 
         {displayedFish ? (
           <span aria-hidden className="fishing-loop-fish">
