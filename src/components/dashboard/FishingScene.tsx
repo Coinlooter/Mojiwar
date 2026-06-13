@@ -114,14 +114,12 @@ export function FishingScene({
 
       <div className="fishing-scene-stage">
         <div className="fishing-angler-wrap">
-          <div className="fishing-dock-crew">
-            <span aria-hidden className="fishing-bucket">
-              🪣
-            </span>
-            <span aria-hidden className="fishing-character-emoji">
-              {characterEmoji}
-            </span>
-          </div>
+          <span aria-hidden className="fishing-bucket">
+            🪣
+          </span>
+          <span aria-hidden className="fishing-character-emoji">
+            {characterEmoji}
+          </span>
 
           <div aria-hidden className="fishing-rod-pivot">
             <svg
