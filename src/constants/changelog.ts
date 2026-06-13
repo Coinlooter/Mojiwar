@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.15.10",
+    changes: [
+      "Angeln — Eimer weiter links und bleibt beim Fang fest stehen",
+    ],
+  },
+  {
     version: "1.15.9",
     changes: [
       "Angeln — Eimer etwas weiter nach links positioniert",

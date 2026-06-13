@@ -1707,12 +1707,13 @@ h3 {
 
 .fishing-bucket {
   position: absolute;
-  left: 50%;
-  bottom: 0;
+  left: 30%;
+  bottom: 36px;
+  z-index: 3;
   font-size: clamp(1.9rem, 5.5vw, 2.55rem);
   line-height: 1;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.32));
-  transform: translateX(-112%) translateY(12px);
+  transform: translateX(-50%);
 }
 
 .fishing-character-emoji {
@@ -1791,7 +1792,7 @@ h3 {
 
 .fishing-catch-floater {
   position: absolute;
-  left: 39%;
+  left: 30%;
   top: 72%;
   font-size: 0.95rem;
   font-weight: 800;
@@ -1851,10 +1852,6 @@ h3 {
   animation: fishing-fish-into-bucket 1.3s ease-in forwards;
 }
 
-.fishing-scene.is-phase-reel .fishing-bucket {
-  animation: fishing-bucket-catch 1.3s ease-out;
-}
-
 .fishing-scene.is-phase-catching .fishing-rod-pivot {
   animation: fishing-rod-reel 1.5s ease-in-out infinite;
 }
@@ -1869,10 +1866,6 @@ h3 {
 
 .fishing-scene.is-phase-catching .fishing-loop-fish {
   animation: fishing-fish-into-bucket 1.5s ease-in forwards;
-}
-
-.fishing-scene.is-phase-catching .fishing-bucket {
-  animation: fishing-bucket-catch 1.5s ease-out;
 }
 
 .fishing-scene.is-phase-catching .fishing-catch-floater {
@@ -2076,44 +2069,29 @@ h3 {
   }
 
   72% {
-    left: 44%;
+    left: 36%;
     top: 66%;
     transform: translate(-50%, -50%) scale(0.92) rotate(20deg);
   }
 
   88% {
-    left: 39%;
+    left: 30%;
     top: 79%;
     opacity: 1;
     transform: translate(-50%, -72%) scale(0.72) rotate(32deg);
   }
 
   100% {
-    left: 39%;
+    left: 30%;
     top: 81%;
     opacity: 0;
     transform: translate(-50%, -78%) scale(0.45) rotate(40deg);
   }
 }
 
-@keyframes fishing-bucket-catch {
-  0%,
-  68% {
-    transform: translateX(-128%) translateY(12px) scale(1);
-  }
-
-  82% {
-    transform: translateX(-128%) translateY(8px) scale(1.1);
-  }
-
-  100% {
-    transform: translateX(-128%) translateY(12px) scale(1);
-  }
-}
-
 @keyframes fishing-catch-floater-bucket {
   0% {
-    left: 39%;
+    left: 30%;
     top: 72%;
     opacity: 0;
     transform: translate(-50%, -50%);
@@ -2125,7 +2103,7 @@ h3 {
   }
 
   100% {
-    left: 39%;
+    left: 30%;
     top: 58%;
     opacity: 0;
     transform: translate(-50%, -90%);
