@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.15.7",
+    changes: [
+      "Angeln — Eimer 🪣 neben dem Emoji auf dem Steg, gefangene Fische fallen hinein",
+    ],
+  },
+  {
     version: "1.15.6",
     changes: [
       "Angeln — Haken 🪝 nur beim Ein- und Auswerfen sichtbar, im Wasser verborgen",
