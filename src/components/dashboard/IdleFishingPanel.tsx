@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { claimFishingReward } from "@/app/dashboard/actions";
+import { FishingScene, type FishingPhase } from "@/components/dashboard/FishingScene";
 import type { FishingReward } from "@/lib/game/fishing";
 import { summarizeFishingFish } from "@/lib/game/fishing";
 
 const CLAIM_ERROR_MESSAGE =
   "Die Angelbeute konnte gerade nicht abgeholt werden. Bitte versuche es erneut.";
+const CATCH_ANIMATION_MS = 1500;
 
 export function IdleFishingPanel({
   characterEmoji,
@@ -21,28 +23,49 @@ export function IdleFishingPanel({
   const [isPending, startTransition] = useTransition();
   const [claimMessage, setClaimMessage] = useState<string | null>(null);
   const [claimError, setClaimError] = useState<string | null>(null);
+  const [isClaimAnimating, setIsClaimAnimating] = useState(false);
+  const [catchDisplay, setCatchDisplay] = useState<{
+    fish: string;
+    gold: number;
+  } | null>(null);
   const fishSummary = summarizeFishingFish(reward.fish);
 
+  const forcedPhase: FishingPhase | null = isClaimAnimating ? "catching" : null;
+
   function handleClaim() {
+    if (!reward.hasReward || isPending || isClaimAnimating) {
+      return;
+    }
+
     setClaimError(null);
     setClaimMessage(null);
+    setIsClaimAnimating(true);
+    setCatchDisplay({
+      fish: fishSummary[0]?.emoji ?? "🐟",
+      gold: reward.totalGold,
+    });
 
-    startTransition(async () => {
-      const result = await claimFishingReward();
+    window.setTimeout(() => {
+      startTransition(async () => {
+        const result = await claimFishingReward();
 
-      if (!result.ok) {
-        if (result.error === "empty") {
-          setClaimError("Noch keine Beute — dein Emoji angelt weiter.");
+        setIsClaimAnimating(false);
+        setCatchDisplay(null);
+
+        if (!result.ok) {
+          if (result.error === "empty") {
+            setClaimError("Noch keine Beute — dein Emoji angelt weiter.");
+            return;
+          }
+
+          setClaimError(CLAIM_ERROR_MESSAGE);
           return;
         }
 
-        setClaimError(CLAIM_ERROR_MESSAGE);
-        return;
-      }
-
-      setClaimMessage(`+${result.totalGold} 🪙 Gold abgeholt!`);
-      router.refresh();
-    });
+        setClaimMessage(`+${result.totalGold} 🪙 Gold abgeholt!`);
+        router.refresh();
+      });
+    }, CATCH_ANIMATION_MS);
   }
 
   return (
@@ -55,14 +78,12 @@ export function IdleFishingPanel({
         </p>
       </div>
 
-      <div className="fishing-scene">
-        <div aria-hidden="true" className="fishing-scene-backdrop" />
-        <div className="fishing-scene-stage">
-          <span aria-hidden className="fishing-character-emoji">
-            {characterEmoji}
-          </span>
-        </div>
-      </div>
+      <FishingScene
+        catchDisplay={catchDisplay}
+        characterEmoji={characterEmoji}
+        forcedPhase={forcedPhase}
+        hasReward={reward.hasReward}
+      />
 
       <div className="fishing-reward-summary">
         {reward.hasReward ? (
@@ -99,11 +120,11 @@ export function IdleFishingPanel({
 
       <button
         className="button primary fishing-claim-button"
-        disabled={!reward.hasReward || isPending}
+        disabled={!reward.hasReward || isPending || isClaimAnimating}
         onClick={handleClaim}
         type="button"
       >
-        {isPending ? "Wird abgeholt..." : "Beute abholen"}
+        {isClaimAnimating || isPending ? "Wird eingeholt..." : "Beute abholen"}
       </button>
     </section>
   );

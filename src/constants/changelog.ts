@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.15.1",
+    changes: [
+      "Angeln — animierte Szene mit Angel, Schnur, Float und Wasserwellen",
+      "Angeln — Auswerfen, Warten, Biss und Einholen in einer Endlosschleife",
+      "Angeln — Catch-Animation beim Abholen der Beute",
+    ],
+  },
+  {
     version: "1.15.0",
     changes: [
       "Angeln — Idle-Feature am Dashboard mit See-Hintergrund und Emoji auf dem Steg",
