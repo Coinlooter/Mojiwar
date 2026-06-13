@@ -1754,13 +1754,17 @@ h3 {
   filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.25));
 }
 
-.fishing-bobber-svg {
-  fill: #ff6d52;
-  stroke: rgba(255, 255, 255, 0.92);
-  stroke-width: 0.65;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: fishing-bobber-float-svg 2.4s ease-in-out infinite;
+.fishing-bobber-hook {
+  position: absolute;
+  left: 84%;
+  top: 74%;
+  z-index: 3;
+  font-size: 1.25rem;
+  line-height: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.35));
+  transform: translate(-50%, -50%) rotate(18deg);
+  animation: fishing-bobber-float-hook 2.4s ease-in-out infinite;
 }
 
 .fishing-loop-fish {
@@ -1813,21 +1817,21 @@ h3 {
   animation: fishing-line-recast 900ms ease-in-out;
 }
 
-.fishing-scene.is-phase-cast .fishing-bobber-svg {
-  animation: fishing-bobber-recast 900ms ease-in-out;
+.fishing-scene.is-phase-cast .fishing-bobber-hook {
+  animation: fishing-bobber-recast-hook 900ms ease-in-out;
 }
 
-.fishing-scene.is-phase-wait .fishing-bobber-svg,
-.fishing-scene.is-phase-bite .fishing-bobber-svg {
-  animation: fishing-bobber-wait-svg 1.1s ease-in-out infinite;
+.fishing-scene.is-phase-wait .fishing-bobber-hook,
+.fishing-scene.is-phase-bite .fishing-bobber-hook {
+  animation: fishing-bobber-wait-hook 1.1s ease-in-out infinite;
 }
 
-.fishing-scene.has-reward.is-phase-wait .fishing-bobber-svg {
-  animation: fishing-bobber-agitated-svg 0.75s ease-in-out infinite;
+.fishing-scene.has-reward.is-phase-wait .fishing-bobber-hook {
+  animation: fishing-bobber-agitated-hook 0.75s ease-in-out infinite;
 }
 
-.fishing-scene.is-phase-bite .fishing-bobber-svg {
-  animation: fishing-bobber-bite-svg 550ms ease-in forwards;
+.fishing-scene.is-phase-bite .fishing-bobber-hook {
+  animation: fishing-bobber-bite-hook 550ms ease-in forwards;
 }
 
 .fishing-scene.is-phase-bite .fishing-splash {
@@ -1842,8 +1846,8 @@ h3 {
   animation: fishing-line-reel-stroke 1.3s ease-in-out;
 }
 
-.fishing-scene.is-phase-reel .fishing-bobber-svg {
-  animation: fishing-bobber-reel-sync 1.3s ease-in-out;
+.fishing-scene.is-phase-reel .fishing-bobber-hook {
+  animation: fishing-bobber-reel-sync-hook 1.3s ease-in-out;
 }
 
 .fishing-scene.is-phase-reel .fishing-loop-fish {
@@ -1860,8 +1864,8 @@ h3 {
   animation: fishing-line-reel-stroke 1.5s ease-in-out;
 }
 
-.fishing-scene.is-phase-catching .fishing-bobber-svg {
-  animation: fishing-bobber-reel-sync 1.5s ease-in-out;
+.fishing-scene.is-phase-catching .fishing-bobber-hook {
+  animation: fishing-bobber-reel-sync-hook 1.5s ease-in-out;
 }
 
 .fishing-scene.is-phase-catching .fishing-loop-fish {
@@ -1881,7 +1885,7 @@ h3 {
 .fishing-scene.prefers-reduced-motion .fishing-character-emoji,
 .fishing-scene.prefers-reduced-motion .fishing-rod-pivot,
 .fishing-scene.prefers-reduced-motion .fishing-line-stroke,
-.fishing-scene.prefers-reduced-motion .fishing-bobber-svg {
+.fishing-scene.prefers-reduced-motion .fishing-bobber-hook {
   animation: none !important;
 }
 
@@ -1971,29 +1975,29 @@ h3 {
   }
 }
 
-@keyframes fishing-bobber-recast {
+@keyframes fishing-bobber-recast-hook {
   0%,
   100% {
-    cx: 84;
-    cy: 74;
+    left: 84%;
+    top: 74%;
   }
 
   40% {
-    cx: 57;
-    cy: 38;
+    left: 57%;
+    top: 38%;
   }
 }
 
-@keyframes fishing-bobber-reel-sync {
+@keyframes fishing-bobber-reel-sync-hook {
   0%,
   100% {
-    cx: 84;
-    cy: 74;
+    left: 84%;
+    top: 74%;
   }
 
   55% {
-    cx: 66;
-    cy: 50;
+    left: 66%;
+    top: 50%;
   }
 }
 
@@ -2010,60 +2014,60 @@ h3 {
   }
 }
 
-@keyframes fishing-bobber-float-svg {
+@keyframes fishing-bobber-float-hook {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translate(-50%, -50%) rotate(18deg) translateY(0);
   }
 
   50% {
-    transform: translateY(0.35px);
+    transform: translate(-50%, -50%) rotate(18deg) translateY(3px);
   }
 }
 
-@keyframes fishing-bobber-wait-svg {
+@keyframes fishing-bobber-wait-hook {
   0%,
   100% {
-    transform: translateY(0) scale(1);
+    transform: translate(-50%, -50%) rotate(18deg) translateY(0) scale(1);
   }
 
   50% {
-    transform: translateY(0.45px) scale(1.06);
+    transform: translate(-50%, -50%) rotate(18deg) translateY(2px) scale(1.06);
   }
 }
 
-@keyframes fishing-bobber-agitated-svg {
+@keyframes fishing-bobber-agitated-hook {
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(18deg) translateY(0);
   }
 
   25% {
-    transform: translateY(0.5px) rotate(-8deg);
+    transform: translate(-50%, -50%) rotate(10deg) translateY(2px);
   }
 
   75% {
-    transform: translateY(0.25px) rotate(8deg);
+    transform: translate(-50%, -50%) rotate(26deg) translateY(1px);
   }
 }
 
-@keyframes fishing-bobber-bite-svg {
+@keyframes fishing-bobber-bite-hook {
   0%,
   70% {
-    cy: 74;
-    transform: translateY(0);
+    top: 74%;
+    transform: translate(-50%, -50%) rotate(18deg);
     opacity: 1;
   }
 
   90% {
-    cy: 78;
-    transform: translateY(0.8px);
+    top: 78%;
+    transform: translate(-50%, -40%) rotate(18deg);
     opacity: 0.45;
   }
 
   100% {
-    cy: 74.5;
-    transform: translateY(0);
+    top: 74.5%;
+    transform: translate(-50%, -50%) rotate(18deg);
     opacity: 1;
   }
 }
@@ -3696,7 +3700,7 @@ h3 {
   .fishing-character-emoji,
   .fishing-rod-pivot,
   .fishing-line-stroke,
-  .fishing-bobber-svg,
+  .fishing-bobber-hook,
   .fishing-loop-fish,
   .fishing-catch-floater,
   .fishing-splash {
