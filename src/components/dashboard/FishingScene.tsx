@@ -140,12 +140,20 @@ export function FishingScene({
               <circle cx="18" cy="112" fill="#4a3020" r="5" />
               <circle cx="72" cy="10" fill="#d8dee8" r="3.5" stroke="#8b95a7" strokeWidth="1.5" />
             </svg>
-
-            <div className="fishing-rig">
-              <div className="fishing-line" />
-              <span className="fishing-bobber" />
-            </div>
           </div>
+        </div>
+
+        <svg
+          aria-hidden
+          className="fishing-line-svg"
+          preserveAspectRatio="none"
+          viewBox="0 0 100 100"
+        >
+          <line className="fishing-line-stroke" x1="57" x2="84" y1="38" y2="74" />
+        </svg>
+
+        <div className="fishing-bobber-anchor">
+          <span className="fishing-bobber" />
         </div>
 
         {displayedFish ? (
