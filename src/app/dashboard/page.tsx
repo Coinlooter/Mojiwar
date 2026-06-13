@@ -3,6 +3,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { AccountPanel } from "@/components/account/AccountPanel";
+import { IdleFishingPanel } from "@/components/dashboard/IdleFishingPanel";
 import { XpProgressBar } from "@/components/dashboard/XpProgressBar";
 import { StartPlayingButton } from "@/components/auth/StartPlayingButton";
 import { AlertBanner } from "@/components/ui/AlertBanner";
@@ -51,7 +52,7 @@ export default async function DashboardPage({
     redirect("/onboarding" as Route);
   }
 
-  const { inboxStats, battles, loadError } = await fetchDashboardData(
+  const { inboxStats, battles, fishingReward, loadError } = await fetchDashboardData(
     supabase,
     user.id,
     character,
@@ -106,7 +107,13 @@ export default async function DashboardPage({
       </section>
 
       <div className="dashboard-main">
-        <section className="panel battle-card dashboard-battles">
+        <div className="dashboard-primary">
+          <IdleFishingPanel
+            characterEmoji={character.emoji}
+            reward={fishingReward}
+          />
+
+          <section className="panel battle-card dashboard-battles">
           <div className="dashboard-section-head">
             <p className="eyebrow">Letzte Kämpfe</p>
           </div>
@@ -153,6 +160,7 @@ export default async function DashboardPage({
             </div>
           )}
         </section>
+        </div>
 
         <aside className="dashboard-side">
           <AccountPanel

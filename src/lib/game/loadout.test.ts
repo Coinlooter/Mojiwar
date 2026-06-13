@@ -22,6 +22,7 @@ describe("loadout mapper", () => {
       losses: 0,
       is_bot: false,
       unlocked_slot_count: 3,
+      fishing_started_at: null,
       created_at: "2026-01-01T00:00:00.000Z",
       updated_at: "2026-01-01T00:00:00.000Z",
     };

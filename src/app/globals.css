@@ -1612,6 +1612,113 @@ h3 {
   align-items: start;
 }
 
+.dashboard-primary {
+  display: grid;
+  gap: 16px;
+}
+
+.fishing-panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+}
+
+.fishing-panel-copy {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.fishing-scene {
+  position: relative;
+  min-height: 220px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 20px rgba(255, 255, 255, 0.06),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.fishing-scene-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.12) 100%),
+    url("/images/fishing-lake.png") center center / cover no-repeat;
+  pointer-events: none;
+}
+
+.fishing-scene-stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 220px;
+  padding: 0 16px 28px;
+}
+
+.fishing-character-emoji {
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  line-height: 1;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
+  transform: translateY(6px);
+}
+
+.fishing-reward-summary {
+  display: grid;
+  gap: 6px;
+}
+
+.fishing-reward-total {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.fishing-reward-breakdown,
+.fishing-reward-empty {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.fishing-catch-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fishing-catch-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 0.84rem;
+}
+
+.fishing-feedback {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.fishing-feedback-success {
+  color: #9be7b4;
+}
+
+.fishing-feedback-error {
+  color: #ffb4b4;
+}
+
+.fishing-claim-button {
+  justify-self: start;
+}
+
 .dashboard-battles {
   padding: 16px 18px;
 }

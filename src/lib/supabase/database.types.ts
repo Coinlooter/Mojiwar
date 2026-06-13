@@ -55,6 +55,7 @@ export type Database = {
           losses: number;
           is_bot: boolean;
           unlocked_slot_count: number;
+          fishing_started_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -76,6 +77,7 @@ export type Database = {
           losses?: number;
           is_bot?: boolean;
           unlocked_slot_count?: number;
+          fishing_started_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -97,6 +99,7 @@ export type Database = {
           losses?: number;
           is_bot?: boolean;
           unlocked_slot_count?: number;
+          fishing_started_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -393,6 +396,17 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      claim_fishing_reward: {
+        Args: {
+          p_requesting_user_id: string;
+          p_character_id: string;
+          p_fishing_started_at: string;
+          p_gold_gained: number;
+          p_gold_after: number;
+          p_new_fishing_started_at: string;
+        };
+        Returns: undefined;
+      };
       grant_starter_deck: {
         Args: {
           p_character_id: string;

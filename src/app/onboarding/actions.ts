@@ -80,6 +80,7 @@ export async function createCharacter(formData: FormData) {
       base_speed: baseStats.speed,
       base_crit_chance: baseStats.critChance,
       power,
+      fishing_started_at: new Date().toISOString(),
     })
     .select("id")
     .single();

@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import { calculateFishingReward, type FishingReward } from "@/lib/game/fishing";
 import type { Database } from "@/lib/supabase/database.types";
 import { LOAD_ERROR_MESSAGE } from "@/lib/ui/load-result";
 
@@ -26,6 +27,7 @@ export type DashboardPageData = {
   character: CharacterRow;
   inboxStats: Array<{ label: string; value: number }>;
   battles: DashboardBattleRow[];
+  fishingReward: FishingReward;
   loadError: string | null;
 };
 
@@ -114,6 +116,11 @@ export async function fetchDashboardData(
     };
   });
 
+  const fishingReward = calculateFishingReward({
+    fishingStartedAt: character.fishing_started_at,
+    level: character.level,
+  });
+
   return {
     character,
     inboxStats: [
@@ -124,6 +131,7 @@ export async function fetchDashboardData(
       { label: "Karten", value: ownedCards },
     ],
     battles: dashboardBattles,
+    fishingReward,
     loadError: battlesLoadError,
   };
 }

@@ -6,6 +6,14 @@ export type ChangelogEntry = {
 // Bei neuen Releases zuerst eintragen (neueste Version oben).
 export const CHANGELOG_VERSIONS: ChangelogEntry[] = [
   {
+    version: "1.15.0",
+    changes: [
+      "Angeln — Idle-Feature am Dashboard mit See-Hintergrund und Emoji auf dem Steg",
+      "Angeln — Offline-Belohnung bis 24 Stunden mit passivem Gold und zufälligen Fisch-Fängen",
+      "Angeln — Beute abholen setzt den Fang-Timer zurück",
+    ],
+  },
+  {
     version: "1.14.0",
     changes: [
       "Karten-Drops — Affix-System mit 4 Qualitätsstufen: Gewöhnlich, Selten, Episch, Legendär",
